@@ -1,0 +1,60 @@
+const express = require('express'),
+      path = require('path'),
+      router  = express.Router(),
+      AddProcessor = require('../data/Create'),
+			accountKey = process.env.accountKey
+;
+
+router.post('/', async (req, res, next) => { //we are limited in speed because we cant use rabbitmq or a similar product on our server
+
+  /*
+    TODO:make sure to convert the unix timestamp from nearbynow createdAt value to a readable format before storing
+   */
+
+  // Takes the request body and checks to make sure that it is valid. throws an error if not.
+  await (() => {
+    try {
+      let valid = processRequest(req);
+      if (valid === true) {
+        res.status(200).end();
+				storeData(req.body).then();
+      } else {
+      	console.log("There was an error: " + valid);
+        res.status(500).end();
+      }
+    } catch (error) {
+      next(error);
+    }
+  })();
+
+});
+
+async function storeData(request) {
+
+  try {
+
+    const requestType = (request["type"] === "checkin.created") ? 'checkin' :
+                        (request["type"] === "review.completed") ? 'review' :
+                        false;
+
+    new AddProcessor.Create(request,requestType)
+
+  } catch(e) {
+    console.log(e);
+  }
+  
+}
+
+function processRequest(data) {
+	
+	if (data.headers["x-account-key"] !== accountKey) {
+		return "badKey";
+	} else if (Object.entries(data.body).length === 0) {
+		return "emptyRequest";
+	} else {
+		return true;
+	}
+
+}
+
+module.exports = router;
