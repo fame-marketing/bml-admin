@@ -35,6 +35,7 @@ class db {
 	query(query,values) {
     this.connection.query(query, values, function(err,results,fields) {
       if (err) console.log(err);
+      if (results) return results;
     });
   }
 

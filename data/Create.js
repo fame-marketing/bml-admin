@@ -1,11 +1,11 @@
-const db = require('./db');
+const Db = require('./Database');
 
 class Create {
 
   constructor(data,requestType) {
 
     this.data = data;
-    this.database = new db.db;
+    this.database = new Db.Database;
 
     if(requestType === 'checkin') {
       this.insertCheckin(this.database,this.data);
@@ -13,15 +13,13 @@ class Create {
       this.insertReview(this.database,this.data);
     }
 
-
   }
 
   insertCheckin(database,data) {
 
-
     const values = {
       "eventID": data["id"],
-      "createdAt": data["createdAt"],
+      "createdAt": this.convertDate(data["createdAt"]),
       "checkinId": data["data"]["id"],
       "location": JSON.stringify(data["data"]["location"]),
       "reference": data["data"]["reference"],
@@ -30,13 +28,9 @@ class Create {
       "userEmail": data["data"]["user"]["email"]
     };
 
-    let sql = "INSERT INTO nn_checkins SET ?";
+    let sql = "INSERT INTO nn_checkins_temp SET ?";
 
-    database.createConnection();
-
-    database.query(sql,values);
-
-    database.endConnection();
+    database.writePool(sql,values);
 
   }
 
@@ -61,15 +55,15 @@ class Create {
       "userName": data["data"]["checkin"]["user"]["name"],
       "userEmail": data["data"]["checkin"]["user"]["email"]
     };
-    let sql = "INSERT INTO nn_reviews (" + columns + ") VALUES ?";
+    let sql = "INSERT INTO nn_reviews_temp (" + columns + ") VALUES ?";
 
-    database.createConnection();
-
-    database.query(sql,values);
-
-    database.endConnection();
+    database.writePool(sql,values);
 
   }
+  
+  convertDate(date) {
+  	return new Date(date * 1000);
+	}
 
 }
 

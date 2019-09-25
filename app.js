@@ -4,7 +4,7 @@ const createError = require('http-errors'),
       cookieParser = require('cookie-parser'),
       logger = require('morgan'),
 			cron  = require('cron').CronJob,
-			dbWatcher = require('./data/dbWatcher');
+			Checker = require('./data/cityCheck');
 
       indexRouter = require('./routes/index'),
       whrouter    = require('./routes/webhook'),
@@ -41,8 +41,13 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-new cron('0 30 * * * *', function() {
+/*new cron('0 30 * * * *', function() {
 
-}, null,true,'America/New_York')
+}, null,true,'America/New_York')*/
+
+(async() => {
+  new Checker();
+})();
+
 
 module.exports = app;
