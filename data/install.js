@@ -1,4 +1,4 @@
-const db = require('./db');
+const db = require('./Database');
 
 class Install {
 
@@ -11,7 +11,7 @@ class Install {
     database.createConnection();
 
     database.query(
-      'CREATE TABLE IF NOT EXISTS nn_checkins (' +
+      'CREATE TABLE IF NOT EXISTS nn_checkins_temp (' +
       'id INT AUTO_INCREMENT PRIMARY KEY,' +
       'eventID VARCHAR(50),' +
       'createdAt DATETIME,' +
@@ -25,7 +25,7 @@ class Install {
     );
 
     database.query(
-      'CREATE TABLE IF NOT EXISTS nn_reviews (' +
+      'CREATE TABLE IF NOT EXISTS nn_reviews_temp (' +
       'id INT AUTO_INCREMENT PRIMARY KEY,' +
       'eventID VARCHAR(50),' +
       'createdAt DATETIME,' +
@@ -43,6 +43,61 @@ class Install {
       'image TINYTEXT,' +
       'userName VARCHAR(50),' +
       'userEmail VARCHAR(100)' +
+      ')'
+    );
+
+    database.query(
+      'CREATE TABLE IF NOT EXISTS nn_checkins_temp (' +
+      'id INT AUTO_INCREMENT PRIMARY KEY,' +
+      'eventID VARCHAR(50),' +
+      'createdAt DATETIME,' +
+      'checkinId VARCHAR(50),' +
+      'location JSON,' +
+      'reference TEXT,' +
+      'image TINYTEXT,' +
+      'userName VARCHAR(50),' +
+      'userEmail VARCHAR(100)' +
+      ')'
+    );
+
+    database.query(
+      'CREATE TABLE IF NOT EXISTS nn_reviews_temp (' +
+      'id INT AUTO_INCREMENT PRIMARY KEY,' +
+      'eventID VARCHAR(50),' +
+      'createdAt DATETIME,' +
+      'reviewSummary VARCHAR(255),' +
+      'reviewDetail TEXT,' +
+      'overallRating INT,' +
+      'reviewRequestedDate DATETIME,' +
+      'reviewRespondedDate DATETIME,' +
+      'reviewerName VARCHAR(50),' +
+      'reviewerEmail VARCHAR(100),' +
+      'checkinId VARCHAR(50),' +
+      'checkinCreatedAt DATETIME,' +
+      'location JSON,' +
+      'reference TEXT,' +
+      'image TINYTEXT,' +
+      'userName VARCHAR(50),' +
+      'userEmail VARCHAR(100)' +
+      ')'
+    );
+
+    database.query(
+      'CREATE TABLE IF NOT EXISTS nn_locations (' +
+      'city VARCHAR(100),' +
+      'state VARCHAR(25),' +
+      'postalCode VARCHAR(25),' +
+      'country VARCHAR(10),' +
+      'street VARCHAR(125),' +
+      'latitude DECIMAL,' +
+      'longitude DECIMAL' +
+      ')'
+    );
+
+    database.query(
+      'CREATE TABLE IF NOT EXISTS nn_city_totals (' +
+      'total INT,' +
+      'cityName VARCHAR(100)' +
       ')'
     );
 
