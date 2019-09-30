@@ -1,5 +1,5 @@
-const mysql = require('mysql'),
-      updateHandler = require('../controller/updateHandler')
+const mysql = require('mysql2'),
+			util  = require('util')
 ;
 
 
@@ -14,37 +14,33 @@ class Database {
       database: process.env.dbName
     });
     
+    this.promisePool = this.pool.promise()
+    
+    this.resultRows = '';
+    
   }
+  
 
 	writePool(query,values) {
 
-    this.pool.getConnection(function(e,con) {
-      if (e) throw e;
-
-      con.query(query, values, function(err,results,fields) {
-        if (err) console.log(err);
-        if (results) return results;
-      });
-
-    })
+		this.pool.query(query, values, function (err) {
+			if (err) throw err;
+		});
+		
   }
+  
+  writePoolQueryOnly(query) {
+  	this.pool.query(query, function (err) {
+			if (err) throw err;
+		})
+	}
 
-  readPool(query) {
+  async readPool(query) {
+  
+		const [rows,fields] = await this.promisePool.query(query);
 
-    this.pool.getConnection(function(e,con) {
-      if (e) throw e;
-
-      con.query(query, function(e,res) {
-
-        con.release();
-        if (e) throw e;
-
-        if (res.length !== 0) {
-          new updateHandler(res);
-        }
-
-      })
-    })
+		return rows;
+		
   }
 
 }

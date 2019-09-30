@@ -5,7 +5,7 @@ class Create {
   constructor(data,requestType) {
 
     this.data = data;
-    this.database = new Db.Database;
+    this.database = new Db();
 
     if(requestType === 'checkin') {
       this.insertCheckin(this.database,this.data);

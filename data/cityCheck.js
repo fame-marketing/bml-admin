@@ -1,19 +1,31 @@
-const Db = require('./Database');
+const Db = require('./Database'),
+			Saver = require('./saveData');
+;
 
 class cityCheck {
 
   constructor () {
     this.database = new Db();
-    this.fetch("nn_checkins");
-    this.fetch("nn_reviews");
+    this.saver = Saver;
+    this.fetch("nn_checkins_temp", "checkin");
+    this.fetch("nn_reviews_temp", "review");
+    
+    this.checkCityTotals();
 	}
 
-	fetch (table) {
+	async fetch (table,eventType) {
 
     const sql = "SELECT * FROM " + table;
-    this.database.readPool(sql);
-
+    const rows = await this.database.readPool(sql);
+    
+    new this.saver(rows,eventType);
+    
   }
+  
+  checkCityTotals () {
+  	const sql = "SELECT cityName FROM nn_city_totals WHERE total ";
+  	const eligible = this.database.readPool(sql)
+	}
 
 }
 
