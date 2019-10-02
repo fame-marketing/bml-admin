@@ -17,14 +17,19 @@ class cityCheck {
 
     const sql = "SELECT * FROM " + table;
     const rows = await this.database.readPool(sql);
-    
+
     new this.saver(rows,eventType);
     
   }
   
-  checkCityTotals () {
-  	const sql = "SELECT cityName FROM nn_city_totals WHERE total ";
-  	const eligible = this.database.readPool(sql)
+  async checkCityTotals () {
+  	const sql = "SELECT cityName FROM nn_city_totals WHERE " +
+      "checkinTotal >= 5 OR " +
+      "reviewTotal >= 1 AND checkinTotal >= 3 OR " +
+      "reviewTotal >= 5"
+    ;
+
+    const eligible = await this.database.readPool(sql)
 	}
 
 }

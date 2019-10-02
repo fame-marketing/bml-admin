@@ -7,9 +7,9 @@ class Install {
     this.createTables(this.database);
   }
 
-  createTables(database) {
+  async createTables(database) {
 
-    database.writePool(
+    await database.writePool(
       'CREATE TABLE IF NOT EXISTS nn_checkins_temp (' +
       'id INT AUTO_INCREMENT PRIMARY KEY,' +
       'eventID VARCHAR(50),' +
@@ -23,7 +23,7 @@ class Install {
       ')'
     );
 
-    database.writePool(
+    await database.writePool(
       'CREATE TABLE IF NOT EXISTS nn_reviews_temp (' +
       'id INT AUTO_INCREMENT PRIMARY KEY,' +
       'eventID VARCHAR(50),' +
@@ -45,7 +45,7 @@ class Install {
       ')'
     );
 
-    database.writePool(
+    await database.writePool(
       'CREATE TABLE IF NOT EXISTS nn_checkins_perma (' +
 			'id INT AUTO_INCREMENT PRIMARY KEY,' +
 			'eventID VARCHAR(50),' +
@@ -64,8 +64,8 @@ class Install {
       'longitude DECIMAL' +
       ')'
     );
-	
-		database.writePool(
+
+    await database.writePool(
 			'CREATE TABLE IF NOT EXISTS nn_reviews_perma (' +
 			'id INT AUTO_INCREMENT PRIMARY KEY,' +
 			'eventID VARCHAR(50),' +
@@ -93,13 +93,23 @@ class Install {
 			')'
 		);
 
-    database.writePool(
+    await database.writePool(
       'CREATE TABLE IF NOT EXISTS nn_city_totals (' +
       'cityName VARCHAR(100) UNIQUE,' +
       'checkinTotal INT,' +
 			'reviewTotal INT' +
       ')'
     );
+
+    process.on('exit', (code) => {
+      if (code === 0) {
+        console.log("db tables successfully created.");
+      } else {
+        console.log("process completed but with errors: code - " + code);
+      }
+    });
+
+    process.exit();
 
   }
 

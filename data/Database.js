@@ -14,16 +14,13 @@ class Database {
       database: process.env.dbName
     });
     
-    this.promisePool = this.pool.promise()
-    
-    this.resultRows = '';
-    
+    this.promisePool = this.pool.promise();
+
   }
-  
 
-	writePool(query,values) {
+	async writePool(query,values) {
 
-		this.pool.query(query, values, function (err) {
+    await this.promisePool.query(query, values, function (err) {
 			if (err) throw err;
 		});
 		

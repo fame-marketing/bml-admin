@@ -8,29 +8,30 @@ class saveData {
 		this.data = rows;
 		this.eventType = eventType;
 		this.database = new Db();
-		
-		console.log(this.data);
-		
+
 		this.data.forEach((row) => {
-			this.saveCityValues(row['location']['city']);
+		  const citName = JSON.parse(row['location']);
+			this.saveCityValues(citName['city']);
 		});
 		
 		this.data.forEach((row) => {
 			this.saveEvent(row);
-		})
+		});
 		
 	}
 	
 	saveCityValues (city) {
-		
+
 		const typeColumn = this.eventType === "checkin" ? "checkinTotal" : "reviewTotal";
 		
-		const query = "INSERT INTO nn_city_totals (cityName,total) " +
+		const query = "INSERT INTO nn_city_totals (cityName, " + typeColumn + ") " +
 			"VALUES (" + city + ", 1) " +
-			"ON DUPLICATE KEY UPDATE nn_city_totals " +
-			"SET cityName = " + city + " " + typeColumn + " + 1";
-		
-		//this.database.writePoolQueryOnly(query);
+			"ON DUPLICATE KEY UPDATE " + typeColumn + " = " + typeColumn + " + 1"
+    ;
+
+		console.log(query);
+
+		this.database.writePoolQueryOnly(query);
 		
 	}
 	
@@ -43,10 +44,10 @@ class saveData {
 		} else if (this.eventType === "review") {
 			table = "nn_reviews_perma";
 		} else {return}
-		
+
 		const sql = "INSERT INTO " + table + " SET ?";
 		
-		this.database.writePool(sql,event);
+		//this.database.writePool(sql,event);
 		
 	}
 	
