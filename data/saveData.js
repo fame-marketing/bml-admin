@@ -9,9 +9,10 @@ class saveData {
 		this.eventType = eventType;
 		this.database = new Db();
 		this.flatData = {};
-		
+
 		this.data.forEach((row) => {
-			this.saveCityValues(row.location.city);
+		  let location = JSON.parse(row.location);
+      this.saveCityValues(location.city);
 		});
 		
 		this.data.forEach((row) => {
@@ -24,38 +25,44 @@ class saveData {
 
 		const typeColumn = this.eventType === "checkin" ? "checkinTotal" : "reviewTotal";
 		
-		const query = `INSERT INTO nn_city_totals (cityName, ${typeColumn}) ` +
-			`VALUES ("${city}", 1) ` +
-			`ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`
+		const query = `INSERT INTO nn_city_totals (cityName, ${typeColumn})
+                   VALUES ("${city}", 1)
+                   ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`
     ;
-		
-		//this.database.writePoolQueryOnly(query);
+
+		this.database.writePoolQueryOnly(query);
 		
 	}
 	
 	saveEvent (event) {
 		
 		let table = "";
-		
-		if (this.eventType === "checkin") {
+
+    if (this.eventType === "checkin") {
 			table = "nn_checkins_perma";
-			this.flattenObject(event);
+      this.flattenObject(event);
 		} else if (this.eventType === "review") {
 			table = "nn_reviews_perma";
 			this.flattenObject(event);
 		} else {return}
 
 		const sql = `INSERT INTO ${table} SET ?`;
-		
+
 		this.database.writePool(sql,this.flatData);
 		
 	}
 	
 	flattenObject (event) {
-		
-		Object.entries(event).forEach(
+
+	  if (event.location) {
+	    event.location = JSON.parse(event.location);
+    }
+
+    Object.entries(event).forEach(
 			([key,value]) => {
-				if (typeof value === "object") {
+        console.log(value);
+        if (typeof value === "object" && Object.entries(value).length !== 0) {
+          console.log(key);
 					this.flattenObject(value);
 				} else if (key === "id") {
 				} else {

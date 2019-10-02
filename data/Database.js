@@ -19,7 +19,7 @@ class Database {
   }
 
 	async writePool(query,values) {
-
+  
     await this.promisePool.query(query, values, function (err) {
 			if (err) throw err;
 		});

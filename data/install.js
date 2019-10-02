@@ -60,8 +60,8 @@ class Install {
       'postalCode VARCHAR(25),' +
       'country VARCHAR(10),' +
       'street VARCHAR(125),' +
-      'latitude DECIMAL,' +
-      'longitude DECIMAL' +
+      'latitude DOUBLE(10,7),' +
+      'longitude DOUBLE(10,7)' +
       ')'
     );
 
@@ -88,8 +88,8 @@ class Install {
 			'postalCode VARCHAR(25),' +
 			'country VARCHAR(10),' +
 			'street VARCHAR(125),' +
-			'latitude DECIMAL,' +
-			'longitude DECIMAL' +
+			'latitude DOUBLE(10,7),' +
+			'longitude DOUBLE(10,7)' +
 			')'
 		);
 
