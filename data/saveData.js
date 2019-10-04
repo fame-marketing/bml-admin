@@ -11,8 +11,7 @@ class saveData {
 		this.flatData = {};
 
 		this.data.forEach((row) => {
-		  let location = JSON.parse(row.location);
-      this.saveCityValues(location.city);
+      this.saveCityValues(row);
 		});
 		
 		this.data.forEach((row) => {
@@ -21,37 +20,60 @@ class saveData {
 		
 	}
 	
-	saveCityValues (city) {
+	async saveCityValues (row) {
 
-		const typeColumn = this.eventType === "checkin" ? "checkinTotal" : "reviewTotal";
-		
-		const query = `INSERT INTO nn_city_totals (cityName, ${typeColumn})
-                   VALUES ("${city}", 1)
+	  /*
+	   * starts by checking to see if the event id already exists and if it does, exits the function and does not count as an extra checkin or review.
+	   */
+    const typeTable = this.eventType === "checkin" ? "nn_checkins_perma" : "nn_reviews_perma";
+	  const eventID = row.eventID;
+	  const checkQuery = `SELECT id FROM ${typeTable} WHERE eventID = '${eventID}'`;
+    const exists = await this.database.returnQueryPool(checkQuery);
+
+    if (exists[0].length !== 0) return;
+
+    const city = row.location.city,
+          state = row.location.state,
+          typeColumn = this.eventType === "checkin" ? "checkinTotal" : "reviewTotal",
+
+          query = `INSERT INTO nn_city_totals (city, state, ${typeColumn})
+                   VALUES ("${city}","${state}",1)
                    ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`
     ;
 
-		this.database.writePoolQueryOnly(query);
+		this.database.QueryOnly(query);
 		
 	}
 	
-	saveEvent (event) {
+	async saveEvent (event) {
 		
-		let table = "";
+		let permTable = "",
+        tempTable = "",
+		    columnEventId = event.eventID;
 
     if (this.eventType === "checkin") {
-			table = "nn_checkins_perma";
+			permTable = "nn_checkins_perma";
+      tempTable = "nn_checkins_temp";
       this.flattenObject(event);
 		} else if (this.eventType === "review") {
-			table = "nn_reviews_perma";
+			permTable = "nn_reviews_perma";
+      tempTable = "nn_reviews_temp";
 			this.flattenObject(event);
 		} else {return}
 
-		const sql = `INSERT INTO ${table} SET ?`;
+		const sql = `INSERT IGNORE INTO ${permTable} SET ?`;
 
-		this.database.writePool(sql,this.flatData);
+		await this.database.writePool(sql,this.flatData);
+
+		const deleteSql = `DELETE FROM ${tempTable} WHERE eventID = '${columnEventId}'`;
+
+		await this.database.QueryOnly(deleteSql);
 		
 	}
-	
+
+	/*
+	 * Takes the basic object from NearbyNow and levels out all sub objects to be on the same level, this allows mysql to auto add values from the flattened object
+	 */
 	flattenObject (event) {
 
 	  if (event.location) {
@@ -60,9 +82,7 @@ class saveData {
 
     Object.entries(event).forEach(
 			([key,value]) => {
-        console.log(value);
         if (typeof value === "object" && Object.entries(value).length !== 0) {
-          console.log(key);
 					this.flattenObject(value);
 				} else if (key === "id") {
 				} else {

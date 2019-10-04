@@ -48,7 +48,7 @@ class Install {
     await database.writePool(
       'CREATE TABLE IF NOT EXISTS nn_checkins_perma (' +
 			'id INT AUTO_INCREMENT PRIMARY KEY,' +
-			'eventID VARCHAR(50),' +
+			'eventID VARCHAR(50) UNIQUE,' +
 			'createdAt DATETIME,' +
 			'checkinId VARCHAR(50),' +
 			'reference TEXT,' +
@@ -68,7 +68,7 @@ class Install {
     await database.writePool(
 			'CREATE TABLE IF NOT EXISTS nn_reviews_perma (' +
 			'id INT AUTO_INCREMENT PRIMARY KEY,' +
-			'eventID VARCHAR(50),' +
+			'eventID VARCHAR(50) UNIQUE,' +
 			'createdAt DATETIME,' +
 			'reviewSummary VARCHAR(255),' +
 			'reviewDetail TEXT,' +
@@ -95,7 +95,8 @@ class Install {
 
     await database.writePool(
       'CREATE TABLE IF NOT EXISTS nn_city_totals (' +
-      'cityName VARCHAR(100) UNIQUE,' +
+      'city VARCHAR(100) UNIQUE,' +
+      'state VARCHAR(25),' +
       'checkinTotal INT,' +
 			'reviewTotal INT' +
       ')'

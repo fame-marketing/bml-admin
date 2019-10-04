@@ -4,7 +4,8 @@ const createError = require('http-errors'),
       cookieParser = require('cookie-parser'),
       logger = require('morgan'),
 			cron  = require('cron').CronJob,
-			Checker = require('./data/cityCheck');
+			Checker = require('./data/cityCheck'),
+      Builder = require('./model/Builder'),
 
       indexRouter = require('./routes/index'),
       whrouter    = require('./routes/webhook'),
@@ -48,6 +49,5 @@ app.use(function(err, req, res, next) {
 (async() => {
   new Checker();
 })();
-
 
 module.exports = app;

@@ -26,7 +26,7 @@ class Database {
 		
   }
   
-  writePoolQueryOnly(query) {
+  QueryOnly(query) {
   	this.pool.query(query, function (err) {
 			if (err) throw err;
 		})
@@ -38,6 +38,12 @@ class Database {
 
 		return rows;
 		
+  }
+
+  async returnQueryPool(query) {
+
+    return await this.promisePool.query(query);
+
   }
 
 }

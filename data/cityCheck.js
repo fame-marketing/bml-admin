@@ -1,5 +1,6 @@
 const Db = require('./Database'),
-			Saver = require('./saveData');
+			Saver = require('./saveData'),
+      Builder = require('../model/Builder')
 ;
 
 class cityCheck {
@@ -7,6 +8,7 @@ class cityCheck {
   constructor () {
     this.database = new Db();
     this.saver = Saver;
+    this.builder = Builder;
     this.fetch("nn_checkins_temp", "checkin");
     this.fetch("nn_reviews_temp", "review");
     
@@ -23,13 +25,19 @@ class cityCheck {
   }
   
   async checkCityTotals () {
-  	const sql = "SELECT cityName FROM nn_city_totals WHERE " +
-      "checkinTotal >= 5 OR " +
-      "reviewTotal >= 1 AND checkinTotal >= 3 OR " +
-      "reviewTotal >= 5"
+
+  	const sql = `SELECT * FROM nn_city_totals WHERE
+      checkinTotal >= 5 OR
+      reviewTotal >= 1 AND checkinTotal >= 3 OR
+      reviewTotal >= 5`
     ;
 
-    const eligible = await this.database.readPool(sql)
+    const eligible = await this.database.readPool(sql);
+
+    if (eligible) {
+      new this.builder(eligible);
+    }
+
 	}
 
 }
