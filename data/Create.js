@@ -1,5 +1,10 @@
 const Db = require('./Database');
 
+/*
+ | @data -- an object containing the event body as it was sent from nearby now
+ | @requestType -- a string of either checkin or review.
+ | Creates new rows in the temp db tables using the event data.
+*/
 class Create {
 
   constructor(data,requestType) {
@@ -15,6 +20,11 @@ class Create {
 
   }
 
+  /*
+   | @database -- an instance of the Database class.
+   | @data -- an object containing the event body as it was sent from nearby now
+   | Performs an INSERT query into the checkin_temp folder.
+  */
   insertCheckin(database,data) {
 
     const values = {
@@ -34,6 +44,11 @@ class Create {
 
   }
 
+  /*
+   | @database -- an instance of the Database class.
+   | @data -- an object containing the event body as it was sent from nearby now
+   | Performs an INSERT query into the reviews_temp folder.
+  */
   insertReview(database,data) {
 
     const columns = "eventID, createdAt, reviewSummary, reviewDetail, overallRating, reviewRequestedDate, reviewRespondedDate, reviewerName, reviewerEmail, checkinId, checkinCreatedAt, location, reference, image, userName, userEmail";
@@ -60,7 +75,10 @@ class Create {
     database.writePool(sql,values);
 
   }
-  
+
+  /*
+   | Converts the unix formatted time sent from nearby now into a more readable format for storage
+  */
   convertDate(date) {
   	return new Date(date * 1000);
 	}

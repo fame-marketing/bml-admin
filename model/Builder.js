@@ -1,20 +1,33 @@
 const fs = require('fs'),
       util = require('util'),
       path = require('path'),
-      handlebars = require('handlebars')
+  handlebars = require('handlebars'),
+  Db = require('../data/Database')
 ;
 
+/*
+ | The class that handles all facets of creating new pages.
+*/
 class Builder {
 
   constructor (cities) {
+
     this.filesystem = fs;
     this.promiseReader = util.promisify(fs.readFile);
     this.path = path;
     this.cities = cities;
+    this.handlebars = handlebars;
+    this.database = new Db();
     this.destination = process.env.DESTINATION; //directory where the page will be placed upon creation
     this.initPageCreation();
+
   }
 
+  /*
+   | this function exists solely to allow the page creation process to be performed using async/await as the constructor cannot be async.
+   | grabs the handlebars filled html page base then iterates over the cities list passed to the parent class
+   | and passes each one to the createPage method.
+  */
   async initPageCreation () {
 
     const pageBase = await this.fetchFileBase();
@@ -24,23 +37,37 @@ class Builder {
     });
 
   }
-  
+
+  /*
+   | @city -- a string representing a city name to create the page around.
+   | @pageBase -- a full html page with handlebars syntax in key locations
+   | passes the city name to the generateSEO method, and compiles the pageBase using the resulting seo values.
+   | once the page has been created the code is written to a file and that file stored the the location
+   | indicated by the filepath variable.
+  */
   createPage (city,pageBase) {
 
-  	const seo = this.generateSEO(city);
-    const content = this.generateContent(pageBase,seo);
+    const seo = this.generateSEO(city),
+      template = this.handlebars.compile(pageBase),
+      filepath = this.destination + seo.url
+    ;
 
-  	/*this.filesystem.appendFile(seo.url,content, (e) => {
-  	  console.log("there was an error while attempting to create the file: " + e);
-    });*/
-	}
+    let page = template(seo);
 
-  generateContent (pageBase, seo) {
-    /*
-     * will take the content base and the seo and merge them to create a complete base.
-     */
+    this.filesystem.writeFile(filepath, page, (e) => {
+
+      if (e) console.log("there was an error while attempting to create the file: " + e);
+      console.log('page created succesfully');
+      const sql = `UPDATE nn_city_totals SET created = 1 WHERE city = "${city.city}"`;
+      this.database.QueryOnly(sql);
+
+    });
+
   }
 
+  /*
+   | grabs the handlebars file contents and returns them
+  */
   async fetchFileBase () {
 
     try {
@@ -51,25 +78,31 @@ class Builder {
 
   }
 
+  /*
+   | @city -- a string representing a city name to create the page around.
+   | Creates all the dynamic content parts to be passed into the handlebars
+   | template.
+  */
   generateSEO (city) {
 
-    console.log(city);
-
     const cityName = city.city,
-          state = city.state
+      state = city.state,
+      seoPhrase = process.env.KEYWORDBASE + " in " + cityName,
+      seoUrl = process.env.KEYWORDBASE.replace(/\s|_/g, '-') + ".phtml"
     ;
 
     return {
-      metaDescription: process.env.KEYWORD + " repair in" + cityName,
-      metaTitle: process.env.KEYWORD + "repair in" + cityName,
-      url: process.env.KEYWORD + ".phtml",
-      pageName: "page name in " + process.env.KEYWORD,
-      keyword: process.env.KEYWORD,
-      state: cityName,
+      metaDescription: seoPhrase,
+      metaTitle: seoPhrase,
+      url: seoUrl,
+      pageName: cityName,
+      keyword: seoPhrase,
+      city: cityName,
       state: state
     };
-  }
 
+  }
+  
 }
 
 module.exports = Builder;

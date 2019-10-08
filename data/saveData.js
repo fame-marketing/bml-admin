@@ -1,6 +1,9 @@
 const Db = require('./Database')
 ;
 
+/*
+ | Handles saving new events.
+*/
 class saveData {
 	
 	constructor (rows,eventType) {
@@ -8,7 +11,6 @@ class saveData {
 		this.data = rows;
 		this.eventType = eventType;
 		this.database = new Db();
-		this.flatData = {};
 
 		this.data.forEach((row) => {
       this.saveCityValues(row);
@@ -17,23 +19,30 @@ class saveData {
 		this.data.forEach((row) => {
 			this.saveEvent(row);
 		});
-		
-	}
-	
-	async saveCityValues (row) {
+
+  }
+
+  /*
+   | @event -- originates from the cityCheck class as a result from querying the temp tables for new events.
+   | async class in order to delay internal progress until the database has finished reading the data.
+   | Starts by checking if the event has already been added, if it has not then we will create
+   | a new query to either add a new city/state column and add a value of 1, or we will
+   | increase the value of an existing city/state column by 1.
+  */
+  async saveCityValues(event) {
 
 	  /*
-	   * starts by checking to see if the event id already exists and if it does, exits the function and does not count as an extra checkin or review.
+	   | starts by checking to see if the event id already exists and if it does, exits the function and does not count as an extra checkin or review.
 	   */
     const typeTable = this.eventType === "checkin" ? "nn_checkins_perma" : "nn_reviews_perma";
-	  const eventID = row.eventID;
+    const eventID = event.eventID;
 	  const checkQuery = `SELECT id FROM ${typeTable} WHERE eventID = '${eventID}'`;
-    const exists = await this.database.returnQueryPool(checkQuery);
+    const exists = await this.database.readPool(checkQuery);
 
-    if (exists[0].length !== 0) return;
+    if (exists.length !== 0) return;
 
-    const city = row.location.city,
-          state = row.location.state,
+    const city = event.city,
+      state = event.state,
           typeColumn = this.eventType === "checkin" ? "checkinTotal" : "reviewTotal",
 
           query = `INSERT INTO nn_city_totals (city, state, ${typeColumn})
@@ -44,52 +53,62 @@ class saveData {
 		this.database.QueryOnly(query);
 		
 	}
-	
+
+  /*
+   | @event -- originates from the cityCheck class as a result from querying the temp tables for new events.
+   | async class in order to delay internal progress until the database has finished reading the data.
+   | uses the event type passed to the class to decide which table to store the event in.
+   | writes the data to the permanent tables for long term storage.
+  */
 	async saveEvent (event) {
-		
-		let permTable = "",
+
+    let permTable = "",
         tempTable = "",
-		    columnEventId = event.eventID;
+      columnEventId = event.eventID,
+      flatData = {};
 
     if (this.eventType === "checkin") {
 			permTable = "nn_checkins_perma";
       tempTable = "nn_checkins_temp";
-      this.flattenObject(event);
+      flatData = this.flattenObject(event);
 		} else if (this.eventType === "review") {
 			permTable = "nn_reviews_perma";
       tempTable = "nn_reviews_temp";
-			this.flattenObject(event);
+      flatData = this.flattenObject(event);
 		} else {return}
 
 		const sql = `INSERT IGNORE INTO ${permTable} SET ?`;
 
-		await this.database.writePool(sql,this.flatData);
+    await this.database.writePool(sql, flatData);
 
-		const deleteSql = `DELETE FROM ${tempTable} WHERE eventID = '${columnEventId}'`;
+    const deleteSql = `DELETE FROM ${tempTable} WHERE eventID = '${columnEventId}'`;
 
-		await this.database.QueryOnly(deleteSql);
+    await this.database.QueryOnly(deleteSql);
 		
 	}
 
 	/*
-	 * Takes the basic object from NearbyNow and levels out all sub objects to be on the same level, this allows mysql to auto add values from the flattened object
-	 */
+	 | @event -- originates from the cityCheck class as a result from querying the temp tables for new events.
+	 | parse the location data as it is usually in a string format when pulled from the db TODO: maybe check what type event.location is first to see if parsing is necessary. Seems to change based on db versions.
+	 | remove and store the location data from the event then re add the data to the event as individual object
+	 | properties. return the event with the flattened structure.
+	*/
 	flattenObject (event) {
 
 	  if (event.location) {
 	    event.location = JSON.parse(event.location);
     }
 
-    Object.entries(event).forEach(
-			([key,value]) => {
-        if (typeof value === "object" && Object.entries(value).length !== 0) {
-					this.flattenObject(value);
-				} else if (key === "id") {
-				} else {
-					this.flatData[key] = value;
-				}
-			}
-		)
+    const location = event.location;
+    delete event.location;
+
+    for (const detail in location) {
+      if (location.hasOwnProperty(detail)) {
+        event[detail] = location[detail];
+      }
+    }
+
+    return event;
 		
 	}
 	

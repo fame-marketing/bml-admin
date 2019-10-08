@@ -29,6 +29,11 @@ router.post('/', async (req, res, next) => { //we are limited in speed because w
 
 });
 
+/*
+ | @request -- the body of the request that called this file. This should contain the NearbyNow event data.
+ | Decides which type of event the request is and passes the event and request type to the Create class
+ | to store the data in the temp tables.
+*/
 async function storeData(request) {
 
   try {
@@ -45,6 +50,10 @@ async function storeData(request) {
   
 }
 
+/*
+ | @data - an object containing the page request data.
+ | checks to make sure the request is valid returning true if so.
+*/
 function processRequest(data) {
 	
 	if (data.headers["x-account-key"] !== accountKey) {

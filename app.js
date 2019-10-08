@@ -42,6 +42,11 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+/*
+ | checks temp db tables for new reviews/checkins
+ | Stores information and counts checkin/review totals
+ | creates a  page if a new city has an updated count
+*/
 /*new cron('0 30 * * * *', function() {
 
 }, null,true,'America/New_York')*/
