@@ -16,6 +16,7 @@ class cityCheck {
     // grabs event data from temp tables and hands them to the saveData class for processing and storage.
     this.save("nn_checkins_temp", "checkin");
     this.save("nn_reviews_temp", "review");
+    this.save("nn_customers_temp", "customer");
 
     // checks the nn_city_totals db for any cities that have gained enough event data to create a page with
     this.checkCityTotals();
@@ -42,9 +43,9 @@ class cityCheck {
   async checkCityTotals () {
 
   	const sql = `SELECT * FROM nn_city_totals WHERE created = 0
-                                                AND (checkinTotal >= 5 OR
-                                                     reviewTotal >= 1 AND checkinTotal >= 3 OR
-                                                     reviewTotal >= 5)`
+                AND (checkinTotal >= 5 OR
+                      reviewTotal >= 1 AND checkinTotal >= 3 OR
+                      reviewTotal >= 5)`
     ;
 
     const eligible = await this.database.readPool(sql);

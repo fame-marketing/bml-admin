@@ -23,7 +23,8 @@ class Database {
   */
 	async writePool(query,values) {
 
-    await this.promisePool.query(query, values);
+    const [rows,fields] = await this.promisePool.query(query, values);
+    console.log(rows);
 
   }
 

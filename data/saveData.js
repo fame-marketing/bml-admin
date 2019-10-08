@@ -12,10 +12,12 @@ class saveData {
 		this.eventType = eventType;
 		this.database = new Db();
 
-		this.data.forEach((row) => {
-      this.saveCityValues(row);
-		});
-		
+		if (this.eventType !== 'customer') {
+      this.data.forEach((row) => {
+        this.saveCityValues(row);
+      });
+    }
+
 		this.data.forEach((row) => {
 			this.saveEvent(row);
 		});
@@ -42,13 +44,11 @@ class saveData {
     if (exists.length !== 0) return;
 
     const city = event.city,
-      state = event.state,
+          state = event.state,
           typeColumn = this.eventType === "checkin" ? "checkinTotal" : "reviewTotal",
-
           query = `INSERT INTO nn_city_totals (city, state, ${typeColumn})
                    VALUES ("${city}","${state}",1)
-                   ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`
-    ;
+                   ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`;
 
 		this.database.QueryOnly(query);
 		
@@ -75,14 +75,16 @@ class saveData {
 			permTable = "nn_reviews_perma";
       tempTable = "nn_reviews_temp";
       flatData = this.flattenObject(event);
-		} else {return}
+		} else if (this.eventType === "customer") {
+      permTable = "nn_customers_perma";
+      tempTable = "nn_customers_temp";
+      flatData = this.flattenObject(event);
+    } else {return}
 
 		const sql = `INSERT IGNORE INTO ${permTable} SET ?`;
-
     await this.database.writePool(sql, flatData);
 
     const deleteSql = `DELETE FROM ${tempTable} WHERE eventID = '${columnEventId}'`;
-
     await this.database.QueryOnly(deleteSql);
 		
 	}

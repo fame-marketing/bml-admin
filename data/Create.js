@@ -12,10 +12,14 @@ class Create {
     this.data = data;
     this.database = new Db();
 
+    console.log(requestType);
+
     if(requestType === 'checkin') {
       this.insertCheckin(this.database,this.data);
     } else if (requestType === 'review') {
       this.insertReview(this.database,this.data);
+    } else if (requestType === 'customer') {
+      this.insertCustomer(this.database,this.data);
     }
 
   }
@@ -71,6 +75,38 @@ class Create {
       "userEmail": data["data"]["checkin"]["user"]["email"]
     };
     let sql = "INSERT INTO nn_reviews_temp SET ?";
+
+    database.writePool(sql,values);
+
+  }
+
+  /*
+   | @database -- an instance of the Database class.
+   | @data -- an object containing the event body as it was sent from nearby now
+   | Performs an INSERT query into the customer_temp folder.
+  */
+  insertCustomer(database,data) {
+
+    const columns = "eventID, createdAt, reviewSummary, reviewDetail, overallRating, reviewRequestedDate, reviewRespondedDate, reviewerName, reviewerEmail, checkinId, checkinCreatedAt, location, reference, image, userName, userEmail";
+    const values = {
+      "eventID": data["id"],
+      "createdAt": this.convertDate(data["createdAt"]),
+      "reviewSummary": data["data"]["review"]["summary"],
+      "reviewDetail": data["data"]["review"]["detail"],
+      "overallRating": data["data"]["review"]["overallRating"],
+      "reviewRequestedDate": this.convertDate(data["data"]["review"]["dateRequested"]),
+      "reviewRespondedDate": this.convertDate(data["data"]["review"]["dateResponded"]),
+      "reviewerName": data["data"]["name"],
+      "reviewerEmail": data["data"]["email"],
+      "checkinId": data["data"]["checkin"]["id"],
+      "checkinCreatedAt": this.convertDate(data["data"]["checkin"]["createdAt"]),
+      "location": JSON.stringify(data["data"]["checkin"]["location"]),
+      "reference": data["data"]["checkin"]["reference"],
+      "image": data["data"]["checkin"]["image"],
+      "userName": data["data"]["checkin"]["user"]["name"],
+      "userEmail": data["data"]["checkin"]["user"]["email"]
+    };
+    let sql = "INSERT INTO nn_customers_temp SET ?";
 
     database.writePool(sql,values);
 

@@ -11,6 +11,7 @@ router.post('/', async (req, res, next) => { //we are limited in speed because w
     TODO:make sure to convert the unix timestamp from nearbynow createdAt value to a readable format before storing
    */
 
+
   // Takes the request body and checks to make sure that it is valid. throws an error if not.
   await (() => {
     try {
@@ -40,7 +41,8 @@ async function storeData(request) {
 
     const requestType = (request["type"] === "checkin.created") ? 'checkin' :
                         (request["type"] === "review.completed") ? 'review' :
-                        false;
+                        (request["type"] === "customer.created") ? 'customer' :
+                        'invalid';
 
     new AddProcessor.Create(request,requestType)
 
