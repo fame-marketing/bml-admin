@@ -4,8 +4,8 @@
  * Module dependencies.
  */
 const app = require('../app'),
-      debug = require('debug')('nearbynow-automation:server'),
-      http = require('http');
+  debug = require('debug')('nearbynow-automation:server'),
+  http = require('http');
 
 /**
  * Get port from environment and store in Express.
