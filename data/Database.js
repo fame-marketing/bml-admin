@@ -1,5 +1,5 @@
 const mysql = require('mysql2'),
-			util  = require('util')
+			winston = require('../bin/winston')
 ;
 
 class Database {
@@ -10,7 +10,8 @@ class Database {
       connectionLimit: 5,
       host: process.env.dbHost,
       user: process.env.dbUser,
-      database: process.env.dbName
+      database: process.env.dbName,
+      password: process.env.dbPass
     });
 
     this.promisePool = this.pool.promise();
@@ -22,10 +23,15 @@ class Database {
    | @values -- an object that will be parsed into the query automatically to populate the db column.
   */
 	async writePool(query,values) {
-
-    const [rows,fields] = await this.promisePool.query(query, values);
-    console.log(rows);
-
+		
+		try {
+			const [rows,fields] = await this.promisePool.query(query, values);
+			return rows;
+		} catch (err) {
+			winston.error(err);
+		}
+  
+    
   }
 
   /*
@@ -33,7 +39,7 @@ class Database {
    | a non promise version of the db query
   */
   QueryOnly(query) {
-  	this.pool.query(query, function (err) {
+  	this.pool.query(query, function (err, rows, fields) {
 			if (err) throw err;
 		})
 	}

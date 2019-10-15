@@ -26,6 +26,14 @@ it will perform the following tasks.
 
 Upload the files to a public facing directory.
 
+For verve make sure to add the following lines to the .bash_profile file in order to have access to the npm and node 
+commands form the terminal.
+
+`PATH="$PATH:$HOME/bin:/opt/alt/alt-nodejs10/root/usr/bin"
+export PATH`
+
+Replace the existing PATH in the bash_profile with those lines.
+
 Visit 
 <a href="https://admin.nearbynow.co/Integration/Webhooks" target="_blank">
 admin.nearbynow.co/Integration/Webhooks

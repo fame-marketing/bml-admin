@@ -12,8 +12,6 @@ class Create {
     this.data = data;
     this.database = new Db();
 
-    console.log(requestType);
-
     if(requestType === 'checkin') {
       this.insertCheckin(this.database,this.data);
     } else if (requestType === 'review') {

@@ -1,4 +1,7 @@
-const Db = require('./Database');
+const Db = require('./Database'),
+      winston = require('../bin/winston')
+;
+require('dotenv').config();
 
 class Install {
 
@@ -10,18 +13,16 @@ class Install {
   async createTables(database) {
 
     await database.writePool(
-        `CREATE TABLE IF NOT EXISTS nn_checkins_temp
-         (
-             id        INT AUTO_INCREMENT PRIMARY KEY,
-             eventID   VARCHAR(100),
-             createdAt DATETIME,
-             checkinId VARCHAR(50),
-             location  JSON,
-             reference TEXT,
-             image     TINYTEXT,
-             userName  VARCHAR(50),
-             userEmail VARCHAR(100)
-         )`
+    `CREATE TABLE IF NOT EXISTS nn_checkins_temp(
+     id        INT AUTO_INCREMENT PRIMARY KEY,
+     eventID   VARCHAR(100),
+     createdAt DATETIME,
+     checkinId VARCHAR(50),
+     location  JSON,
+     reference TEXT,
+     image     TINYTEXT,
+     userName  VARCHAR(50),
+     userEmail VARCHAR(100))`
     );
 
     await database.writePool(
@@ -150,9 +151,9 @@ class Install {
 
     process.on('exit', (code) => {
       if (code === 0) {
-        console.log("db tables successfully created.");
+        winston.info("db tables successfully created.");
       } else {
-        console.log("process completed but with errors: code - " + code);
+        winston.error(`process completed but with errors: code - ${code}`);
       }
     });
 

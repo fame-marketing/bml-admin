@@ -1,4 +1,5 @@
-const Db = require('./Database')
+const Db = require('./Database'),
+			winston = require('../bin/winston')
 ;
 
 /*
@@ -82,22 +83,25 @@ class saveData {
     } else {return}
 
 		const sql = `INSERT IGNORE INTO ${permTable} SET ?`;
-    await this.database.writePool(sql, flatData);
+    const writtenData = await this.database.writePool(sql, flatData);
 
     const deleteSql = `DELETE FROM ${tempTable} WHERE eventID = '${columnEventId}'`;
-    await this.database.QueryOnly(deleteSql);
+		await this.database.QueryOnly(deleteSql);
 		
+		if(writtenData.affectedRows > 0) {
+		 winston.log('info', "The following data was written to the database %j", flatData);
+		}
 	}
 
 	/*
 	 | @event -- originates from the cityCheck class as a result from querying the temp tables for new events.
-	 | parse the location data as it is usually in a string format when pulled from the db TODO: maybe check what type event.location is first to see if parsing is necessary. Seems to change based on db versions.
+	 | parse the location data as it is usually in a string format when pulled from the db
 	 | remove and store the location data from the event then re add the data to the event as individual object
 	 | properties. return the event with the flattened structure.
 	*/
 	flattenObject (event) {
 
-	  if (event.location) {
+	  if (event.location && typeof event.location === 'string') {
 	    event.location = JSON.parse(event.location);
     }
 

@@ -1,8 +1,9 @@
 const fs = require('fs'),
       util = require('util'),
       path = require('path'),
-  handlebars = require('handlebars'),
-  Db = require('../data/Database')
+      handlebars = require('handlebars'),
+      winston = require('../bin/winston'),
+      Db = require('../data/Database')
 ;
 
 /*
@@ -56,8 +57,8 @@ class Builder {
 
     this.filesystem.writeFile(filepath, page, (e) => {
 
-      if (e) console.log("there was an error while attempting to create the file: " + e);
-      console.log('page created succesfully');
+      if (e) winston.error(`there was an error while attempting to create the file: ${e}`);
+      winston.info(`${city} page created succesfully`);
       const sql = `UPDATE nn_city_totals SET created = 1 WHERE city = "${city.city}"`;
       this.database.QueryOnly(sql);
 
@@ -73,7 +74,7 @@ class Builder {
     try {
       return await this.promiseReader('views/nearbynow.hbs', 'utf8');
     } catch (err) {
-      console.log(err);
+      winston.error(err);
     }
 
   }
