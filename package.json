@@ -4,7 +4,6 @@
   "private": true,
   "main": "./bin/www",
   "scripts": {
-    "start": "node ./bin/www",
     "init": "node ./data/install"
   },
   "dependencies": {
@@ -14,6 +13,7 @@
     "debug": "~2.6.9",
     "dotenv": "^8.1.0",
     "express": "~4.16.1",
+    "fast-csv": "^3.4.0",
     "get-port": "^5.0.0",
     "handlebars": "^4.4.2",
     "hbs": "^4.0.5",

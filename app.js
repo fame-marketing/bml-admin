@@ -1,17 +1,18 @@
 const createError = require('http-errors'),
-  express = require('express'),
-  path = require('path'),
-  fs = require('fs'),
-  cookieParser = require('cookie-parser'),
-  morgan = require('morgan'),
-  winston = require('./bin/winston'),
-  cron = require('cron').CronJob,
-  Checker = require('./data/cityCheck'),
-  Builder = require('./model/Builder'),
-
-  indexRouter = require('./routes/index'),
-
-  app = express();
+			express = require('express'),
+			path = require('path'),
+			fs = require('fs'),
+			cookieParser = require('cookie-parser'),
+			morgan = require('morgan'),
+			winston = require('./bin/winston'),
+			cron = require('cron').CronJob,
+			Checker = require('./data/cityCheck'),
+			Builder = require('./model/Builder'),
+		
+			indexRouter = require('./routes/index'),
+			importRouter = require('./routes/import'),
+		
+			app = express();
 
 require('dotenv').config();
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/webhook', indexRouter);
+app.use('/webhook/import', importRouter);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -50,7 +52,8 @@ app.use(function (err, req, res, next) {
  | Stores information and counts checkin/review totals
  | creates a  page if a new city has an updated count
 */
-new cron('1 * * * * *', function () {
+new cron('0 */5 * * * *', function () {
+	winston.info("the cron ran");
   (async () => {
     new Checker();
   })();

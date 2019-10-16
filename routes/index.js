@@ -1,16 +1,16 @@
 const express = require('express'),
-  path = require('path'),
-  router = express.Router(),
-  winston = require('../bin/winston'),
-  AddProcessor = require('../data/Create')
+      path = require('path'),
+      router  = express.Router(),
+      winston = require('../bin/winston'),
+      AddProcessor = require('../data/Create')
 ;
 /* GET home page. */
-router.get('/', function (req, res) {
-  res.render('index', {title: 'Nearby Now Webhook', description: 'There is nothing of value here. This route can probably just be removed'});
+router.get('/', function(req, res) {
+  res.render('index', { title: 'Nearby Now Webhook',description: 'There is nothing of value here. This route can probably just be removed'});
 });
 
-router.get('/webhook', function (req, res) {
-  res.render('index', {title: 'Nearby Now Webhooks Data', description: 'Nearby Now Data for Fame Marketing'});
+router.get('/webhook', function(req, res) {
+  res.render('index', { title: 'Nearby Now Webhooks Data',description: 'Nearby Now Data for Fame Marketing'});
 });
 
 router.post('/webhook', async (req, res, next) => {
@@ -43,13 +43,13 @@ async function storeData(request) {
   try {
 
     const requestType = (request["type"] === "checkin.created") ? 'checkin' :
-      (request["type"] === "review.completed") ? 'review' :
-        (request["type"] === "customer.created") ? 'customer' :
-          'invalid';
+      									(request["type"] === "review.completed") ? 'review' :
+        								(request["type"] === "customer.created") ? 'customer' :
+          							'invalid';
 
-    new AddProcessor.Create(request, requestType)
+    new AddProcessor.Create(request,requestType)
 
-  } catch (e) {
+  } catch(e) {
     winston.error(e);
   }
 
