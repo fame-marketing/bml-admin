@@ -6,7 +6,7 @@ const express = require('express'),
 
 router.get('/', function(req, res) {
 	res.render(
-		'index',
+		'import',
 		{
 			title: 'import Nearby Now Event Data',
 			description: 'import a csv'

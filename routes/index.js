@@ -44,10 +44,11 @@ async function storeData(request) {
 
     const requestType = (request["type"] === "checkin.created") ? 'checkin' :
       									(request["type"] === "review.completed") ? 'review' :
-        								(request["type"] === "customer.created") ? 'customer' :
           							'invalid';
 
-    new AddProcessor.Create(request,requestType)
+    if (requestType !== "invalid") {
+      new AddProcessor.Create(request,requestType)
+    }
 
   } catch(e) {
     winston.error(e);
