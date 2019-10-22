@@ -11,7 +11,8 @@ const createError = require('http-errors'),
 		
 			indexRouter = require('./routes/index'),
 			importRouter = require('./routes/import'),
-		
+      formHandler = require('./routes/submit'),
+
 			app = express();
 
 require('dotenv').config();
@@ -22,12 +23,13 @@ app.set('view engine', 'hbs');
 
 app.use(morgan('combined', {stream: winston.stream}));
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/webhook', indexRouter);
 app.use('/webhook/import', importRouter);
+app.use('/webhook/import/submit', formHandler);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -53,7 +55,6 @@ app.use(function (err, req, res, next) {
  | creates a  page if a new city has an updated count
 */
 new cron('0 */5 * * * *', function () {
-	winston.info("the cron ran");
   (async () => {
     new Checker();
   })();
