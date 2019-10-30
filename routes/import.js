@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
 	res.render(
 		'import',
 		{
-			title: 'import Nearby Now Event Data',
+			title: 'Import Data',
 			description: 'import a csv'
 		}
 	);

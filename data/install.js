@@ -1,1 +1,121 @@
-const Db = require('./Database'),  winston = require('../bin/winston');require('dotenv').config();class Install {  constructor() {    this.database = new Db();    this.createTables(this.database);  }  async createTables(database) {    await database.writePool(    `CREATE TABLE IF NOT EXISTS nn_checkins_temp(      id        INT AUTO_INCREMENT PRIMARY KEY,      eventID   VARCHAR(100),      createdAt DATETIME,      checkinId VARCHAR(50),      location  JSON,      reference TEXT,      image     TINYTEXT,      userName  VARCHAR(50),      userEmail VARCHAR(100)    )`    );    await database.writePool(      `CREATE TABLE IF NOT EXISTS nn_reviews_temp (      id INT AUTO_INCREMENT PRIMARY KEY,      eventID VARCHAR(100),      createdAt DATETIME,      reviewSummary VARCHAR(255),      reviewDetail TEXT,      overallRating INT,      reviewRequestedDate DATETIME,      reviewRespondedDate DATETIME,      reviewerName VARCHAR(50),      reviewerEmail VARCHAR(100),      checkinId VARCHAR(50),      checkinCreatedAt DATETIME,      location JSON,      reference TEXT,      image TINYTEXT,      userName VARCHAR(50),      userEmail VARCHAR(100))`    );    await database.writePool(    `CREATE TABLE IF NOT EXISTS nn_checkins_perma (      id         INT AUTO_INCREMENT PRIMARY KEY,      eventID    VARCHAR(100) UNIQUE,      createdAt  DATETIME,      checkinId  VARCHAR(50),      reference  TEXT,      image      TINYTEXT,      userName   VARCHAR(50),      userEmail  VARCHAR(100),      city       VARCHAR(100),      state      VARCHAR(25),      postalCode VARCHAR(25),      country    VARCHAR(10),      street     VARCHAR(125),      latitude   DOUBLE(10, 7),      longitude  DOUBLE(10, 7)    )`    );    await database.writePool(      `CREATE TABLE IF NOT EXISTS nn_reviews_perma (        id                  INT AUTO_INCREMENT PRIMARY KEY,        eventID             VARCHAR(100) UNIQUE,        createdAt           DATETIME,        reviewSummary       VARCHAR(255),        reviewDetail        TEXT,        overallRating       INT,        reviewRequestedDate DATETIME,        reviewRespondedDate DATETIME,        reviewerName        VARCHAR(50),        reviewerEmail       VARCHAR(100),        checkinId           VARCHAR(50),        checkinCreatedAt    DATETIME,        reference           TEXT,        image               TINYTEXT,        userName            VARCHAR(50),        userEmail           VARCHAR(100),        city                VARCHAR(100),        state               VARCHAR(25),        postalCode          VARCHAR(25),        country             VARCHAR(10),        street              VARCHAR(125),        latitude            DOUBLE(10, 7),        longitude           DOUBLE(10, 7)      )`    );    await database.writePool(      `CREATE TABLE IF NOT EXISTS nn_city_totals (      city VARCHAR(100) UNIQUE,      state VARCHAR(25),      checkinTotal INT,			reviewTotal INT,      created TINYINT(1) DEFAULT 0)`    );    process.on('exit', (code) => {      if (code === 0) {        winston.info("db tables successfully created.");        console.log("db tables successfully created.")      } else {        winston.error(`process completed but with errors: code - ${code}`);      }    });    process.exit();  }}new Install();
+const Db = require('./Database'),
+  winston = require('../bin/winston')
+;
+
+require('dotenv').config();
+
+class Install {
+
+  constructor() {
+    this.database = new Db();
+    this.createTables(this.database);
+  }
+
+  async createTables(database) {
+
+    await database.writePool(
+    `CREATE TABLE IF NOT EXISTS nn_checkins_temp(
+      id              INT AUTO_INCREMENT PRIMARY KEY,
+      EventID         VARCHAR(100),
+      CheckinDateTime DATETIME,
+      CheckinId       VARCHAR(50),
+      Location        JSON,
+      Reference       TEXT,
+      CheckinImageUrl TINYTEXT,
+      UserName        VARCHAR(50),
+      UserEmail       VARCHAR(100)
+    )`
+    );
+
+    await database.writePool(
+      `CREATE TABLE IF NOT EXISTS nn_reviews_temp (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      EventID VARCHAR(100),
+      CreatedAt DATETIME,
+      ReviewSummary VARCHAR(255),
+      ReviewDetail TEXT,
+      ReviewRating INT,
+      ResponseDate DATETIME,
+      CustomerName VARCHAR(50),
+      CustomerEmail VARCHAR(100),
+      CheckinId VARCHAR(50),
+      CheckinDateTime DATETIME,
+      Location JSON,
+      Reference TEXT,
+      CheckinImageUrl TINYTEXT,
+      UserName VARCHAR(50),
+      UserEmail VARCHAR(100))`
+    );
+
+    await database.writePool(
+    `CREATE TABLE IF NOT EXISTS nn_checkins_perma (
+      id               INT AUTO_INCREMENT PRIMARY KEY,
+      EventID          VARCHAR(100) UNIQUE,
+      CheckinDateTime  DATETIME,
+      CheckinId        VARCHAR(50),
+      Reference        TEXT,
+      CheckinImageUrl  TINYTEXT,
+      UserName         VARCHAR(50),
+      UserEmail        VARCHAR(100),
+      City             VARCHAR(100),
+      State            VARCHAR(25),
+      PostalCode       VARCHAR(25),
+      Country          VARCHAR(10),
+      Street           VARCHAR(125),
+      Latitude         DOUBLE(10, 7),
+      Longitude        DOUBLE(10, 7)
+    )`
+    );
+
+    await database.writePool(
+      `CREATE TABLE IF NOT EXISTS nn_reviews_perma (
+        id                  INT AUTO_INCREMENT PRIMARY KEY,
+        EventID             VARCHAR(100) UNIQUE,
+        CreatedAt           DATETIME,
+        ReviewSummary       VARCHAR(255),
+        ReviewDetail        TEXT,
+        ReviewRating        INT,
+        ResponseDate       DATETIME,
+        CustomerName        VARCHAR(50),
+        CustomerEmail       VARCHAR(100),
+        CheckinId           VARCHAR(50),
+        CheckinDateTime     DATETIME,
+        Reference           TEXT,
+        CheckinImageUrl     TINYTEXT,
+        UserName            VARCHAR(50),
+        UserEmail           VARCHAR(100),
+        City                VARCHAR(100),
+        State               VARCHAR(25),
+        PostalCode          VARCHAR(25),
+        Country             VARCHAR(10),
+        Street              VARCHAR(125),
+        Latitude            DOUBLE(10, 7),
+        Longitude           DOUBLE(10, 7)
+      )`
+    );
+
+    await database.writePool(
+      `CREATE TABLE IF NOT EXISTS nn_city_totals (
+      City VARCHAR(100) UNIQUE,
+      State VARCHAR(25),
+      CheckinTotal INT,
+			ReviewTotal INT,
+      Created TINYINT(1) DEFAULT 0)`
+    );
+
+    process.on('exit', (code) => {
+      if (code === 0) {
+        winston.info("db tables successfully created.");
+        console.log("db tables successfully created.")
+      } else {
+        winston.error(`process completed but with errors: code - ${code}`);
+      }
+    });
+
+    process.exit();
+
+  }
+
+}
+
+new Install();

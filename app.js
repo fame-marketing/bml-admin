@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const createError = require('http-errors'),
 			express = require('express'),
 			path = require('path'),
@@ -14,8 +16,6 @@ const createError = require('http-errors'),
       formHandler = require('./routes/submit'),
 
 			app = express();
-
-require('dotenv').config();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

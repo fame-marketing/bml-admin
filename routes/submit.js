@@ -10,69 +10,120 @@ const express = require('express'),
       database = new db()
 ;
 
-let endMsg = "";
-
 router.post('/', fileHandler.single('file'), function(req, res) {
-	
+
+  let endMsg = "";
   const eventType = req.body.type;
   const fileContents = req.file["buffer"];
+
   if (!fileContents) {
     endMsg = `The file was either empty or unable to be read. Check that you selected the correct file and try again.`;
-    return endMsg;
   }
+
   parse(fileContents, {
     columns: true,
     skip_empty_lines: true
-  }, function(err, output) {
+  }, async function(err, output) {
 
     if (err) {
       winston.error(err);
       endMsg = `${err}`;
     }
-    const validationCheck = validateData(output, eventType);
-    if (validationCheck) {
-      importEvents(output, eventType);
+
+    const validationCheck = await validateData(output, eventType);
+    
+    if (validationCheck === true) {
+      const importResult = await importEvents(output, eventType);
+      if (importResult === 'notValid') {
+        endMsg = "The event type is invalid. Make sure that you selected an import type";
+      } else {
+        endMsg = `Import Successful! ${importResult} rows have been imported`;
+      }
     } else {
       endMsg = `Data was not valid, missing columns: ${validationCheck}`;
     }
 
-  });
+    res.send(endMsg);
 
-  return endMsg;
+  });
 
 });
 
 async function importEvents(events, type) { // remember to set some sort of eventId
 
-  let table = type === 'checkin' ? 'nn_checkins_perma' :
+  let table = type === 'checkins' ? 'nn_checkins_perma' :
               type === 'reviews' ? 'nn_reviews_perma' :
               'notValid',
-			sql = `INSERT INTO ${table} SET ?, eventId = id`
+			sql = `INSERT IGNORE INTO ${table} SET ?`
 	;
-  
-  events.forEach( event => {
-  	
-  	const keys = Object.keys(event);
-  	const values = Object.values(event);
-  	let dbReadyEvent = {};
-  	
-  	for (let i = 0; i < keys.length; i++) {
-  		dbReadyEvent[keys[i]] = values[i];
-		};
-	
-		const written = database.writePool(sql,dbReadyEvent);
-		setTimeout(function() {
-			console.log(written);
-		}, 7000)
-  
-	})
 
+  if (table === 'notValid') return table;
+  
+  const importedData = async () => {
+  	return await Promise.all(events.map( async event => {
+
+				const keys = Object.keys(event),
+					LatI = keys.indexOf('Lat'),
+					LongI = keys.indexOf('Long'),
+					values = Object.values(event);
+			
+				keys.splice(LatI, 1, "Latitude");
+				keys.splice(LongI, 1, "Longitude");
+			
+				let dbReadyEvent = {};
+			
+				for (let i = 0; i < keys.length; i++) {
+					dbReadyEvent[keys[i]] = values[i];
+				}
+				
+				dbReadyEvent.eventId = dateToId(event.CheckinDateTime);
+				dbReadyEvent.Country = !dbReadyEvent.Country ? 'US' : dbReadyEvent.Country;
+				if (dbReadyEvent.CheckinDateTime) {
+					dbReadyEvent.CheckinDateTime = new Date(dbReadyEvent.CheckinDateTime);
+				}
+				if (dbReadyEvent.RequestDate) { // assign the RequestDate value to the Created DB column.
+					dbReadyEvent.CreatedAt = new Date(dbReadyEvent.RequestDate);
+				}
+				if (dbReadyEvent.ResponseDate) {
+					dbReadyEvent.ResponseDate = new Date(dbReadyEvent.ResponseDate);
+				}
+				
+				const eventRows = await database.writePool(sql, dbReadyEvent);
+				saveCityTotals(dbReadyEvent, table);
+				return eventRows.affectedRows;
+
+		}))
+	};
+  
+  const importedArray = await importedData();
+  
+  if(Array.isArray(importedArray)) {
+		const totalImported = importedArray.reduce((total,current) => {
+			return total + current;
+		},0);
+		return totalImported;
+	} else {
+		return importedArray;
+	}
+	
+
+	
+}
+
+function saveCityTotals(event, table) {
+	const city = event.City,
+		state = event.State,
+		typeColumn = table === "checkins" ? "checkinTotal" : "reviewTotal",
+		query = `INSERT INTO nn_city_totals (city, state, ${typeColumn})
+                   VALUES ("${city}","${state}",1)
+                   ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`;
+	
+	database.QueryOnly(query);
 }
 
 function validateData(eventData, eventType) {
-
+	
   const expectedColumns = {
-    //make createdAt and reviewRequestDate identical, make reference field NULL for import, assume Country US
     reviews: [
       "CustomerName",
       "CustomerEmail",
@@ -86,7 +137,7 @@ function validateData(eventData, eventType) {
       "CheckinDateTime",
       "Lat",
       "Long",
-      "CheckinImage",
+      "CheckinImageUrl",
       "Street",
       "City",
       "State",
@@ -120,6 +171,10 @@ function validateData(eventData, eventType) {
     }, []);
   }
 
+}
+
+function dateToId(date) {
+  return new Date(date).getTime() / 1000;
 }
 
 module.exports = router;

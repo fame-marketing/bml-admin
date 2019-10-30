@@ -1,19 +1,27 @@
 <div class="importWrapper">
-  <h1>{{title}}</h1>
+    <div class="importContent">
+        <h1>{{title}}</h1>
 
-  <form action="/webhook/import/submit" method="post" enctype="multipart/form-data" class="importForm">
+        <form action="/webhook/import/submit" method="post" enctype="multipart/form-data" class="importForm">
 
-    <label for="file">Select a cvs file containing properly formatted Nearby Now Data</label>
-    <select name="type" id="type" required>
-      <option value="checkins" selected>checkins</option>
-      <option value="reviews">reviews</option>
-      <option value="customers">customers</option>
-    </select>
-    <input type="file" id="file" name="file" accept=".csv" required>
-    <div class="fileDetails"></div>
-    <div>
-      <button>Submit</button>
+            <div class="inputWrapper selectWrapper" id="inputWrapper">
+                <label for="type">Event Type</label>
+                <select name="type" id="type" required>
+                    <option value="checkins" selected>checkins</option>
+                    <option value="reviews">reviews</option>
+                </select>
+            </div>
+
+            <div class="inputWrapper">
+                <label for="file">Select A File</label>
+                <input type="file" id="file" name="file" accept=".csv" required>
+            </div>
+
+            <div class="fileDetails"></div>
+            <div>
+                <button>Submit</button>
+            </div>
+
+        </form>
     </div>
-
-  </form>
 </div>

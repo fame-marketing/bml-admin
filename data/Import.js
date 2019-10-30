@@ -1,7 +1,7 @@
 const fs = require('fs');
       mysql = require('mysql2'),
 			csv = require('fast-csv'),
-			db = require('./Database')
+			db = require('./Database');
 			database = new db()
 			;
    
@@ -17,4 +17,4 @@ let writeData = csv.parse()
 									 .on("end", () => {
 									 		dataArray.shift();
 										  database.writePool(sql, dataArray);
-									 })
+									 });
