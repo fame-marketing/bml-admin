@@ -1,0 +1,116 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 10px;
+  background: #f7f7f7
+}
+a {
+  color: #00B7FF;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 55px;
+}
+.importWrapper {
+  height: 100vh;
+  width: 100vw;
+  display:flex;
+  justify-content: center;
+  align-items:center;
+}
+.fileDetails {
+  display: none;
+  text-align: center;
+  padding: 10px 0;
+}
+.inputWrapper {
+  text-align: center;
+  position: relative;
+  width:250px;
+  margin:auto
+}
+.importForm {
+  position: relative;
+  background:#ed1c24;
+  border-radius: 3px;
+  padding: 50px 25px;
+  color: #fff;
+  width: 444px;
+  box-shadow: 3px 3px 11px -3px #000;
+}
+.importForm::before {
+  content: "";
+  position: absolute;
+  top: -29px;
+  right: -29px;
+  bottom: -29px;
+  left: -29px;
+  z-index: -5;
+  background: #e6e6e6;
+  border-radius: 4px;
+  box-shadow: inset 0 0 8px #fff;
+}
+label {
+  width: 100%;
+  display: inline-block;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+label[for="file"] {
+  background: #333;
+  padding: 10px;
+}
+select, input {
+  display: block;
+  width: 100%;
+  margin: auto;
+  height: 30px;
+  display:none
+}
+select:active, select:focus,
+input:active, input:focus {
+  border: none;
+}
+input[type="file"] {
+  font-size: 0;
+  margin-bottom: 30px;
+}
+#select-items {
+  position: absolute;
+  visibility: visible;
+  opacity: 1;
+  width:100%;
+  z-index: 10;
+  overflow: hidden;
+}
+#select-items.select-hide {
+  visibility: hidden;
+  opacity: 0;
+}
+.inputWrapper.selectWrapper {
+  margin-bottom: 20px;
+}
+.inputWrapper div {
+  font-size: 1.2rem;
+}
+#select-selected {
+  padding: 10px;
+  background: #333;
+}
+#select-items div {
+  padding: 10px;
+  background: #555;
+  border-top: 1px solid #444;
+}
+button {
+  display: block;
+  margin: auto;
+  background: #ececec;
+  border: none;
+  padding: 7px 25px;
+  margin-top: 10px;
+}
