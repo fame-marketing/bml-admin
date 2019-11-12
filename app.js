@@ -27,9 +27,9 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/webhook', indexRouter);
-app.use('/webhook/import', importRouter);
-app.use('/webhook/import/submit', formHandler);
+app.use('/test/webhook', indexRouter);// TODO: Remove all instances of /test from these files before pushing to live directory
+app.use('/test/webhook/import', importRouter);
+app.use('/test/webhook/import/submit', formHandler);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {

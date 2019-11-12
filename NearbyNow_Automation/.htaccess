@@ -1,5 +1,0 @@
-PassengerAppRoot "/home/youneedfame/webhooks"
-PassengerBaseURI "/webhook"
-PassengerNodejs "/home/youneedfame/nodevenv/webhooks/10/bin/node"
-PassengerAppType node
-PassengerStartupFile bin/www
