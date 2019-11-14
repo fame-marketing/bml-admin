@@ -23,7 +23,7 @@ router.post('/webhook', async (req, res, next) => {
         res.status(200).end();
         storeData(req.body).then();
       } else {
-        winston.error(`There was an error: ${err}`);
+        winston.error(`There was an error: ${valid}`);
         res.status(500).end();
       }
     } catch (error) {
