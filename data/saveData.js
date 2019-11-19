@@ -79,12 +79,13 @@ class saveData {
     }
 
     const sql = `INSERT IGNORE INTO ${permTable} SET ?`;
+    console.log(flatData);
     const writtenData = await this.database.writePool(sql, flatData);
 
     const deleteSql = `DELETE FROM ${tempTable} WHERE eventID = '${columnEventId}'`;
     await this.database.QueryOnly(deleteSql);
 
-    if (writtenData.affectedRows > 0) {
+    if (typeof writtenData !== 'undefined' && writtenData.affectedRows > 0) {
       winston.log('info', "The following data was written to the database %j", flatData);
     }
   }
@@ -95,6 +96,7 @@ class saveData {
    | remove and store the location data from the event then re add the data to the event as individual object
    | properties. return the event with the flattened structure.
    | TODO: make sure location details are forced to uppercase here.
+   | FIX: Looks like this isnt actually flattening the location data. must look  into this as it is bullshit
   */
   flattenObject(event) {
 

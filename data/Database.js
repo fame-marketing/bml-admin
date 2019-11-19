@@ -27,7 +27,8 @@ class Database {
       const [rows, fields] = await this.promisePool.query(query, values);
       return rows;
     } catch (err) {
-      winston.error(err);
+      winston.error(err.stack);
+      console.log(err);
     }
   }
 
