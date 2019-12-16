@@ -44,3 +44,24 @@ files. If your website is example.com and you place your files in a directory na
 secure url would be https://example.com/webhooks/webhook
 
 Run `node /.bin/www`
+
+# Environment Variables
+
+#### accountKey
+The nearby now account key.
+#### dbHost
+Database Host
+#### dbUser
+Database User name
+#### dbPass
+Database user password
+#### dbName
+Database name
+#### KEYWORDBASE
+The phrase to be appended to the city name for SEO Data Creation. This will be used to create the url, 
+the page title, the meta description, and the page h1.
+#### DESTINATION
+The file path relative to the server directory root. The server directory root is the public_html
+folder by default.
+#### URL 
+the clients primary Domain.

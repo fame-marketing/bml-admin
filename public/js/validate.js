@@ -47,7 +47,7 @@ $(function() {
     }).done(function(text) {
 
     	$('.fileDetails').html(text).show();
-			form.reset();
+      $('.importForm').trigger('reset');
 
     }).fail(function(xhr, status, error) {
 	
@@ -58,32 +58,5 @@ $(function() {
 
 
   let submitted = false; //constant that tells if the form has already been submitted one during this page view. prevents sending multiple form success events to google analytics for one page view.
-
-  function displayFormMessage(verdict) {
-
-    const form = $('#contact-form');
-    const failMessage = 'There was an error, please try again.';
-    const successMessage = 'Message sent successfully!';
-
-    if (verdict === 'sent') {
-      if (submitted === false) {
-        form.append('<div class="formResult formSuccess">' + successMessage + '</div>');
-        dataLayer.push({'event':'Form Success'});
-        form.trigger("reset");
-        submitted = true;
-      } else {
-        form.html('<div class="formResult formSuccess">' + successMessage + '</div>');
-      }
-    } else {
-      if (submitted === false) {
-        form.append('<div class="formResult formFail">' + failMessage + '</div>');
-        dataLayer.push({'event':'Form Failure'});
-        submitted = true;
-      } else {
-        form.html('<div class="formResult formFail">' + failMessage + '</div>');
-      }
-    }
-
-  }
 
 });

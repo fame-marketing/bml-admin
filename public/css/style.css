@@ -10,9 +10,17 @@ body {
 a {
   color: #00B7FF;
 }
+p {
+  text-align: center;
+}
 h1 {
   text-align: center;
-  margin-bottom: 55px;
+}
+h4 {
+  margin: 20px 0 50px;
+  text-align: center;
+  width: 444px;
+  line-height: 1.7em;
 }
 .importWrapper {
   height: 100vh;

@@ -5,7 +5,7 @@ const express = require('express'),
       multer = require('multer'),
       storage = multer.memoryStorage(),
       fileHandler = multer({storage:storage}),
-      winston = require('winston'),
+      winston = require('../bin/winston'),
       db = require('../data/Database'),
       database = new db()
 ;
@@ -62,15 +62,20 @@ async function importEvents(events, type) { // remember to set some sort of even
   const importedData = async () => {
   	return await Promise.all(events.map( async event => {
 
-				const keys = Object.keys(event),
-					LatI = keys.indexOf('Lat'),
-					LongI = keys.indexOf('Long'),
-					values = Object.values(event);
-			
-				keys.splice(LatI, 1, "Latitude");
-				keys.splice(LongI, 1, "Longitude");
-			
-				let dbReadyEvent = {};
+      const keys = Object.keys(event),
+            LatI = keys.indexOf('Lat'),
+            LongI = keys.indexOf('Long'),
+            values = Object.values(event);
+
+      keys.splice(LatI, 1, "Latitude");
+      keys.splice(LongI, 1, "Longitude");
+
+      if (keys.includes('RequestDate')) {
+        const rdI = keys.indexOf('RequestDate');
+        keys.splice(rdI, 1, "CreatedAt");
+      }
+
+      let dbReadyEvent = {};
 			
 				for (let i = 0; i < keys.length; i++) {
 					dbReadyEvent[keys[i]] = values[i];
@@ -81,13 +86,13 @@ async function importEvents(events, type) { // remember to set some sort of even
 				if (dbReadyEvent.CheckinDateTime) {
 					dbReadyEvent.CheckinDateTime = new Date(dbReadyEvent.CheckinDateTime);
 				}
-				if (dbReadyEvent.RequestDate) { // assign the RequestDate value to the Created DB column.
-					dbReadyEvent.CreatedAt = new Date(dbReadyEvent.RequestDate);
+				if (dbReadyEvent.CreatedAt) { // assign the RequestDate value to the Created DB column.
+					dbReadyEvent.CreatedAt = new Date(dbReadyEvent.CreatedAt);
 				}
 				if (dbReadyEvent.ResponseDate) {
 					dbReadyEvent.ResponseDate = new Date(dbReadyEvent.ResponseDate);
 				}
-				
+
 				const eventRows = await database.writePool(sql, dbReadyEvent);
 				saveCityTotals(dbReadyEvent, table);
 				return eventRows.affectedRows;
@@ -105,20 +110,18 @@ async function importEvents(events, type) { // remember to set some sort of even
 	} else {
 		return importedArray;
 	}
-	
-
-	
 }
 
 function saveCityTotals(event, table) {
+
 	const city = event.City,
 		state = event.State,
-		typeColumn = table === "checkins" ? "checkinTotal" : "reviewTotal",
-		query = `INSERT INTO nn_city_totals (city, state, ${typeColumn})
-                   VALUES ("${city}","${state}",1)
-                   ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`;
-	
-	database.QueryOnly(query);
+		typeColumn = table === "nn_reviews_perma" ? "ReviewTotal" : "CheckinTotal",
+		query = `INSERT INTO nn_city_totals (city, state, ${typeColumn}) 
+              VALUES ("${city}","${state}",1) 
+              ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`;
+
+  database.QueryOnly(query);
 }
 
 function validateData(eventData, eventType) {

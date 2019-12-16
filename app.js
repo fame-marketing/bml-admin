@@ -42,7 +42,7 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = err;
 
-  winston.error(err.message);
+  winston.error('general error sent from app.js - ' + err.message);
 
   // render the error page
   res.status(err.status || 500);
@@ -55,6 +55,7 @@ app.use(function (err, req, res, next) {
  | creates a  page if a new city has an updated count
 */
 new cron('0 */5 * * * *', function () {
+  winston.info('cron ran');
   (async () => {
     new Checker();
   })();
