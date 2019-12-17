@@ -60,15 +60,24 @@ class Builder {
 
     let page = template(seo);
 
-    this.filesystem.writeFile(filepath, page, (e) => {
+    /*
+     | This writefile method will handle creating the seo page.
+     | Node documentation - https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback
+     | flags wx tell the method not to try to create the file if it exists already
+     | If there is an missing directory leading up to the destination, the method will
+     | attempt to create the missing directory.
+    */
+    this.filesystem.writeFile(filepath, page, {flag:'wx'}, (e) => {
 
       if(e) {
 
         if (e.code === 'ENOENT') {
-          winston.error("there was an error while attempting to create the file: " + e)
-        } else {
-          this.filesystem.mkdirSync(fileDir);
+          this.filesystem.mkdirSync(fileDir, {recursive:true},(e) => {
+            if (e) throw e;
+          });
           winston.info("The directory did not exist, it has been created. The file will be generated on the next cron run.");
+        } else {
+          winston.error("there was an error while attempting to create the file: " + e);
         }
 
       } else {

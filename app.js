@@ -54,8 +54,7 @@ app.use(function (err, req, res, next) {
  | Stores information and counts checkin/review totals
  | creates a  page if a new city has an updated count
 */
-new cron('0 */5 * * * *', function () {
-  winston.info('cron ran');
+new cron('0 */2 * * * *', function () {
   (async () => {
     new Checker();
   })();

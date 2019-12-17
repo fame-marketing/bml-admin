@@ -65,3 +65,18 @@ The file path relative to the server directory root. The server directory root i
 folder by default.
 #### URL 
 the clients primary Domain.
+
+
+
+## Version History
+
+- 1.0.0  
+Project Creation
+---
+- 1.0.1  
+
+Modified file creation to prevent overwriting existing files.
+If a directory is missing when the program goes to create a page, it will
+now create the missing directory.
+
+---
