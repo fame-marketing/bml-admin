@@ -1,163 +1,188 @@
-<?php require_once '../init.php'; ?>
+<?php require_once '../init.php';  ?>
 <!DOCTYPE html>
 <html>
+
 <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-NG95PD9');</script>
+  <title>{{metaTitle}} - Anderson Power Services</title>
+  <meta name="description" content="{{metaDescription}}">
+  <link href="//widgets.vcdnita.com" rel="dns-prefetch">
+  <link href="//www.vcita.com" rel="dns-prefetch">
 
-  <?php getStaticHead(); ?>
+  <?php includeStyles(true); ?>
 
-  <title>{{metaTitle}} - Comfort Solutions</title>
-  <meta name="description"
-    content="{{metaDescription}}">
-  <link rel="canonical" href="https://comfortsolutionsair.com/local-hvac/{{seo.url}}.phtml">
-  <meta property="og:url" content="https://comfortsolutionsair.com/local-hvac/{{seo.url}}"/>
-  <meta property="og:title" content="{{metaTitle}} - Comfort Solutions"/>
-  <meta property="og:image" content="https://comfortsolutionsair.com/images/subpages/heatmap.jpg"/>
-  <meta property="og:description"
-    content="{{metaDescription}}"/>
-
+  <link rel="canonical" href="https://andersonpowerservices.com/service-area/{{seo.url}}">
+  <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+  <meta property="og:url" content="https://andersonpowerservices.com/service-area/{{seo.url}}" />
+  <meta property="og:title" content="{{metaTitle}} - Anderson Power Services" />
+  <meta property="og:image" content="https://andersonpowerservices.com/images/subpages/aps_north_heatmap.jpg" />
+  <meta property="og:description" content="{{metaDescription}}" />
   <script type="application/ld+json">
     {
       "@context": "http://schema.org",
-      "@type": "HVACBusiness",
-      "image": "https://comfortsolutionsair.com/images/subpages/heatmap.jpg",
-      "@id": "comfortsolutionsair.com",
-      "name": "Comfort Solutions Air",
+      "@type": "HomeAndConstructionBusiness",
+      "image": "https://andersonpowerservices.com/images/subpages/aps_north_heatmap.jpg",
+      "@id": "andersonpowerservices.com",
+      "name": "Anderson Power Services",
       "priceRange": "$$",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "214 Edge Road",
-        "addressLocality": "Villa Rica",
+        "streetAddress": "2175 Jason Industrial Parkway",
+        "addressLocality": "Winston",
         "addressRegion": "GA",
-        "postalCode": "30180",
+        "postalCode": "30187",
         "addressCountry": "US"
       },
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": 33.7237391,
-        "longitude": -84.9122706
+        "latitude": 33.7414731,
+        "longitude": -84.8192636
       },
-      "telephone": "7708002665",
-      "email": "mailto:service@comfortsolutionsair.com"
+      "telephone": "+17702144765",
+      "email": "mailto:sales@andersonpowerservices.com"
     }
   </script>
+  <script>(function(h,o,t,j,a,r){h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};h._hjSettings={hjid:454644,hjsv:6};a=o.getElementsByTagName('head')[0];r=o.createElement('script');r.async=1;r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;a.appendChild(r);})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');</script>
 </head>
 
 <body>
 
-<noscript>
-  <iframe src="https://www.googletagmanager.com/ns.phtml?id=GTM-54LRXRC"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NG95PD9"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <div class="page-wrapper">
 
-  <?php getHeader(); ?>
-
-  <section class="page-title">
+  <header class="main-header header-style-one">
     <div class="auto-container">
-      <div class="page-title__name">Service Areas - {{city}}</div>
-
-      <?php getBreadcrumbs(); ?>
+      <?php getHeader(); ?>
     </div>
-  </section>
+  </header>
 
-  <!--Sidebar Page Container-->
-  <div class="sidebar-page-container">
+  <div class="sidebar-page">
     <div class="auto-container">
       <div class="row clearfix">
 
-        <!--Content Side-->
-        <div class="content-side col-lg-8 col-md-12 col-sm-12">
-          <div class="blog-single">
-            <div class="inner-box">
-              <div class="title-box">
-                <h1>{{keyword}}</h1>
-                <h2>Comfort Solutions Heating and Cooling provides quality, timely, and affordable services. For {{keyword}}, contact us today.</h2>
+        <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12 pull-right">
+          <section class="blog-container">
+            <div class="content-box">
+
+              <h1>{{keyword}}</h1>
+              <div class="bread-crumb">
+                <?php getBreadcrumbs(); ?>
               </div>
-              <div class="lower-content">
-
-                <div class="nn-info combo-info">
-
-                  <?php
-                  getNearbyNow();
+              <h2>If you need a whole-home or business industrial generator for your home or business, Anderson Power Services can help you keep the lights on, in spite of the storms!</h2>
+              <h5><a href="../about/generator-financing-in-georgia">Financing Available! Click here for more details.</a></h5>
+              <div class="nn-info combo-info">
+                <?php include '../include/nearbyNow/nn.php';
                   $comboNN = new nearbyNow(
-                    $state = '{{state}}',
-                    $city = '{{city}}',
-                    $showMap = 'yes',
-                    $zoom = 10
+                    $args = [
+                      'state' => "{{state}}",
+                      'city' => "{{city}}",
+                      'count' => 0,
+                      'zoom' => 8,
+                      'reviewCount' => 5,
+                      'checkInCount' => 5
+                    ]
                   );
                   $comboNN->comboNN();
-                  ?>
-
-                </div>
-
+                ?>
               </div>
-            </div>
 
-          </div>
+            </div>
+          </section>
         </div>
 
-        <!--Sidebar Side-->
-        <div class="sidebar-side col-lg-4 col-md-12 col-sm-12">
+        <div class="col-lg-3 col-md-4 col-sm-5 col-xs-12 pull-left">
           <aside class="sidebar">
-
-            <div class="sidebar-widget popular-posts">
+            <div class="widget popular-categories">
               <div class="sidebar-title">
-                <h2><a href="../local-hvac">Service Areas</a></h2>
+                <h3><a href="../home-electric-generators">Service Area</a></h3>
               </div>
-              <div class="widget-content">
-                <ul class="cat-list">
-                  <li><a href="acworth-hvac">Acworth</a></li>
-                  <li><a href="alpharetta-hvac">Alpharetta</a></li>
-                  <li><a href="atlanta-hvac">Atlanta</a></li>
-                  <li><a href="austell-hvac">Austell</a></li>
-                  <li><a href="bremen-hvac">Bremen</a></li>
-                  <li><a href="canton-hvac">Canton</a></li>
-                  <li><a href="carrollton-hvac">Carrollton</a></li>
-                  <li><a href="college-park-hvac">College Park</a></li>
-                  <li><a href="covington-hvac">Covington</a></li>
-                  <li><a href="dallas-hvac">Dallas</a></li>
-                  <li><a href="decatur-hvac">Decatur</a></li>
-                  <li><a href="doraville-hvac">Doraville</a></li>
-                  <li><a href="douglasville-hvac">Douglasville</a></li>
-                  <li><a href="dunwoody-hvac">Dunwoody</a></li>
-                  <li><a href="hiram-hvac">Hiram</a></li>
-                  <li><a href="jonesboro-hvac">Jonesboro</a></li>
-                  <li><a href="kennesaw-hvac">Kennesaw</a></li>
-                  <li><a href="lithia-springs-hvac">Lithia Springs</a></li>
-                  <li><a href="mableton-hvac">Mableton</a></li>
-                  <li><a href="marietta-hvac">Marietta</a></li>
-                  <li><a href="norcross-hvac">Norcross</a></li>
-                  <li><a href="powder-springs-hvac">Powder Springs</a></li>
-                  <li><a href="roswell-hvac">Roswell</a></li>
-                  <li><a href="sandy-springs-hvac">Sandy Springs</a></li>
-                  <li><a href="smyrna-hvac">Smyrna</a></li>
-                  <li><a href="temple-hvac">Temple</a></li>
-                  <li><a href="villa-rica-hvac">Villa Rica</a></li>
-                  <li><a href="winston-hvac">Winston</a></li>
-                  <li><a href="woodstock-hvac">Woodstock</a></li>
-                </ul>
-              </div>
-            </div>
 
-          </aside>
-          <div class="cta">
-            <div class="text">
-              <h3>Whole house high-efficiency heating and air-conditioning installed for as low as</h3>
+              <ul class="list">
+                <li><span class="icon fal fa-angle-right"></span><a href="acworth-generator-repair">Acworth</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="alpharetta-generator-maintenance">Alpharetta</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="atlanta-generators">Atlanta</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="augusta-generators">Augusta, GA</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="ball-ground-generators">Ball Ground</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="generators-in-blairsville">Blairsville</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="blue-ridge-generators">Blue Ridge</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="bremen-generators">Bremen</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="buchanan-generators">Buchanan</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="buford-generator">Buford</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="canton-generators">Canton, GA</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="carrollton-generator">Carrollton</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="cartersville-generators">Cartersville</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="cedartown-generator">Cedartown</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="chamblee-generator">Chamblee</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="chattanooga-tn-generator">Chattanooga, TN</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="clarkesville-generator">Clarkesville</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="cleveland-generators">Cleveland, GA</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="college-park-generator">College Park</a></li>
+                <li><span class="icon fal fa-angle-right"></span><a href="commerce-generators">Commerce</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="cumming-ga-generators">Cumming, GA</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="dahlonega-generator">Dahlonega</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="dallas-generator">Dallas</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="dawsonville-generators">Dawsonville</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="decatur-generators">Decatur</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="douglasville-generators">Douglasville</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="dunwoody-backup-power">Dunwoody</a></li>
+                <li><span class="icon fal fa-angle-right"></span><a href="ellenwood-generators">Ellenwood</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="ellijay-generator">Ellijay</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="fayetteville-generator">Fayetteville</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="flowery-branch-generator">Flowery Branch</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="gainesville-generators">Gainesville, GA</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="greensboro-ga-generator">Greensboro, GA</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="jasper-generator">Jasper</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="kennesaw-generators">Kennesaw</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="lakemont-generator">Lakemont</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="lawrenceville-generators">Lawrenceville</a></li>
+                <li><span class="icon fal fa-angle-right"></span><a href="lilburn-generator">Lilburn</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="lithia-springs-generator">Lithia Springs</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="mableton-generator">Mableton</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="macon-generators">Macon</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="marietta-generators">Marietta</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="mcdonough-generator">McDonough</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="newnan-generator">Newnan</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="norcross-generator">Norcross</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="ooltewah-tn-generator">Ooltewah, TN</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="powder-springs-generator">Powder Springs</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="rockmart-generator">Rockmart</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="rocky-face-generator">Rocky Face</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="rome-generators">Rome, GA</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="roswell-generators">Roswell</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="sandy-springs-generators">Sandy Springs</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="sautee-nacoochee-generator">Sautee Nacoochee</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="smyrna-generator">Smyrna</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="stockbridge-generator">Stockbridge</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="stone-mountain-generators">Stone Mountain</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="temple-ga-generators">Temple</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="villa-rica-generator">Villa Rica</a></li>
+                <li><span class="icon fal fa-angle-right"></span> <a href="woodstock-generator">Woodstock</a></li>
+              </ul>
+              <div style="margin-top: 20px">
+                <span><a href="../about/generator-financing-in-georgia.phtml"><img src="../images/sidebar-syncrony.jpg" alt="Syncrony Link" /></a> </span>
+              </div>
+
             </div>
-            <a href="https://etail.mysynchrony.com/eapply/eapply.action?mid=5348121950033249&amp;pcgc=M900" target="_blank" rel="noopener noreferrer" class="cta__big">$64 Month</a>
-          </div>
+          </aside>
         </div>
 
       </div>
+
     </div>
   </div>
 
-  <?php getPreFooter(); ?>
-
   <?php getFooter(); ?>
-
-  <?php getScripts(); ?>
-
+  <script src="https://d2gwjd5chbpgug.cloudfront.net/v3/scripts/heatmap.min.js"></script>
+</div>
 </body>
 </html>

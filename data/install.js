@@ -8,12 +8,13 @@ class Install {
 
   constructor() {
     this.database = new Db();
+    this.tableCreationError = {};
     this.createTables(this.database);
   }
 
   async createTables(database) {
 
-    await database.writePool(
+    this.tableCreationError.tempCheckins = await database.writePool(
     `CREATE TABLE IF NOT EXISTS nn_checkins_temp(
       id              INT AUTO_INCREMENT PRIMARY KEY,
       EventID         VARCHAR(100),
@@ -27,7 +28,7 @@ class Install {
     )`
     );
 
-    await database.writePool(
+    this.tableCreationError.tempReviews = await database.writePool(
       `CREATE TABLE IF NOT EXISTS nn_reviews_temp (
       id INT AUTO_INCREMENT PRIMARY KEY,
       EventID VARCHAR(100),
@@ -47,7 +48,7 @@ class Install {
       UserEmail VARCHAR(100))`
     );
 
-    await database.writePool(
+    this.tableCreationError.permCheckins = await database.writePool(
     `CREATE TABLE IF NOT EXISTS nn_checkins_perma (
       id               INT AUTO_INCREMENT PRIMARY KEY,
       EventID          VARCHAR(100) UNIQUE,
@@ -67,7 +68,7 @@ class Install {
     )`
     );
 
-    await database.writePool(
+    this.tableCreationError.permReviews = await database.writePool(
       `CREATE TABLE IF NOT EXISTS nn_reviews_perma (
         id                  INT AUTO_INCREMENT PRIMARY KEY,
         EventID             VARCHAR(100) UNIQUE,
@@ -94,7 +95,7 @@ class Install {
       )`
     );
 
-    await database.writePool(
+    this.tableCreationError.totals = await database.writePool(
       `CREATE TABLE IF NOT EXISTS nn_city_totals (
       City VARCHAR(100) UNIQUE,
       State VARCHAR(25),
@@ -104,9 +105,10 @@ class Install {
     );
 
     process.on('exit', (code) => {
-      if (code === 0) {
+      if (Object.values(this.tableCreationError).includes('error')) {
+        winston.error("There has been an error while attempting to create the tables. Check that your database connection settings are correct.");
+      } else if (code === 0) {
         winston.info("db tables successfully created.");
-        console.log("db tables successfully created.")
       } else {
         winston.error(`process completed but with errors: code - ${code}`);
       }

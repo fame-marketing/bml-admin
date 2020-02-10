@@ -28,6 +28,7 @@ class Database {
       return rows;
     } catch (err) {
       winston.error(err);
+      return "error";
     }
   }
 

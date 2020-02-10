@@ -23,6 +23,10 @@ class Builder {
     this.database = new Db();
     this.destination = process.env.DESTINATION; //directory where the page will be placed upon creation
     this.KeywordPosition = process.env.KeywordPosition;
+
+    this.dPath = this.fixSlashes(this.destination);
+    this.fileDir = os.homedir() + '/public_html/' + this.dPath + '/';
+
     this.initPageCreation();
   }
 
@@ -34,9 +38,46 @@ class Builder {
   async initPageCreation() {
 
     const pageBase = await this.fetchFileBase();
-    
+
     this.cities.forEach((city) => {
-      this.createPage(city, pageBase);
+      if (city !== undefined) {
+        this.checkExisting(city, pageBase);
+      }
+    });
+
+  }
+
+  /*
+   | Checks if a file exists in the destination folder that contains the city name in it.
+   | This is mainly to check if, before this nn automation program was added to the site,
+   | a page was created manually for the city in question.
+  */
+  async checkExisting(city, base) {
+
+    const checkCity = city.City;
+
+    await this.filesystem.readdir(this.fileDir, async (e,files) => {
+
+      if(e) {
+
+        winston.error('Could not read the destination directory: ' + e);
+
+      } else {
+
+        try {
+          const checkCityFormatted = checkCity.toLowerCase().replace(' ', '-');
+          const cityExists = files.filter(file => file.includes(checkCityFormatted));
+          if (cityExists.length !== 0) {
+            this.markAsCreated(checkCity);
+            winston.info('attempted to create a page for the city ' + checkCity + ' that is already represented by the file(s)' + cityExists.toString());
+          }else if(cityExists.length === 0) {
+            this.createPage(city, base);
+          }
+        } catch (err) {
+          winston.error(err);
+        }
+
+      }
     });
 
   }
@@ -50,12 +91,10 @@ class Builder {
   */
 
   createPage(city, pageBase) {
-  	
+
     const seo = this.generateSEO(city),
       template = this.handlebars.compile(pageBase),
-      dpath = this.fixSlashes(this.destination),
-      filepath = os.homedir() + '/public_html/' + dpath + '/' + seo.url + '.phtml',
-      fileDir = os.homedir() + '/public_html/' + dpath + '/'
+      filepath = os.homedir() + '/public_html/' + this.dPath + '/' + seo.url + '.phtml'
     ;
 
     let page = template(seo);
@@ -70,25 +109,34 @@ class Builder {
     this.filesystem.writeFile(filepath, page, {flag:'wx'}, (e) => {
 
       if(e) {
-
+        console.log(e);
         if (e.code === 'ENOENT') {
-          this.filesystem.mkdirSync(fileDir, {recursive:true},(e) => {
+          this.filesystem.mkdirSync(this.fileDir, {recursive:true},(e) => {
             if (e) throw e;
           });
-          winston.info("The directory did not exist, it has been created. The file will be generated on the next cron run.");
+          winston.info("The directory " + this.fileDir + " did not exist, it has been created. The file will be generated on the next cron run.");
         } else {
           winston.error("there was an error while attempting to create the file: " + e);
         }
 
       } else {
 
-        winston.info('page created succesfully');
-        const sql = `UPDATE nn_city_totals SET created = 1 WHERE city = "${city.City}"`;
-        this.database.QueryOnly(sql);
+        winston.info(city.City + ' page created succesfully');
+        this.markAsCreated(city.City);
 
       }
 
     });
+  }
+
+  /**
+   | @param cityName
+   | Takes a city and updates that row in the nn_city_totals table to reflect that the page already
+   | exists.
+   */
+  markAsCreated(cityName) {
+    const sql = `UPDATE nn_city_totals SET created = 1 WHERE city = "${cityName}"`;
+    this.database.QueryOnly(sql);
   }
 
   /*
@@ -114,8 +162,8 @@ class Builder {
     const cityName = city.City,
           state = city.State,
           seoPhrase = this.KeywordPosition === 'pre' ?
-            process.env.KEYWORDBASE + ' ' + cityName :
-            cityName + ' ' + process.env.KEYWORDBASE,
+                      process.env.KEYWORDBASE + ' ' + cityName :
+                      cityName + ' ' + process.env.KEYWORDBASE,
           seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase();
     return {
       metaDescription: seoPhrase,

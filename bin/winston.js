@@ -6,7 +6,6 @@ const customFormat = winston.format.printf(({level, timestamp, message, stack}) 
   } else {
     return `${timestamp} | ${level} | ${message}`;
   }
-
 });
 
 const logger = winston.createLogger({
