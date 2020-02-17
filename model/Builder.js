@@ -1,10 +1,10 @@
 const fs = require('fs'),
 			util = require('util'),
-			path = require('path'),
 			handlebars = require('handlebars'),
 			winston = require('../bin/winston'),
 			os = require('os'),
-			Db = require('../data/Database')
+			Db = require('../data/Database'),
+      SitemapGenerator = require('../bin/Generate')
 ;
 
 /*
@@ -17,15 +17,15 @@ class Builder {
     this.filesystem = fs;
     this.os = os;
     this.promiseReader = util.promisify(fs.readFile);
-    this.path = path;
     this.cities = cities;
     this.handlebars = handlebars;
     this.database = new Db();
     this.destination = process.env.DESTINATION; //directory where the page will be placed upon creation
     this.KeywordPosition = process.env.KeywordPosition;
+    this.sitemapGenerator = SitemapGenerator;
 
     this.dPath = this.fixSlashes(this.destination);
-    this.fileDir = os.homedir() + '/public_html/' + this.dPath + '/';
+    this.fileDir = this.os.homedir() + '/public_html/' + this.dPath + '/';
 
     this.initPageCreation();
   }
@@ -68,7 +68,7 @@ class Builder {
           const checkCityFormatted = checkCity.toLowerCase().replace(' ', '-');
           const cityExists = files.filter(file => file.includes(checkCityFormatted));
           if (cityExists.length !== 0) {
-            this.markAsCreated(checkCity);
+            this.markAsCreated(checkCity, cityExists[0]);
             winston.info('attempted to create a page for the city ' + checkCity + ' that is already represented by the file(s)' + cityExists.toString());
           }else if(cityExists.length === 0) {
             this.createPage(city, base);
@@ -94,7 +94,7 @@ class Builder {
 
     const seo = this.generateSEO(city),
       template = this.handlebars.compile(pageBase),
-      filepath = os.homedir() + '/public_html/' + this.dPath + '/' + seo.url + '.phtml'
+      filepath = this.os.homedir() + '/public_html/' + this.dPath + '/' + seo.url + '.phtml'
     ;
 
     let page = template(seo);
@@ -122,7 +122,9 @@ class Builder {
       } else {
 
         winston.info(city.City + ' page created succesfully');
-        this.markAsCreated(city.City);
+        this.markAsCreated(city.City, seo.url);
+        const sitemap = this.os.homedir() + '/public_html/service-areas-sitemap.xml';
+        new this.sitemapGenerator(sitemap, seo.url);
 
       }
 
@@ -134,9 +136,11 @@ class Builder {
    | Takes a city and updates that row in the nn_city_totals table to reflect that the page already
    | exists.
    */
-  markAsCreated(cityName) {
-    const sql = `UPDATE nn_city_totals SET created = 1 WHERE city = "${cityName}"`;
-    this.database.QueryOnly(sql);
+  markAsCreated(cityName, url) {
+    const createdSql = `UPDATE nn_city_totals SET created = 1 WHERE city = "${cityName}"`;
+    this.database.QueryOnly(createdSql);
+    const urlSql = `UPDATE nn_city_totals SET Url = "${url}" WHERE city = "${cityName}"`;
+    this.database.QueryOnly(urlSql);
   }
 
   /*

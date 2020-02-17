@@ -99,6 +99,7 @@ class Install {
       `CREATE TABLE IF NOT EXISTS nn_city_totals (
       City VARCHAR(100) UNIQUE,
       State VARCHAR(25),
+      Url VARCHAR(250) DEFAULT NULL,
       CheckinTotal INT NOT NULL DEFAULT 0,
 			ReviewTotal INT NOT NULL DEFAULT 0,
       Created TINYINT(1) DEFAULT 0)`
