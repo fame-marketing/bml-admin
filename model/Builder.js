@@ -1,10 +1,10 @@
 const fs = require('fs'),
-			util = require('util'),
-			handlebars = require('handlebars'),
-			winston = require('../bin/winston'),
-			os = require('os'),
-			Db = require('../data/Database'),
-      SitemapGenerator = require('../bin/Generate')
+  util = require('util'),
+  handlebars = require('handlebars'),
+  winston = require('../bin/winston'),
+  os = require('os'),
+  Db = require('../data/Database'),
+  SitemapGenerator = require('../bin/Generate')
 ;
 
 /*
@@ -94,7 +94,7 @@ class Builder {
 
     const seo = this.generateSEO(city),
       template = this.handlebars.compile(pageBase),
-      filepath = this.os.homedir() + '/public_html/' + this.dPath + '/' + seo.url + '.phtml'
+      filepath = this.fileDir + seo.url + '.phtml'
     ;
 
     let page = template(seo);
@@ -106,7 +106,7 @@ class Builder {
      | If there is an missing directory leading up to the destination, the method will
      | attempt to create the missing directory.
     */
-    this.filesystem.writeFile(filepath, page, {flag:'wx'}, (e) => {
+    this.filesystem.writeFile(filepath, page, {flag:'wx'}, async (e) => {
 
       if(e) {
         console.log(e);
@@ -121,10 +121,10 @@ class Builder {
 
       } else {
 
-        winston.info(city.City + ' page created succesfully');
+        winston.info(city.City + ' page created succesfully.');
         this.markAsCreated(city.City, seo.url);
         const sitemap = this.os.homedir() + '/public_html/service-areas-sitemap.xml';
-        new this.sitemapGenerator(sitemap, seo.url);
+        await new this.sitemapGenerator(sitemap, seo.url);
 
       }
 
@@ -164,11 +164,11 @@ class Builder {
   generateSEO(city) {
 
     const cityName = city.City,
-          state = city.State,
-          seoPhrase = this.KeywordPosition === 'pre' ?
-                      process.env.KEYWORDBASE + ' ' + cityName :
-                      cityName + ' ' + process.env.KEYWORDBASE,
-          seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase();
+      state = city.State,
+      seoPhrase = this.KeywordPosition === 'pre' ?
+        process.env.KEYWORDBASE + ' ' + cityName :
+        cityName + ' ' + process.env.KEYWORDBASE,
+      seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase();
     return {
       metaDescription: seoPhrase,
       metaTitle: seoPhrase,

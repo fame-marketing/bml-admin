@@ -1,7 +1,7 @@
 const fs = require('fs'),
-      util = require('util'),
-      path = require('path'),
-      winston = require('./winston');
+  util = require('util'),
+  path = require('path'),
+  winston = require('./winston');
 
 /*
  | @sitemap - should be a string representing the path relative to the web root
@@ -12,9 +12,11 @@ const fs = require('fs'),
 class Generate {
 
   constructor(sitemap, url) {
+    winston.info('running sitemap generator');
     this.fs = fs;
     this.util = util;
     this.domain = process.env.URL;
+    this.destination = process.env.DESTINATION;
     this.url = url;
 
     this.getWriteLocation(sitemap);
@@ -28,20 +30,30 @@ class Generate {
    */
   getWriteLocation(file) {
 
-    const writePos = data.indexOf('<!-- ::writeHere:: -->') - 1;
-
     const writeLoc = fs.readFile(file, (e, data) => {
       if (e) {
         if (e.code === 'ENOENT') {
-          const sitemapBase = ``;
+          const sitemapBase = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+
+  <!-- ::writeHere:: -->
+  <!-- DO NOT REMOVE THESE COMMENTS -->
+</urlset>`;
           fs.writeFile(file, sitemapBase, (e) => {
             if (e) throw e;
+            const writePos = sitemapBase.indexOf('<!-- ::writeHere:: -->') - 1;
             this.writeSitemap(file,this.url,writePos);
           })
         } else {
           throw e;
         }
       } else {
+        const writePos = data.indexOf('<!-- ::writeHere:: -->') - 1;
         this.writeSitemap(file,this.url,writePos);
       }
     });
@@ -56,13 +68,16 @@ class Generate {
    |
    */
   writeSitemap(file,url,position) {
-    const lastmod = new Date(),
-          newUrl = `<url>
-                      <loc>${this.domain}/${url}</loc>
-                      <lastmod>${lastmod}</lastmod>
-                    </url>\n`;
+    const lastmod = new Date().toISOString(),
+      newUrl = `<url>
+    <loc>${this.domain}${this.destination}/${url}</loc>
+    <lastmod>${lastmod}</lastmod>
+  </url>
+  <!-- ::writeHere:: -->
+  <!-- DO NOT REMOVE THESE COMMENTS -->
+</urlset>`;
 
-    fs.open(file, (e, fd) => {
+    fs.open(file, 'r+', (e, fd) => {
 
       if (e) throw e;
 
@@ -72,7 +87,10 @@ class Generate {
           winston.error('Could not write a new sitemap entry for the url ' + url + '. Make sure that the sitemap exists and is writeable. You will need to add the failed url manually.');
           throw e;
         }
-        winston.info('wrote new url to sitemap.xml');
+
+        fs.close(fd, (e) => {
+          if (e) throw e;
+        })
 
       });
 
