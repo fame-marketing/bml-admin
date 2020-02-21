@@ -31,7 +31,7 @@ router.post('/', fileHandler.single('file'), function(req, res) {
     }
 
     const validationCheck = await validateData(output, eventType);
-    
+
     if (validationCheck === true) {
       const importResult = await importEvents(output, eventType);
       if (importResult === 'notValid') {
@@ -58,7 +58,7 @@ async function importEvents(events, type) { // remember to set some sort of even
 	;
 
   if (table === 'notValid') return table;
-  
+
   const importedData = async () => {
   	return await Promise.all(events.map( async event => {
 
@@ -70,17 +70,12 @@ async function importEvents(events, type) { // remember to set some sort of even
       keys.splice(LatI, 1, "Latitude");
       keys.splice(LongI, 1, "Longitude");
 
-      if (keys.includes('RequestDate')) {
-        const rdI = keys.indexOf('RequestDate');
-        keys.splice(rdI, 1, "CreatedAt");
-      }
-
       let dbReadyEvent = {};
-			
+
 				for (let i = 0; i < keys.length; i++) {
 					dbReadyEvent[keys[i]] = values[i];
 				}
-				
+
 				dbReadyEvent.eventId = dateToId(event.CheckinDateTime);
 				dbReadyEvent.Country = !dbReadyEvent.Country ? 'US' : dbReadyEvent.Country;
 				if (dbReadyEvent.CheckinDateTime) {
@@ -89,6 +84,10 @@ async function importEvents(events, type) { // remember to set some sort of even
 				if (dbReadyEvent.CreatedAt) { // assign the RequestDate value to the Created DB column.
 					dbReadyEvent.CreatedAt = new Date(dbReadyEvent.CreatedAt);
 				}
+				if (dbReadyEvent.RequestDate) {
+          dbReadyEvent.RequestDate = new Date(dbReadyEvent.RequestDate);
+				  dbReadyEvent.CreatedAt = new Date(dbReadyEvent.RequestDate);
+        }
 				if (dbReadyEvent.ResponseDate) {
 					dbReadyEvent.ResponseDate = new Date(dbReadyEvent.ResponseDate);
 				}
@@ -99,9 +98,9 @@ async function importEvents(events, type) { // remember to set some sort of even
 
 		}))
 	};
-  
+
   const importedArray = await importedData();
-  
+
   if(Array.isArray(importedArray)) {
 		const totalImported = importedArray.reduce((total,current) => {
 			return total + current;
@@ -125,7 +124,7 @@ function saveCityTotals(event, table) {
 }
 
 function validateData(eventData, eventType) {
-	
+
   const expectedColumns = {
     reviews: [
       "CustomerName",
@@ -134,6 +133,7 @@ function validateData(eventData, eventType) {
       "ReviewRating",
       "ReviewSummary",
       "ReviewDetail",
+      "ReviewAuthor",
       "RequestDate",
       "UserEmail",
       "UserName",

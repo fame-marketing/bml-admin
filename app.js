@@ -14,6 +14,7 @@ const createError = require('http-errors'),
 			indexRouter = require('./routes/index'),
 			importRouter = require('./routes/import'),
       formHandler = require('./routes/submit'),
+      webhookRouter = require('./routes/webhook'),
 
 			app = express();
 
@@ -28,6 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/webhook', indexRouter);
+app.use('/webhook/webhook', webhookRouter);
 app.use('/webhook/import', importRouter);
 app.use('/webhook/import/submit', formHandler);
 

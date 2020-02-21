@@ -14,8 +14,7 @@ class cityCheck {
     this.builder = Builder;
 
     // grabs event data from temp tables and hands them to the saveData class for processing and storage.
-    this.save("nn_checkins_temp", "checkin");
-    this.save("nn_reviews_temp", "review");
+    this.save("nn_events_temp");
 
     // checks the nn_city_totals db for any cities that have gained enough event data to create a page with
     this.checkCityTotals();
@@ -25,12 +24,12 @@ class cityCheck {
    | async class in order to delay internal progress until the database has finished reading the data.
    | runs a query to check the temp tables for new events and passes them to the saveData class.
   */
-  async save(table, eventType) {
+  async save(table) {
 
     const sql = `SELECT * FROM ${table}`;
     const rows = await this.database.readPool(sql);
 
-    new this.saver(rows, eventType);
+    new this.saver(rows);
 
   }
 

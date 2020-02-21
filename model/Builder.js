@@ -160,7 +160,8 @@ class Builder {
    | @city -- a string representing a city name to create the page around.
    | Creates all the dynamic content parts to be passed into the handlebars
    | template.
-  */
+   | TODO: make sure to adjust the md variable below to match the client.
+   */
   generateSEO(city) {
 
     const cityName = city.City,
@@ -168,9 +169,10 @@ class Builder {
       seoPhrase = this.KeywordPosition === 'pre' ?
         process.env.KEYWORDBASE + ' ' + cityName :
         cityName + ' ' + process.env.KEYWORDBASE,
-      seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase();
+      seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase(),
+      md = "If you're looking for " + seoPhrase + " Services then give Majestic Plumbing and Electric a call! We can help with all of your plumbing and electric needs.";
     return {
-      metaDescription: seoPhrase,
+      metaDescription: md,
       metaTitle: seoPhrase,
       url: seoUrl,
       pageName: cityName,

@@ -14,57 +14,31 @@ class Install {
 
   async createTables(database) {
 
-    this.tableCreationError.tempCheckins = await database.writePool(
-    `CREATE TABLE IF NOT EXISTS nn_checkins_temp(
-      id              INT AUTO_INCREMENT PRIMARY KEY,
-      EventID         VARCHAR(100),
-      CheckinDateTime DATETIME,
-      CheckinId       VARCHAR(50),
-      Location        JSON,
-      Reference       TEXT,
-      CheckinImageUrl TINYTEXT,
-      UserName        VARCHAR(50),
-      UserEmail       VARCHAR(100)
-    )`
-    );
-
-    this.tableCreationError.tempReviews = await database.writePool(
-      `CREATE TABLE IF NOT EXISTS nn_reviews_temp (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      EventID VARCHAR(100),
-      CreatedAt DATETIME,
-      ReviewSummary VARCHAR(255),
-      ReviewDetail TEXT,
-      ReviewRating INT,
-      ResponseDate DATETIME,
-      CustomerName VARCHAR(50),
-      CustomerEmail VARCHAR(100),
-      CheckinId VARCHAR(50),
-      CheckinDateTime DATETIME,
-      Location JSON,
-      Reference TEXT,
-      CheckinImageUrl TINYTEXT,
-      UserName VARCHAR(50),
-      UserEmail VARCHAR(100))`
+    this.tableCreationError.eventsTemp = await database.writePool(
+      `CREATE TABLE IF NOT EXISTS nn_events_temp(
+        id                   INT AUTO_INCREMENT PRIMARY KEY,
+        EventData            JSON
+      )`
     );
 
     this.tableCreationError.permCheckins = await database.writePool(
     `CREATE TABLE IF NOT EXISTS nn_checkins_perma (
-      id               INT AUTO_INCREMENT PRIMARY KEY,
-      EventID          VARCHAR(100) UNIQUE,
-      CheckinDateTime  DATETIME,
-      CheckinId        VARCHAR(50),
-      Reference        TEXT,
-      CheckinImageUrl  TINYTEXT,
-      UserName         VARCHAR(50),
-      UserEmail        VARCHAR(100),
-      City             VARCHAR(100),
-      State            VARCHAR(25),
-      PostalCode       VARCHAR(25),
-      Country          VARCHAR(10),
-      Street           VARCHAR(125),
-      Latitude         DOUBLE(10, 7),
-      Longitude        DOUBLE(10, 7)
+      id                     INT AUTO_INCREMENT PRIMARY KEY,
+      EventID                VARCHAR(100) UNIQUE,
+      CreatedAt              VARCHAR(30),
+      CheckinId              VARCHAR(50),
+      CheckinDateTime        VARCHAR(30),
+      Reference              TEXT,
+      CheckinImageUrl        TINYTEXT,
+      UserName               VARCHAR(150),
+      UserEmail              VARCHAR(100),
+      City                   VARCHAR(100),
+      State                  VARCHAR(25),
+      PostalCode             VARCHAR(25),
+      Country                VARCHAR(10),
+      Street                 VARCHAR(125),
+      Latitude               DOUBLE(10, 7),
+      Longitude              DOUBLE(10, 7)
     )`
     );
 
@@ -72,18 +46,20 @@ class Install {
       `CREATE TABLE IF NOT EXISTS nn_reviews_perma (
         id                  INT AUTO_INCREMENT PRIMARY KEY,
         EventID             VARCHAR(100) UNIQUE,
-        CreatedAt           DATETIME,
+        CreatedAt           VARCHAR(30),
         ReviewSummary       VARCHAR(255),
         ReviewDetail        TEXT,
         ReviewRating        INT,
-        ResponseDate       DATETIME,
-        CustomerName        VARCHAR(50),
+        RequestDate         VARCHAR(30),
+        ResponseDate        VARCHAR(30),
+        CustomerName        VARCHAR(150),
         CustomerEmail       VARCHAR(100),
+        CustomerPhone       VARCHAR(100),
         CheckinId           VARCHAR(50),
-        CheckinDateTime     DATETIME,
+        CheckinDateTime     VARCHAR(30),
         Reference           TEXT,
         CheckinImageUrl     TINYTEXT,
-        UserName            VARCHAR(50),
+        UserName            VARCHAR(150),
         UserEmail           VARCHAR(100),
         City                VARCHAR(100),
         State               VARCHAR(25),
@@ -97,12 +73,14 @@ class Install {
 
     this.tableCreationError.totals = await database.writePool(
       `CREATE TABLE IF NOT EXISTS nn_city_totals (
-      City VARCHAR(100) UNIQUE,
-      State VARCHAR(25),
-      Url VARCHAR(250) DEFAULT NULL,
-      CheckinTotal INT NOT NULL DEFAULT 0,
-			ReviewTotal INT NOT NULL DEFAULT 0,
-      Created TINYINT(1) DEFAULT 0)`
+        City                VARCHAR(100) UNIQUE,
+        State               VARCHAR(25),
+        Url                 VARCHAR(250) DEFAULT NULL,
+        CheckinTotal        INT NOT NULL DEFAULT 0,
+        ReviewTotal         INT NOT NULL DEFAULT 0,
+        Created             TINYINT(1) DEFAULT 0,
+        PageCreatedDate     VARCHAR(30)
+      )`
     );
 
     process.on('exit', (code) => {
