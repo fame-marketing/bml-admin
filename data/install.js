@@ -83,6 +83,14 @@ class Install {
       )`
     );
 
+    this.tableCreationError.events = await database.writePool(
+      `CREATE TABLE IF NOT EXISTS nn_events (
+        EventId              VARCHAR(100) UNIQUE,
+        EventTime            VARCHAR(25),
+        EventType            VARCHAR(250) DEFAULT NULL
+      )`
+    );
+
     process.on('exit', (code) => {
       if (Object.values(this.tableCreationError).includes('error')) {
         winston.error("There has been an error while attempting to create the tables. Check that your database connection settings are correct.");

@@ -4,11 +4,23 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   margin: 0;
-  padding: 10px;
-  background: #f7f7f7
+}
+.adminWrapper {
+  min-height: 100vh;
+  min-width: 100vw;
+  background: #f3f3f3;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 a {
-  color: #00B7FF;
+  color: #397ce2;
+  text-decoration: none;
+}
+a:hover,
+a:focus,
+a:active,
+a:visited {
+  text-decoration:none
 }
 p {
   text-align: center;
@@ -22,6 +34,60 @@ h4 {
   width: 444px;
   line-height: 1.7em;
 }
+
+/* Header Styles */
+header {
+  display: grid;
+  grid-template-columns: [logo] auto [nav] auto;
+  align-items: center;
+  padding: 10px;
+  box-shadow: 0 0 7px #000000ad;
+  background: linear-gradient(to bottom, #353535, #404040);
+}
+.nav {
+  text-align: right;
+}
+.nav li {
+  display: inline;
+}
+header a{
+  color: #fff;
+}
+
+/* Dashboard Styles */
+.adminContent {
+  display: grid;
+  grid-template: 1fr 1fr / 1fr 1fr;
+  grid-template-areas:
+    "block1 block2"
+    "block3 block3";
+}
+.adminContent_section {
+  padding: 10px;
+}
+.adminContent_pages {
+  grid-area: block1;
+  background: #e6e6e6;
+}
+.adminContent_events {
+  grid-area: block2;
+  background: #dcdcdc;
+}
+.adminContent_locations {
+  grid-area: block3;
+  background: #d4d4d4;
+}
+.recentPages_list {
+  padding-left: 0;
+}
+.recentPages_item {
+  display: grid;
+  grid-template-columns: repeat(6, 16.666666%);
+  grid-template-rows: 1fr;
+  margin-bottom: 15px;
+}
+
+/* Import Styles */
 .importWrapper {
   height: 100vh;
   width: 100vw;

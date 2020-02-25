@@ -1,20 +1,15 @@
 <div class="adminWrapper">
-  <header>
-    <div class="logo">Fame Nearby Now Dashboard</div>
-    <ul class="nav">
-      <li><a href="/webhook/import">Import</a></li>
-      <li><a href="/webhook/contact">Contact</a></li>
-    </ul>
-  </header>
+
+  {{> header }}
 
   <div class="adminContent">
-    <div class="adminContent_pages">
+    <div class="adminContent_pages adminContent_section">
       {{> pagesInfo }}
     </div>
-    <div class="adminContent_events">
+    <div class="adminContent_events adminContent_section">
       {{> eventsInfo }}
     </div>
-    <div class="adminContent_locations">
+    <div class="adminContent_locations adminContent_section">
       {{> locationsInfo }}
     </div>
   </div>

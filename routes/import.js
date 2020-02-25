@@ -8,6 +8,7 @@ router.get('/', function(req, res) {
 	res.render(
 		'import',
 		{
+		  layout: 'import',
 			title: 'Import Data',
 			description: 'import a csv'
 		}

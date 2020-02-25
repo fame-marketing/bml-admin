@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const createError = require('http-errors'),
 			express = require('express'),
+      hbs = require('express-handlebars'),
 			path = require('path'),
 			fs = require('fs'),
 			cookieParser = require('cookie-parser'),
@@ -19,14 +20,19 @@ const createError = require('http-errors'),
 			app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+app.engine('hbs', hbs({
+  extname: 'hbs',
+  defaultLayout: 'default',
+  layoutsDir: __dirname + '/views/layouts/',
+  partialsDir: __dirname + '/views/partials/'
+}));
 
 app.use(morgan('combined', {stream: winston.stream}));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 app.use('/webhook', indexRouter);
 app.use('/webhook/webhook', webhookRouter);

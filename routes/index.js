@@ -4,30 +4,42 @@ const express = require('express'),
       Db = require('../data/Database')
 ;
 /* GET home page. */
-router.get('/', function(req, res) {
+router.get('/', async function(req, res) {
 
-  const pageList = getNewPages();
+  const pageList = await getNewPages();
+  const recentEvents = await getRecentEvents();
+  const locations = await getLocationDetails();
 
   res.render('admin', {
+    layout: 'default',
+    template: 'admin-template',
     title: 'Nearby Now Webhook Admin Page',
     description: 'This page will be a dashboard with details on pages created, recent nearby now events and buttons allowing you to remove pages, change SEO data and such.',
-    newPages: pageList
+    pages: pageList,
+    events: recentEvents
   });
+
 });
 
-function getNewPages() {
+async function getNewPages() {
   const db = new Db();
-  const sql = `SELECT * FROM nn_city_totals ORDER BY `;
-  const newPages = db.readPool(sql);
-  return newPages;
+  const sql = `SELECT * FROM nn_city_totals WHERE Created = 1 ORDER BY PageCreatedDate LIMIT 10`;
+  const rows = await db.readPool(sql);
+  return rows;
 }
 
 function getRecentEvents() {
-  //TODO: make database table that only stores an event id with a timestamp to use here. after fetching the event id we can then find the correct event in the correct table using the id.
+  const db = new Db();
+  const sql = `SELECT * FROM nn_events ORDER BY PageCreatedDate LIMIT 10`;
+  const rows = await db.readPool(sql);
+  return rows;
 }
 
 function getLocationDetails() {
-
+  const db = new Db();
+  const sql = `SELECT * FROM nn_events ORDER BY CheckinTotal LIMIT 40`;
+  const rows = await db.readPool(sql);
+  return rows;
 }
 
 module.exports = router;

@@ -1,4 +1,17 @@
 <div class="pagesInfo">
   <div class="recentPages">
+    <h2>RECENT PAGES</h2>
+    <ul class="recentPages_list">
+      {{#each pages}}
+        <li class="recentPages_item">
+          <span>City <br> {{this.City}}</span>
+          <span>State <br> {{this.State}}</span>
+          <span>Url <br> {{this.Url}}</span>
+          <span>Checkins <br> {{this.Checkins}}</span>
+          <span>Reviews <br> {{this.Reviews}}</span>
+          <span>Creation Date <br> {{this.PageCreatedDate}}</span>
+        </li>
+      {{/each}}
+    </ul>
   </div>
 </div>
