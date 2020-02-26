@@ -1,15 +1,22 @@
-<div class="pagesInfo">
+<div class="pagesInfo adminContent_cont">
   <div class="recentPages">
     <h2>RECENT PAGES</h2>
     <ul class="recentPages_list">
       {{#each pages}}
-        <li class="recentPages_item">
-          <span>City <br> {{this.City}}</span>
-          <span>State <br> {{this.State}}</span>
-          <span>Url <br> {{this.Url}}</span>
-          <span>Checkins <br> {{this.Checkins}}</span>
-          <span>Reviews <br> {{this.Reviews}}</span>
-          <span>Creation Date <br> {{this.PageCreatedDate}}</span>
+        <li class="recentPage">
+          <span class="recentPage_city"><strong>City</strong> <br> {{this.City}}</span>
+          <span class="recentPage_state"><strong>State</strong> <br> {{this.State}}</span>
+          <span class="recentPage_url"><strong>Url</strong> <br> {{this.Url}}</span>
+          <span class="recentPage_checkin"><strong>Checkins</strong> <br> {{this.CheckinTotal}}</span>
+          <span class="recentPage_review"><strong>Reviews</strong> <br> {{this.ReviewTotal}}</span>
+          <span class="recentPage_date"><strong>Creation Date</strong> <br> {{this.PageCreatedDate}}</span>
+          <span class="recentPage_action">
+            {{#if this.Verified}}
+              <button disabled class="btn">Verified</button>
+            {{else}}
+              <button id="validateBtn" class="btn checked" data-url="{{this.Url}}" title="Check if the page has been added to the master spreadsheet and it's data is correct. Then use this button to mark the page as valid">Validate</button>
+            {{/if}}
+          </span>
         </li>
       {{/each}}
     </ul>

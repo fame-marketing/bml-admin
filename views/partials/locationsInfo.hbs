@@ -1,3 +1,18 @@
-<div class="locationsInfo">
-  <h2>Locations</h2>
+<div class="locationsInfo adminContent_cont">
+  <div class="locationsListWrapper">
+    <h2>Locations</h2>
+    <ul class="locations_list">
+      {{#each locations}}
+        <li class="location">
+          <span>City <br> {{this.City}}</span>
+          <span>State <br> {{this.State}}</span>
+          <span>Checkins <br> {{this.CheckinTotal}}</span>
+          <span>Reviews <br> {{this.ReviewTotal}}</span>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+  <div class="locationsMap">
+
+  </div>
 </div>

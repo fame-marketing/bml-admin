@@ -46,6 +46,14 @@ class saveData {
     const sql = `INSERT IGNORE INTO ${permTable} SET ?`;
     const writtenData = await this.database.writePool(sql, event);
 
+    const eventSQL = `INSERT IGNORE INTO nn_events SET ?`;
+    const eventData = {
+      "EventId":event.EventID,
+      "EventTime":event.CreatedAt,
+      "EventType":eventType
+    };
+    await this.database.writePool(eventSQL, eventData);
+
     if (typeof writtenData !== 'undefined' && writtenData.affectedRows > 0) {
       winston.info( "The following data was written to the database %j", event);
 

@@ -7,8 +7,7 @@ body {
 }
 .adminWrapper {
   min-height: 100vh;
-  min-width: 100vw;
-  background: #f3f3f3;
+  background: #eaeaea;
   display: grid;
   grid-template-rows: auto 1fr;
 }
@@ -34,57 +33,140 @@ h4 {
   width: 444px;
   line-height: 1.7em;
 }
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
 
 /* Header Styles */
 header {
   display: grid;
   grid-template-columns: [logo] auto [nav] auto;
   align-items: center;
-  padding: 10px;
+  height: 80px;
   box-shadow: 0 0 7px #000000ad;
-  background: linear-gradient(to bottom, #353535, #404040);
+  background: #3d3e42;
+}
+.logo {
+  padding-left: 25px;
 }
 .nav {
   text-align: right;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 .nav li {
-  display: inline;
+  border-left: 3px solid #737684;
+  height: 100%;
+}
+.nav li a {
+  padding: 0px 36px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: .8rem;
+  letter-spacing: .5px;
+  font-weight: 100;
+  text-transform: uppercase;
 }
 header a{
   color: #fff;
 }
 
 /* Dashboard Styles */
-.adminContent {
-  display: grid;
-  grid-template: 1fr 1fr / 1fr 1fr;
-  grid-template-areas:
-    "block1 block2"
-    "block3 block3";
+.adminContent.dashboard {
+  display: flex;
+  padding-top: 50px;
+}
+.adminContent{
+  background: #f1f1f1;
 }
 .adminContent_section {
   padding: 10px;
 }
 .adminContent_pages {
-  grid-area: block1;
-  background: #e6e6e6;
+  width:60%;
 }
 .adminContent_events {
-  grid-area: block2;
-  background: #dcdcdc;
+  width: 40%;
 }
-.adminContent_locations {
-  grid-area: block3;
-  background: #d4d4d4;
+.adminContent_cont {
+  background: #fff;
+  padding: 5px 27px;
+  box-shadow: 0 0 10px -5px #0000006b;
 }
 .recentPages_list {
   padding-left: 0;
 }
-.recentPages_item {
+.dashboard ul {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+.dashboard li {
   display: grid;
-  grid-template-columns: repeat(6, 16.666666%);
-  grid-template-rows: 1fr;
-  margin-bottom: 15px;
+  padding: 9px;
+}
+.recentPage {
+  grid-template-columns:
+    1fr [city]
+    80px [state]
+    1fr [url]
+    100px [checkins]
+    100px [reviews]
+    1fr [creationDate]
+    1fr [validate]
+}
+.recentEvents_item {
+  grid-template-columns:
+    104px [type]
+    1fr [time]
+    1fr [employee]
+    1fr [location]
+}
+.dashboard li:nth-child(odd) {
+  background: #dcdcdc;
+}
+.dashboard li.recentEvents_item:nth-child(odd) {
+  background: #d4d4d4;
+}
+.dashboard li.location:nth-child(odd) {
+  background: #dcdcdc;
+}
+.dashboard li span {
+  width: 100%;
+}
+.locationsInfo {
+  display: flex;
+}
+.locationsListWrapper {
+  width: 50%;
+}
+.btn {
+  margin: 0;
+  margin-left: auto;
+  overflow: hidden;
+  position: relative;
+  z-index: 4;
+}
+.btn:not([disabled]) {
+  cursor: pointer;
+}
+.btn:before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #34b34aba;
+  z-index: -1;
+  transform: translateX(-100%);
+  transition: transform 500ms cubic-bezier(0.905, -0.055, 0.545, 1.080);
+}
+.btn.verified:before {
+  transform: translateX(0);
 }
 
 /* Import Styles */

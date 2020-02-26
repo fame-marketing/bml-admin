@@ -16,6 +16,10 @@ const createError = require('http-errors'),
 			importRouter = require('./routes/import'),
       formHandler = require('./routes/submit'),
       webhookRouter = require('./routes/webhook'),
+			statsRouter = require('./routes/stats'),
+			mapRouter = require('./routes/map'),
+			contactRouter = require('./routes/contact'),
+			settingsRouter = require('./routes/settings'),
 
 			app = express();
 
@@ -38,6 +42,10 @@ app.use('/webhook', indexRouter);
 app.use('/webhook/webhook', webhookRouter);
 app.use('/webhook/import', importRouter);
 app.use('/webhook/import/submit', formHandler);
+app.use('/webhook/stats', statsRouter);
+app.use('/webhook/map', mapRouter);
+app.use('/webhook/contact', contactRouter);
+app.use('/webhook/settings', settingsRouter);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -79,7 +79,8 @@ class Install {
         CheckinTotal        INT NOT NULL DEFAULT 0,
         ReviewTotal         INT NOT NULL DEFAULT 0,
         Created             TINYINT(1) DEFAULT 0,
-        PageCreatedDate     VARCHAR(30)
+        PageCreatedDate     VARCHAR(30),
+        Verified            TINYINT(1) DEFAULT 0
       )`
     );
 

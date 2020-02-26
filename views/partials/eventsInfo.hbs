@@ -1,5 +1,13 @@
-<div class="eventsInfo">
+<div class="eventsInfo adminContent_cont">
   <div class="recentEvents">
     <h2>RECENT EVENTS</h2>
+    <ul class="recentEvents_list">
+      {{#each events}}
+        <li class="recentEvents_item">
+          <span>Type <br> {{this.EventType}}</span>
+          <span>Time <br> {{this.EventTime}}</span>
+        </li>
+      {{/each}}
+    </ul>
   </div>
 </div>
