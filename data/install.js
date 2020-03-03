@@ -24,7 +24,7 @@ class Install {
     this.tableCreationError.permCheckins = await database.writePool(
     `CREATE TABLE IF NOT EXISTS nn_checkins_perma (
       id                     INT AUTO_INCREMENT PRIMARY KEY,
-      EventID                VARCHAR(100) UNIQUE,
+      EventId                VARCHAR(100) UNIQUE,
       CreatedAt              VARCHAR(30),
       CheckinId              VARCHAR(50),
       CheckinDateTime        VARCHAR(30),
@@ -45,7 +45,7 @@ class Install {
     this.tableCreationError.permReviews = await database.writePool(
       `CREATE TABLE IF NOT EXISTS nn_reviews_perma (
         id                  INT AUTO_INCREMENT PRIMARY KEY,
-        EventID             VARCHAR(100) UNIQUE,
+        EventId             VARCHAR(100) UNIQUE,
         CreatedAt           VARCHAR(30),
         ReviewSummary       VARCHAR(255),
         ReviewDetail        TEXT,
@@ -89,6 +89,23 @@ class Install {
         EventId              VARCHAR(100) UNIQUE,
         EventTime            VARCHAR(25),
         EventType            VARCHAR(250) DEFAULT NULL
+      )`
+    );
+
+    this.tableCreationError.settings = await database.writePool(
+      `CREATE TABLE IF NOT EXISTS nn_settings (
+        id                   INT AUTO_INCREMENT PRIMARY KEY,
+        Name                 VARCHAR(100) UNIQUE,
+        Value                VARCHAR(25)
+      )`
+    );
+
+    this.tableCreationError.users = await database.writePool(
+      `CREATE TABLE IF NOT EXISTS nn_users (
+        id                   INT AUTO_INCREMENT PRIMARY KEY,
+        UserName             VARCHAR(100) DEFAULT NULL,
+        UserPass             VARCHAR(255) DEFAULT NULL,
+        Permissions          VARCHAR(25)
       )`
     );
 

@@ -33,7 +33,18 @@ async function getNewPages() {
 
 async function getRecentEvents() {
   const db = new Db();
-  const sql = `SELECT * FROM nn_events ORDER BY EventTime LIMIT 10`;
+  const sql = `SELECT EventType, EventTime, UserName, City, State
+               FROM nn_events 
+               INNER JOIN nn_checkins_perma
+               ON nn_events.EventID = nn_checkins_perma.EventId
+               UNION ALL
+               SELECT EventType, EventTime, UserName, City, State
+               FROM nn_events 
+               INNER JOIN nn_reviews_perma
+               ON nn_events.EventID = nn_reviews_perma.EventId
+               ORDER BY EventTime 
+               LIMIT 15`
+  ;
   const rows = await db.readPool(sql);
   rows.forEach(row => {
     row.EventType = (row.EventType === "checkin.created") ? 'checkin' : 'review';

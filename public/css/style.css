@@ -27,6 +27,10 @@ p {
 h1 {
   text-align: center;
 }
+.left {
+  text-align: left;
+  padding-left: 15px;
+}
 h4 {
   margin: 20px 0 50px;
   text-align: center;
@@ -73,6 +77,16 @@ header {
 }
 header a{
   color: #fff;
+}
+
+/* Subheader Styles */
+.subheader ul {
+  display: flex;
+}
+.subheader li {
+  padding: 15px 33px;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 /* Dashboard Styles */
@@ -126,13 +140,7 @@ header a{
     1fr [location]
 }
 .dashboard li:nth-child(odd) {
-  background: #dcdcdc;
-}
-.dashboard li.recentEvents_item:nth-child(odd) {
-  background: #d4d4d4;
-}
-.dashboard li.location:nth-child(odd) {
-  background: #dcdcdc;
+  background: #e4e8ec;
 }
 .dashboard li span {
   width: 100%;
@@ -168,14 +176,26 @@ header a{
 .btn.verified:before {
   transform: translateX(0);
 }
+.btn.verified {
+  color: #353535;
+}
 
 /* Import Styles */
 .importWrapper {
   height: 100vh;
   width: 100vw;
   display:flex;
+  flex-direction: column;
+}
+.importContent {
+  height: 100%;
+  display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
+  flex-direction: column;
+}
+.importContent h1 {
+  margin: 0;
 }
 .fileDetails {
   display: none;
@@ -269,4 +289,29 @@ button {
   border: none;
   padding: 7px 25px;
   margin-top: 10px;
+}
+
+/* Stats Styles */
+.employeeChart {
+  height:500px;
+  position: relative;
+  width:100%;
+}
+.adminContent_section[data-visibility="hidden"] {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+}
+.adminContent_section[data-visibility="visible"] {
+  visibility: visible;
+  opacity: 1;
+}
+.adminContent_section[data-visibility] {
+  transition: opacity .7s;
+}
+
+/* map styles */
+
+div#adminContent_map {
+  height: 500px;
 }

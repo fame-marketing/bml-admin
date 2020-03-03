@@ -1,28 +1,31 @@
 <div class="importWrapper">
-    <div class="importContent">
-        <h1>{{title}}</h1>
-        <h4>Import Reviews or Checkins from nearby now reports(Completed Reviews List and Check-ins List respectively)</h4>
 
-        <form action="/webhook/import/submit" method="post" enctype="multipart/form-data" class="importForm">
+  {{> header }}
 
-            <div class="inputWrapper selectWrapper" id="inputWrapper">
-                <label for="type">Event Type</label>
-                <select name="type" id="type" required>
-                    <option value="checkins" selected>checkins</option>
-                    <option value="reviews">reviews</option>
-                </select>
-            </div>
+  <div class="importContent">
+      <h1>{{title}}</h1>
+      <h4>Import Reviews or Checkins from nearby now reports(Completed Reviews List and Check-ins List respectively)</h4>
 
-            <div class="inputWrapper">
-                <label for="file">Select A File</label>
-                <input type="file" id="file" name="file" accept=".csv" required>
-            </div>
+      <form action="/webhook/import/submit" method="post" enctype="multipart/form-data" class="importForm">
 
-            <div class="fileDetails"></div>
-            <div>
-                <button>Submit</button>
-            </div>
+          <div class="inputWrapper selectWrapper" id="inputWrapper">
+              <label for="type">Event Type</label>
+              <select name="type" id="type" required>
+                  <option value="checkins" selected>checkins</option>
+                  <option value="reviews">reviews</option>
+              </select>
+          </div>
 
-        </form>
-    </div>
+          <div class="inputWrapper">
+              <label for="file">Select A File</label>
+              <input type="file" id="file" name="file" accept=".csv" required>
+          </div>
+
+          <div class="fileDetails"></div>
+          <div>
+              <button>Submit</button>
+          </div>
+
+      </form>
+  </div>
 </div>

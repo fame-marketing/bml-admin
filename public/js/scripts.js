@@ -1,38 +1,35 @@
 ;(function (w,d){
 
-  function pageValidations() {
-    const btn = d.getElementById('validateBtn');
-    btn.addEventListener('click', validatePage);
+  let tabButtons = d.querySelectorAll('.adminSection_tab');
+
+  function adminSectionTabs() {
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', swapTab)
+    });
+
   }
 
-  function validatePage(e) {
-
-    const req = new XMLHttpRequest(),
-          url = encodeURI(e.target.dataset.url),
-          data = "url=" + url
+  function swapTab(e) {
+    const targetSection = e.target.dataset.tab,
+          allSections = d.getElementsByClassName('adminContent_swap')
     ;
 
-    req.onreadystatechange = function() {
-      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-        if (req.responseText === "verified") {
-          const btn = e.target;
-          btn.disabled = true;
-          btn.classList.add('verified');
-          btn.innerText = "Verified";
-        } else {
-          console.log("there was an error while attempting to validate the page. Please check connection to the database");
-        }
+    console.log(allSections.length);
+
+    for(let i = 0; i < allSections.length; i++) {
+      const section = allSections[i];
+      if (section.dataset.swap !== targetSection) {
+        section.dataset.visibility = 'hidden';
+      } else if (section.dataset.swap === targetSection) {
+        section.dataset.visibility = 'visible';
       }
-    };
-
-    req.open('POST', '/webhook', true);
-
-    req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    req.send(data);
+    }
 
   }
 
-  pageValidations();
+  if (tabButtons.length > 0) {
+    adminSectionTabs();
+  }
 
 })(window, document);
