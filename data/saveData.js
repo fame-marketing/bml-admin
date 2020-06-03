@@ -1,4 +1,5 @@
 const Db = require('./Database'),
+      Deleter = require('./deleteData'),
       winston = require('../bin/winston')
 ;
 
@@ -11,6 +12,7 @@ class saveData {
 
     this.data = rows;
     this.database = new Db();
+    this.deleter = new Deleter();
 
     this.data.forEach((row) => {
       this.saveEvent(row);
@@ -54,11 +56,10 @@ class saveData {
     };
     await this.database.writePool(eventSQL, eventData);
 
-    if (typeof writtenData !== 'undefined' && writtenData.affectedRows > 0) {
+    if ((typeof writtenData !== 'undefined' && writtenData.affectedRows > 0) || this.checkIfExists(permTable,event.EventID)) {
       winston.info( "The following data was written to the database %j", event);
 
-      const deleteSql = `DELETE FROM ${tempTable} WHERE id = '${columnEventId}'`;
-      await this.database.QueryOnly(deleteSql);
+      await this.deleter.deleteTempEvent(columnEventId);
     }
 
   }
@@ -78,10 +79,8 @@ class saveData {
 
     const typeTable = eventType === "checkin.created" ? "nn_checkins_perma" : "nn_reviews_perma";
     const eventID = event.EventID;
-    const checkQuery = `SELECT id FROM ${typeTable} WHERE EventID = '${eventID}'`;
-    const exists = await this.database.readPool(checkQuery);
 
-    if (exists.length !== 0) return;
+    if (await this.checkIfExists(typeTable,eventID)) return;
 
     const city = event.City,
       state = event.State,
@@ -147,6 +146,13 @@ class saveData {
 
   createReadableDate(date) {
     return new Date(date * 1000).toLocaleString();
+  }
+
+  async checkIfExists(eventType,id) {
+    const checkQuery = `SELECT id FROM ${eventType} WHERE EventID = '${id}'`;
+    const exists = await this.database.readPool(checkQuery);
+
+    return exists.length !== 0;
   }
 
 }
