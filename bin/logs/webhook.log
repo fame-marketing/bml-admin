@@ -58,3 +58,4 @@ Expecting 'OPEN_SEXPR', 'ID', 'STRING', 'NUMBER', 'BOOLEAN', 'UNDEFINED', 'NULL'
 2020-03-03T03:54:30.148Z | error | general error sent from app.js - Unexpected token o in JSON at position 1
 2020-03-03T03:56:15.854Z | error | general error sent from app.js - Unexpected token o in JSON at position 1
 2020-03-03T03:59:36.859Z | error | general error sent from app.js - Unexpected token o in JSON at position 1
+2020-03-20T19:57:47.664Z | error | general error sent from app.js - Not Found
