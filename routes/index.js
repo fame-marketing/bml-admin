@@ -6,8 +6,10 @@ const express = require('express'),
 /* GET home page. */
 router.get('/', async function(req, res) {
 
-  const pageList = await getNewPages();
-  const recentEvents = await getRecentEvents();
+  const db = new Db();
+  const pageList = await getNewPages(db);
+  const recentEvents = await getRecentEvents(db);
+  const pendingEvents = await getPendingEvents(db);
 
   res.render('admin', {
     layout: 'default',
@@ -15,13 +17,13 @@ router.get('/', async function(req, res) {
     title: 'Nearby Now Webhook Admin Page',
     description: 'This page will be a dashboard with details on pages created, recent nearby now events and buttons allowing you to remove pages, change SEO data and such.',
     pages: pageList,
-    events: recentEvents
+    events: recentEvents,
+    pendingEvents: pendingEvents
   });
 
 });
 
-async function getNewPages() {
-  const db = new Db();
+async function getNewPages(db) {
   const sql = `SELECT * 
                FROM nn_city_totals 
                WHERE Created = 1 
@@ -31,8 +33,7 @@ async function getNewPages() {
   return rows;
 }
 
-async function getRecentEvents() {
-  const db = new Db();
+async function getRecentEvents(db) {
   const sql = `SELECT EventType, EventTime, UserName, City, State
                FROM nn_events 
                INNER JOIN nn_checkins_perma
@@ -50,6 +51,14 @@ async function getRecentEvents() {
     row.EventType = (row.EventType === "checkin.created") ? 'checkin' : 'review';
   });
   return rows;
+}
+
+async function getPendingEvents(db) {
+
+  const sql = `SELECT COUNT(*) FROM nn_events_temp`;
+  const rows = await db.readPool(sql);
+  return rows[0]['COUNT(*)'];
+
 }
 
 router.post('/', async function(req, res) {

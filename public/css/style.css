@@ -114,10 +114,6 @@ header a{
 .recentPages_list {
   padding-left: 0;
 }
-.dashboard ul {
-  margin-left: -10px;
-  margin-right: -10px;
-}
 .dashboard li {
   display: grid;
   padding: 9px;
@@ -178,6 +174,13 @@ header a{
 }
 .btn.verified {
   color: #353535;
+}
+
+/* Dashboard Styles */
+.pendingEventsCounter {
+  margin-bottom: 1em;
+  text-align:right;
+
 }
 
 /* Import Styles */

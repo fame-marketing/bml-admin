@@ -1,0 +1,33 @@
+<div class="eventsInfo adminContent_cont">
+  <div class="recentEvents">
+    <h2>RECENT EVENTS</h2>
+
+    {{#if events}}
+
+      <ul class="recentEvents_list">
+        {{#each events}}
+          <li class="recentEvents_item">
+            <span><strong>Type</strong> <br> {{this.EventType}}</span>
+            <span><strong>Time</strong> <br> {{this.EventTime}}</span>
+            <span><strong>Employee</strong> <br> {{this.UserName}}</span>
+            <span><strong>Location</strong> <br> {{this.City}},{{this.State}}</span>
+          </li>
+        {{/each}}
+      </ul>
+
+      <div class="pendingEventsCounter">
+        {{#if pendingEvents }}
+          events currently processing - {{pendingEvents}}
+        {{else}}
+          All events have been processed
+        {{/if}}
+      </div>
+
+    {{else}}
+
+      <p>No events have been processed yet</p>
+
+    {{/if}}
+
+  </div>
+</div>

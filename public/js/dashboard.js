@@ -1,10 +1,5 @@
 ;(function (w,d){
 
-  function pageValidations() {
-    const btn = d.getElementById('validateBtn');
-    btn.addEventListener('click', validatePage);
-  }
-
   function validatePage(e) {
 
     const req = new XMLHttpRequest(),
@@ -25,12 +20,17 @@
       }
     };
 
-    req.open('POST', '/webhook', true);
+    req.open('POST', '/nn-admin', true);
 
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     req.send(data);
 
+  }
+
+  const btn = d.getElementById('validateBtn');
+  if (btn) {
+    btn.addEventListener('click', validatePage);
   }
 
 })(window, document);

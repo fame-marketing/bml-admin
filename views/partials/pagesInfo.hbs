@@ -2,23 +2,31 @@
   <div class="recentPages">
     <h2>RECENT PAGES</h2>
     <ul class="recentPages_list">
-      {{#each pages}}
-        <li class="recentPage">
-          <span class="recentPage_city"><strong>City</strong> <br> {{this.City}}</span>
-          <span class="recentPage_state"><strong>State</strong> <br> {{this.State}}</span>
-          <span class="recentPage_url"><strong>Url</strong> <br> {{this.Url}}</span>
-          <span class="recentPage_checkin"><strong>Checkins</strong> <br> {{this.CheckinTotal}}</span>
-          <span class="recentPage_review"><strong>Reviews</strong> <br> {{this.ReviewTotal}}</span>
-          <span class="recentPage_date"><strong>Creation Date</strong> <br> {{this.PageCreatedDate}}</span>
-          <span class="recentPage_action">
-            {{#if this.Verified}}
-              <button disabled class="btn">Verified</button>
-            {{else}}
-              <button id="validateBtn" class="btn checked" data-url="{{this.Url}}" title="Check if the page has been added to the master spreadsheet and it's data is correct. Then use this button to mark the page as valid">Validate</button>
-            {{/if}}
-          </span>
-        </li>
-      {{/each}}
+      {{#if pages}}
+
+        {{#each pages}}
+          <li class="recentPage">
+            <span class="recentPage_city"><strong>City</strong> <br> {{this.City}}</span>
+            <span class="recentPage_state"><strong>State</strong> <br> {{this.State}}</span>
+            <span class="recentPage_url"><strong>Url</strong> <br> {{this.Url}}</span>
+            <span class="recentPage_checkin"><strong>Checkins</strong> <br> {{this.CheckinTotal}}</span>
+            <span class="recentPage_review"><strong>Reviews</strong> <br> {{this.ReviewTotal}}</span>
+            <span class="recentPage_date"><strong>Creation Date</strong> <br> {{this.PageCreatedDate}}</span>
+            <span class="recentPage_action">
+              {{#if this.Verified}}
+                <button disabled class="btn">Verified</button>
+              {{else}}
+                <button id="validateBtn" class="btn checked" data-url="{{this.Url}}" title="Check if the page has been added to the master spreadsheet and it's data is correct. Then use this button to mark the page as valid">Validate</button>
+              {{/if}}
+            </span>
+          </li>
+        {{/each}}
+
+      {{else}}
+
+        <p>No pages have been created</p>
+
+      {{/if}}
     </ul>
   </div>
 </div>
