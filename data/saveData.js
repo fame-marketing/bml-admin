@@ -1,6 +1,7 @@
 const Db = require('./Database'),
-      Deleter = require('./deleteData'),
-      winston = require('../bin/winston')
+      winston = require('../bin/winston'),
+      recentEventStorageHandler = require('./Db/storeRecentEvent'),
+      deleteTempEventHandler = require('./Db/deleteTempEvent')
 ;
 
 /*
@@ -12,7 +13,8 @@ class saveData {
 
     this.data = rows;
     this.database = new Db();
-    this.deleter = new Deleter();
+    this.recentEventStorageHandler = recentEventStorageHandler;
+    this.deleteTempEventHandler = deleteTempEventHandler;
 
     this.data.forEach((row) => {
       this.saveEvent(row);
@@ -32,34 +34,20 @@ class saveData {
     const eventType = data.type;
     const event = this.formatData(data, eventType);
 
-    this.saveCityValues(event, eventType);
+    let permTable = eventType === "checkin.created" ? "nn_checkins_perma" : "nn_reviews_perma",
+        rowId = row.id;
 
-    let permTable = "",
-        tempTable = "nn_events_temp",
-        columnEventId = row.id,
-        flatData = {};
-
-    if (eventType === "checkin.created") {
-      permTable = "nn_checkins_perma";
-    } else {
-      permTable = "nn_reviews_perma";
-    }
+    await this.updateCityValues(event, rowId, permTable);
 
     const sql = `INSERT IGNORE INTO ${permTable} SET ?`;
     const writtenData = await this.database.writePool(sql, event);
 
-    const eventSQL = `INSERT IGNORE INTO nn_events SET ?`;
-    const eventData = {
-      "EventId":event.EventID,
-      "EventTime":event.CreatedAt,
-      "EventType":eventType
-    };
-    await this.database.writePool(eventSQL, eventData);
+    this.recentEventStorageHandler.store(event.EventID, event.CreatedAt, eventType);
 
-    if ((typeof writtenData !== 'undefined' && writtenData.affectedRows > 0) || this.checkIfExists(permTable,event.EventID)) {
+    if (typeof writtenData !== 'undefined' && writtenData.affectedRows > 0) {
       winston.info( "The following data was written to the database %j", event);
 
-      await this.deleter.deleteTempEvent(columnEventId);
+      this.deleteTempEventHandler.delete(rowId);
     }
 
   }
@@ -71,27 +59,36 @@ class saveData {
  | a new query to either add a new city/state column and add a value of 1, or we will
  | increase the value of an existing city/state column by 1.
 */
-  async saveCityValues(event, eventType) {
+  async updateCityValues(event, rowId, permTable) {
 
     /*
      | starts by checking to see if the event id already exists and if it does, exits the function and does not count as an extra checkin or review.
      */
 
-    const typeTable = eventType === "checkin.created" ? "nn_checkins_perma" : "nn_reviews_perma";
     const eventID = event.EventID;
+    const checkQuery = `SELECT id FROM ${permTable} WHERE EventID = '${eventID}'`;
+    const exists = await this.database.readPool(checkQuery);
 
-    if (await this.checkIfExists(typeTable,eventID)) return;
+    if (exists.length !== 0) {
+      this.deleteTempEventHandler.delete(rowId);
+      return;
+    }
 
     const city = event.City,
       state = event.State,
-      typeColumn = eventType === "checkin.created" ? "checkinTotal" : "reviewTotal",
+      typeColumn = permTable === "nn_checkins_perma" ? "checkinTotal" : "reviewTotal",
       query = `INSERT INTO nn_city_totals (city, state, ${typeColumn})
                    VALUES ("${city}","${state}",1)
                    ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`;
+
     this.database.QueryOnly(query);
 
   }
 
+  /*
+   | This function maps the event data received from Nearby Now to the correct columns in the database.
+   | This function will also reformat any dates from unix timestamps to a more readable format.
+   */
   formatData(row, eventType) {
 
     if (eventType === "checkin.created") {
@@ -144,15 +141,11 @@ class saveData {
     }
   }
 
+  /*
+   | formats the unix timestamp received from Nearby Now into a more readable format.
+   */
   createReadableDate(date) {
     return new Date(date * 1000).toLocaleString();
-  }
-
-  async checkIfExists(eventType,id) {
-    const checkQuery = `SELECT id FROM ${eventType} WHERE EventID = '${id}'`;
-    const exists = await this.database.readPool(checkQuery);
-
-    return exists.length !== 0;
   }
 
 }

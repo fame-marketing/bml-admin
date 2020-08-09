@@ -1,3 +1,5 @@
 /node_modules/
 /.idea/
 .env
+/bin/logs/error.log
+/bin/logs/webhook.log

@@ -1,6 +1,6 @@
 const Db = require('./Database'),
-  Saver = require('./saveData'),
-  Builder = require('../model/Builder')
+      Saver = require('./saveData'),
+      Builder = require('../model/Builder')
 ;
 
 /*
@@ -14,7 +14,7 @@ class cityCheck {
     this.builder = Builder;
 
     // grabs event data from temp tables and hands them to the saveData class for processing and storage.
-    this.save("nn_events_temp");
+    this.save();
 
     // checks the nn_city_totals db for any cities that have gained enough event data to create a page with
     this.checkCityTotals();
@@ -24,9 +24,9 @@ class cityCheck {
    | async class in order to delay internal progress until the database has finished reading the data.
    | runs a query to check the temp tables for new events and passes them to the saveData class.
   */
-  async save(table) {
+  async save() {
 
-    const sql = `SELECT * FROM ${table}`;
+    const sql = `SELECT * FROM nn_events_temp`;
     const rows = await this.database.readPool(sql);
 
     new this.saver(rows);
@@ -37,13 +37,19 @@ class cityCheck {
    | async class in order to delay internal progress until the database has finished reading the data.
    | runs a query to check if there are any eligible cities for page creation.
    | if there are any results from the query they are passed on to the Builder class.
+   | adjust limit variables to adjust the thresholds for creating new pages.
   */
   async checkCityTotals() {
 
+    const checkinOnlyLimit = 5,
+          reviewOnlyLimit = 5,
+          checkinMixLimit = 3,
+          reviewMixLimit = 1;
+
     const sql = `SELECT * FROM nn_city_totals WHERE Created = 0
-                AND (CheckinTotal >= 5 OR
-                      ReviewTotal >= 1 AND CheckinTotal >= 3 OR
-                      ReviewTotal >= 5)`
+                AND (CheckinTotal >= ${checkinOnlyLimit} OR
+                      ReviewTotal >= ${reviewMixLimit} AND CheckinTotal >= ${checkinMixLimit} OR
+                      ReviewTotal >= ${reviewOnlyLimit})`
     ;
 
     const eligible = await this.database.readPool(sql);

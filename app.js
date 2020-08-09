@@ -38,14 +38,14 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static('public'));
 
-app.use('/webhook', indexRouter);
-app.use('/webhook/webhook', webhookRouter);
-app.use('/webhook/import', importRouter);
-app.use('/webhook/import/submit', formHandler);
-app.use('/webhook/stats', statsRouter);
-app.use('/webhook/map', mapRouter);
-app.use('/webhook/contact', contactRouter);
-app.use('/webhook/settings', settingsRouter);
+app.use('/nn-admin', indexRouter);
+app.use('/nn-admin/webhook', webhookRouter);
+app.use('/nn-admin/import', importRouter);
+app.use('/nn-admin/import/submit', formHandler);
+app.use('/nn-admin/stats', statsRouter);
+app.use('/nn-admin/map', mapRouter);
+app.use('/nn-admin/contact', contactRouter);
+app.use('/nn-admin/settings', settingsRouter);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
