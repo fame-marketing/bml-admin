@@ -73,8 +73,8 @@
     });
 
     const colors = employees.map( employee => {
-      return createRandomHex();
-    })
+      return getColorFromList();
+    });
 
     let employeeChart = new Chart( eCanvas , {
       type: 'horizontalBar',
@@ -101,16 +101,12 @@
 
   }
 
-  function initLocationCharts(chartData) {
+  function getColorFromList() {
 
-  }
+    let colorList = ['#BD1C24','#097CBD','#BDB92F','#06705D','#3C701C','#BD5026','#BD9D2F','#573A30','#7D1318']
 
-  function initReviewCharts(chartData) {
+    return colorList.shift();
 
-  }
-
-  function createRandomHex() {
-    return '#'+Math.floor(Math.random()*16777215).toString(16);
   }
 
   w.onload = function() {

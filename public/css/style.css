@@ -299,6 +299,7 @@ button {
   height:500px;
   position: relative;
   width:100%;
+  padding: 0 50px;
 }
 .adminContent_section[data-visibility="hidden"] {
   visibility: hidden;
