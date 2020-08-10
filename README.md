@@ -40,8 +40,8 @@ admin.nearbynow.co/Integration/Webhooks
 </a>
 and install the webhooks app for your nearby now account.
 From the webhooks settings tab add the secure url. The URL will depend on where you place your
-files. If your website is example.com and you place your files in a directory named at the root of your website and call it "webhooks" your 
-secure url would be https://example.com/webhooks/webhook
+files. If your website is example.com and you place your files in a directory named at the root of your website and call it "nn-admin" your 
+secure url would be https://example.com/nn-admin/webhook
 
 Run `node /.bin/www`
 
@@ -78,5 +78,11 @@ Project Creation
 Modified file creation to prevent overwriting existing files.
 If a directory is missing when the program goes to create a page, it will
 now create the missing directory.
+
+---
+- 1.1.0
+
+Added an Admin interface to allow better management of the application. Added new DB tables
+to help manage the increase functionality.
 
 ---
