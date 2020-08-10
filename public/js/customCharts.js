@@ -11,7 +11,7 @@
     const req = new XMLHttpRequest(),
           type = {type: dataSet};
 
-    req.open('POST', '/webhook/stats', true);
+    req.open('POST', '/nn-admin/stats', true);
     req.setRequestHeader('Content-Type', 'application/json');
     req.send(JSON.stringify(type));
 

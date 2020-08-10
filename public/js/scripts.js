@@ -15,8 +15,6 @@
           allSections = d.getElementsByClassName('adminContent_swap')
     ;
 
-    console.log(allSections.length);
-
     for(let i = 0; i < allSections.length; i++) {
       const section = allSections[i];
       if (section.dataset.swap !== targetSection) {
