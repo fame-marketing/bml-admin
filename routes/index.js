@@ -37,12 +37,12 @@ async function getRecentEvents(db) {
   const sql = `SELECT EventType, EventTime, UserName, City, State
                FROM nn_events 
                INNER JOIN nn_checkins_perma
-               ON nn_events.EventID = nn_checkins_perma.EventId
+               ON nn_events.EventId = nn_checkins_perma.EventId
                UNION ALL
                SELECT EventType, EventTime, UserName, City, State
                FROM nn_events 
                INNER JOIN nn_reviews_perma
-               ON nn_events.EventID = nn_reviews_perma.EventId
+               ON nn_events.EventId = nn_reviews_perma.EventId
                ORDER BY EventTime 
                LIMIT 15`
   ;

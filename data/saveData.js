@@ -42,7 +42,7 @@ class saveData {
     const sql = `INSERT IGNORE INTO ${permTable} SET ?`;
     const writtenData = await this.database.writePool(sql, event);
 
-    this.recentEventStorageHandler.store(event.EventID, event.CreatedAt, eventType);
+    this.recentEventStorageHandler.store(event.EventId, event.CreatedAt, eventType);
 
     if (typeof writtenData !== 'undefined' && writtenData.affectedRows > 0) {
       winston.info( "The following data was written to the database %j", event);
@@ -65,8 +65,8 @@ class saveData {
      | starts by checking to see if the event id already exists and if it does, exits the function and does not count as an extra checkin or review.
      */
 
-    const eventID = event.EventID;
-    const checkQuery = `SELECT id FROM ${permTable} WHERE EventID = '${eventID}'`;
+    const eventId = event.EventId;
+    const checkQuery = `SELECT id FROM ${permTable} WHERE EventId = '${eventId}'`;
     const exists = await this.database.readPool(checkQuery);
 
     if (exists.length !== 0) {
@@ -94,7 +94,7 @@ class saveData {
     if (eventType === "checkin.created") {
 
       return {
-        "EventID": row["id"],
+        "EventId": row["id"],
         "CreatedAt": this.createReadableDate(row["createdAt"]),
         "CheckinId": row["data"]["id"],
         "CheckinDateTime": this.createReadableDate(row["data"]["createdAt"]),
@@ -114,7 +114,7 @@ class saveData {
     } else {
 
       return {
-        "EventID": row["id"],
+        "EventId": row["id"],
         "CreatedAt": this.createReadableDate(row["createdAt"]),
         "ReviewSummary": row["data"]["summary"],
         "ReviewDetail": row["data"]["detail"],

@@ -7,7 +7,8 @@ const express = require('express'),
       fileHandler = multer({storage:storage}),
       winston = require('../bin/winston'),
       db = require('../data/Database'),
-      database = new db()
+      database = new db(),
+      recentEventStorageHandler = require('../data/Db/storeRecentEvent')
 ;
 
 router.post('/', fileHandler.single('file'), function(req, res) {
@@ -54,6 +55,7 @@ async function importEvents(events, type) { // remember to set some sort of even
   let table = type === 'checkins' ? 'nn_checkins_perma' :
               type === 'reviews' ? 'nn_reviews_perma' :
               'notValid',
+      eventType = type === 'checkins' ? 'checkin.created' : 'review.completed', //This needs to be converted due to inconsistency with how Nearby Now names things between their reports and webhooks.
 			sql = `INSERT IGNORE INTO ${table} SET ?`
 	;
 
@@ -93,7 +95,12 @@ async function importEvents(events, type) { // remember to set some sort of even
 				}
 
 				const eventRows = await database.writePool(sql, dbReadyEvent);
-				saveCityTotals(dbReadyEvent, table);
+
+        if (eventRows.affectedRows > 0) { // only save event and tally event for city if this is a new event.
+          recentEventStorageHandler.store(dbReadyEvent.eventId, dbReadyEvent.CreatedAt, eventType);
+          saveCityTotals(dbReadyEvent, table);
+        }
+
 				return eventRows.affectedRows;
 
 		}))
@@ -109,6 +116,7 @@ async function importEvents(events, type) { // remember to set some sort of even
 	} else {
 		return importedArray;
 	}
+
 }
 
 function saveCityTotals(event, table) {
