@@ -13,40 +13,46 @@ const express = require('express'),
 
 router.post('/', fileHandler.single('file'), function(req, res) {
 
-  let endMsg = "";
-  const eventType = req.body.type;
-  const fileContents = req.file["buffer"];
+  try {
 
-  if (!fileContents) {
-    endMsg = `The file was either empty or unable to be read. Check that you selected the correct file and try again.`;
-  }
+    let endMsg = "";
+    const eventType = req.body.type;
+    const fileContents = req.file["buffer"];
 
-  parse(fileContents, {
-    columns: true,
-    skip_empty_lines: true
-  }, async function(err, output) {
-
-    if (err) {
-      winston.error(err);
-      endMsg = `${err}`;
+    if (!fileContents) {
+      endMsg = `The file was either empty or unable to be read. Check that you selected the correct file and try again.`;
     }
 
-    const validationCheck = await validateData(output, eventType);
+    parse(fileContents, {
+      columns: true,
+      skip_empty_lines: true
+    }, async function(err, output) {
 
-    if (validationCheck === true) {
-      const importResult = await importEvents(output, eventType);
-      if (importResult === 'notValid') {
-        endMsg = "The event type is invalid. Make sure that you selected an import type";
-      } else {
-        endMsg = `Import Successful! ${importResult} rows have been imported`;
+      if (err) {
+        winston.error(err);
+        endMsg = `${err}`;
       }
-    } else {
-      endMsg = `Data was not valid, missing columns: ${validationCheck}`;
-    }
 
-    res.send(endMsg);
+      const validationCheck = await validateData(output, eventType);
 
-  });
+      if (validationCheck === true) {
+        const importResult = await importEvents(output, eventType);
+        if (importResult === 'notValid') {
+          endMsg = "The event type is invalid. Make sure that you selected an import type";
+        } else {
+          endMsg = `Import Successful! ${importResult} rows have been imported`;
+        }
+      } else {
+        endMsg = `Data was not valid, missing columns: ${validationCheck}`;
+      }
+
+      res.send(endMsg);
+
+    });
+
+  } catch (e) {
+    winston.error('There was an error during import : ' + e)
+  }
 
 });
 
@@ -83,21 +89,21 @@ async function importEvents(events, type) { // remember to set some sort of even
 				if (dbReadyEvent.CheckinDateTime) {
 					dbReadyEvent.CheckinDateTime = new Date(dbReadyEvent.CheckinDateTime);
 				}
-				if (dbReadyEvent.CreatedAt) { // assign the RequestDate value to the Created DB column.
-					dbReadyEvent.CreatedAt = new Date(dbReadyEvent.CreatedAt);
-				}
 				if (dbReadyEvent.RequestDate) {
           dbReadyEvent.RequestDate = new Date(dbReadyEvent.RequestDate);
 				  dbReadyEvent.CreatedAt = new Date(dbReadyEvent.RequestDate);
         }
 				if (dbReadyEvent.ResponseDate) {
 					dbReadyEvent.ResponseDate = new Date(dbReadyEvent.ResponseDate);
-				}
+					const eventTimestamp = dbReadyEvent.ResponseDate;
+				} else {
+          const eventTimestamp = dbReadyEvent.CheckinDateTime;
+        }
 
 				const eventRows = await database.writePool(sql, dbReadyEvent);
 
         if (eventRows.affectedRows > 0) { // only save event and tally event for city if this is a new event.
-          recentEventStorageHandler.store(dbReadyEvent.eventId, dbReadyEvent.CreatedAt, eventType);
+          recentEventStorageHandler.store(dbReadyEvent.eventId, eventTimestamp, eventType);
           saveCityTotals(dbReadyEvent, table);
         }
 
@@ -141,7 +147,6 @@ function validateData(eventData, eventType) {
       "ReviewRating",
       "ReviewSummary",
       "ReviewDetail",
-      "ReviewAuthor",
       "RequestDate",
       "UserEmail",
       "UserName",
@@ -171,7 +176,11 @@ function validateData(eventData, eventType) {
 
   const eventColumns = Object.keys(eventData[0]);
 
-  if (JSON.stringify(eventColumns) === JSON.stringify(expectedColumns[eventType])) {
+  if (
+    eventColumns.every( function (column) {
+      return expectedColumns[eventType].includes(column);
+    })
+  ) {
     return true;
   } else {
     return expectedColumns[eventType].reduce( (missing, column) => {

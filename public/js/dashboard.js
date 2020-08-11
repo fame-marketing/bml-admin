@@ -28,9 +28,11 @@
 
   }
 
-  const btn = d.getElementById('validateBtn');
-  if (btn) {
-    btn.addEventListener('click', validatePage);
+  const validateButtons = d.querySelectorAll('.validateBtn');
+  if (validateButtons) {
+    for (let i = 0; i < validateButtons.length; i++) {
+      validateButtons[i].addEventListener('click', validatePage);
+    }
   }
 
 })(window, document);
