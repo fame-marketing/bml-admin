@@ -27,7 +27,7 @@ async function getNewPages(db) {
   const sql = `SELECT * 
                FROM nn_city_totals 
                WHERE Created = 1 
-               ORDER BY Verified ASC, PageCreatedDate 
+               ORDER BY Verified ASC, PageCreatedDate DESC
                LIMIT 20`;
   const rows = await db.readPool(sql);
   return rows;
@@ -43,7 +43,7 @@ async function getRecentEvents(db) {
                FROM nn_events 
                INNER JOIN nn_reviews_perma
                ON nn_events.EventId = nn_reviews_perma.EventId
-               ORDER BY EventTime 
+               ORDER BY EventTime DESC
                LIMIT 15`
   ;
   const rows = await db.readPool(sql);

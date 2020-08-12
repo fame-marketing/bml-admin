@@ -20,7 +20,7 @@
       }
     };
 
-    req.open('POST', '/nn-admin', true);
+    req.open('POST', '/nn-admin/', true);
 
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
