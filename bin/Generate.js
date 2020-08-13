@@ -69,10 +69,11 @@ class Generate {
    */
   writeSitemap(file,url,position) {
     const lastmod = new Date().toISOString(),
+      domainBase = this.removeTrailingSlash(this.domain),
       newUrl = `<url>
-    <loc>${this.domain}${this.destination}/${url}</loc>
+    <loc>${domainBase}/${this.destination}/${url}</loc>
     <lastmod>${lastmod}</lastmod>
-  </url>
+</url>
   <!-- ::writeHere:: -->
   <!-- DO NOT REMOVE THESE COMMENTS -->
 </urlset>`;
@@ -95,6 +96,13 @@ class Generate {
       });
 
     });
+  }
+
+  removeTrailingSlash(path) {
+    if (path.endsWith('/')) {
+      path = path.slice(0,-1)
+    }
+    return path;
   }
 
 }

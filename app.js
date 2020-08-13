@@ -71,10 +71,9 @@ app.use(function (err, req, res, next) {
  | creates a  page if a new city has an updated count
 */
 new cron('0 */2 * * * *', function () {
+  (async () => {
+    new Checker();
+  })();
 }, null, true, 'America/New_York');
-
-(async () => {
-  new Checker();
-})();
 
 module.exports = app;

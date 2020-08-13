@@ -86,8 +86,8 @@ the page title, the meta description, and the page h1.
 The file path relative to the server directory root. The server directory root is the public_html
 folder by default.
 #### URL 
-the clients primary Domain.
-
+the clients primary Domain. Should include the protocol(ie. https://youneedfame.com). 
+If no protocol is given https will be assumed which could cause issues if you are not using an ssl.
 
 ### Testing
 

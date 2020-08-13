@@ -26,7 +26,8 @@ router.get('/', async function(req, res) {
 async function getNewPages(db) {
   const sql = `SELECT * 
                FROM nn_city_totals 
-               WHERE Created = 1 
+               WHERE Created = 1 AND
+                     City != ''
                ORDER BY Verified ASC, PageCreatedDate DESC
                LIMIT 20`;
   const rows = await db.readPool(sql);
