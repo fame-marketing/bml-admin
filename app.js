@@ -10,7 +10,6 @@ const createError = require('http-errors'),
 			winston = require('./bin/winston'),
 			cron = require('cron').CronJob,
 			Checker = require('./data/cityCheck'),
-			Builder = require('./model/Builder'),
 
 			indexRouter = require('./routes/index'),
 			importRouter = require('./routes/import'),

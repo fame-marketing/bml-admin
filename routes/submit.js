@@ -84,20 +84,23 @@ async function importEvents(events, type) { // remember to set some sort of even
 					dbReadyEvent[keys[i]] = values[i];
 				}
 
-				dbReadyEvent.eventId = dateToId(event.CheckinDateTime);
-				dbReadyEvent.Country = !dbReadyEvent.Country ? 'US' : dbReadyEvent.Country;
-				if (dbReadyEvent.CheckinDateTime) {
-					dbReadyEvent.CheckinDateTime = new Date(dbReadyEvent.CheckinDateTime);
-				}
-				if (dbReadyEvent.RequestDate) {
+        dbReadyEvent.eventId = dateToId(event.CheckinDateTime);
+        dbReadyEvent.Country = !dbReadyEvent.Country ? 'US' : dbReadyEvent.Country;
+        dbReadyEvent.CheckinDateTime = new Date(dbReadyEvent.CheckinDateTime);
+
+        let eventTimestamp = dbReadyEvent.CheckinDateTime;
+
+        if (dbReadyEvent.RequestDate) {
           dbReadyEvent.RequestDate = new Date(dbReadyEvent.RequestDate);
-				  dbReadyEvent.CreatedAt = new Date(dbReadyEvent.RequestDate);
+          dbReadyEvent.CreatedAt = new Date(dbReadyEvent.RequestDate);
         }
-				if (dbReadyEvent.ResponseDate) {
-					dbReadyEvent.ResponseDate = new Date(dbReadyEvent.ResponseDate);
-					const eventTimestamp = dbReadyEvent.ResponseDate;
-				} else {
-          const eventTimestamp = dbReadyEvent.CheckinDateTime;
+        if (dbReadyEvent.ResponseDate) {
+          dbReadyEvent.ResponseDate = new Date(dbReadyEvent.ResponseDate);
+          /*
+           * If there is a responseDate then this is a review, thus we will use the responseDate
+           * As the timestamp since that is the true date of the review.
+           */
+          eventTimestamp = dbReadyEvent.ResponseDate;
         }
 
 				const eventRows = await database.writePool(sql, dbReadyEvent);
@@ -142,6 +145,7 @@ function validateData(eventData, eventType) {
   const expectedColumns = {
     reviews: [
       "CustomerName",
+      "CustomerPhone",
       "CustomerEmail",
       "ResponseDate",
       "ReviewRating",
