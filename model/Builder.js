@@ -170,7 +170,7 @@ class Builder {
         process.env.KEYWORDBASE + ' ' + cityName :
         cityName + ' ' + process.env.KEYWORDBASE,
       seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase(),
-      md = "If you're looking for " + seoPhrase + " Services then give Majestic Plumbing and Electric a call! We can help with all of your plumbing and electric needs.";
+      md = "Comfort Solutions Heating and Cooling provides quality, timely, and affordable services. For " + cityName + " HVAC, contact us today.";
     return {
       metaDescription: md,
       metaTitle: seoPhrase,
