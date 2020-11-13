@@ -103,6 +103,8 @@ async function importEvents(events, type) { // remember to set some sort of even
           eventTimestamp = dbReadyEvent.ResponseDate;
         }
 
+        eventTimestamp = convertToReadableDate(eventTimestamp);
+
 				const eventRows = await database.writePool(sql, dbReadyEvent);
 
         if (eventRows.affectedRows > 0) { // only save event and tally event for city if this is a new event.
@@ -199,6 +201,10 @@ function validateData(eventData, eventType) {
 
 function dateToId(date) {
   return new Date(date).getTime() / 1000;
+}
+
+function convertToReadableDate(date) {
+  return new Date(date).toLocaleString();
 }
 
 module.exports = router;

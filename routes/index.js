@@ -1,15 +1,19 @@
 const express = require('express'),
       router  = express.Router(),
       winston = require('../bin/winston'),
-      Db = require('../data/Database')
+      FileUtils = require('../data/FileSystem/FileUtils'),
+      database = require('../data/Database'),
+      db = new database(),
+      fs = require('fs')
 ;
-/* GET home page. */
-router.get('/', async function(req, res) {
 
-  const db = new Db();
+router.get('/', async (req, res) => {
+
+  const fileUtils = new FileUtils();
   const pageList = await getNewPages(db);
   const recentEvents = await getRecentEvents(db);
   const pendingEvents = await getPendingEvents(db);
+  const directory = fileUtils.fixSlashes(process.env.DESTINATION);
 
   res.render('admin', {
     layout: 'default',
@@ -18,7 +22,8 @@ router.get('/', async function(req, res) {
     description: 'This page will be a dashboard with details on pages created, recent nearby now events and buttons allowing you to remove pages, change SEO data and such.',
     pages: pageList,
     events: recentEvents,
-    pendingEvents: pendingEvents
+    pendingEvents: pendingEvents,
+    hrefBase: process.env.URL + '/' + directory
   });
 
 });
@@ -62,19 +67,22 @@ async function getPendingEvents(db) {
 
 }
 
-router.post('/', async function(req, res) {
+router.post('/', async (req, res) => {
+
   if (typeof req.body.url === "string" && req.body.url !== '') {
-    const url = req.body.url;
-    const validResult = await markAsValid(url);
-    res.send(validResult);
+      const url = req.body.url;
+      const validResult = await markAsValid(url);
+      res.send(validResult);
   }
+
 });
 
 async function markAsValid(url) {
-  const db = new Db();
+
   const sql = `UPDATE nn_city_totals SET Verified = 1 WHERE Url = "${url}"`;
   const res = await db.readPool(sql);
   return res.affectedRows > 0 ? "verified" : "error : " + res.serverStatus;
+
 }
 
 module.exports = router;

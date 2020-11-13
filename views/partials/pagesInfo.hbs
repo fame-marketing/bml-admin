@@ -4,14 +4,24 @@
     <ul class="recentPages_list">
       {{#if pages}}
 
+        <li class="pageListHeading tableHeading">
+          <span class="recentPage_city">City</span>
+          <span class="recentPage_state">State</span>
+          <span class="recentPage_url">Url</span>
+          <span class="recentPage_checkin">Checkins</span>
+          <span class="recentPage_review">Reviews</span>
+          <span class="recentPage_date">Creation Date</span>
+          <span class="recentPage_action">Status</span>
+        </li>
+
         {{#each pages}}
           <li class="recentPage">
-            <span class="recentPage_city"><strong>City</strong> <br> {{this.City}}</span>
-            <span class="recentPage_state"><strong>State</strong> <br> {{this.State}}</span>
-            <span class="recentPage_url"><strong>Url</strong> <br> {{this.Url}}</span>
-            <span class="recentPage_checkin"><strong>Checkins</strong> <br> {{this.CheckinTotal}}</span>
-            <span class="recentPage_review"><strong>Reviews</strong> <br> {{this.ReviewTotal}}</span>
-            <span class="recentPage_date"><strong>Creation Date</strong> <br> {{this.PageCreatedDate}}</span>
+            <span class="recentPage_city">{{this.City}}</span>
+            <span class="recentPage_state">{{this.State}}</span>
+            <span class="recentPage_url"><a href="{{hrefBase}}{{this.Url}}/" target="_blank" rel="noopener noreferrer">{{this.Url}}</a></span>
+            <span class="recentPage_checkin">{{this.CheckinTotal}}</span>
+            <span class="recentPage_review">{{this.ReviewTotal}}</span>
+            <span class="recentPage_date">{{this.PageCreatedDate}}</span>
             <span class="recentPage_action">
               {{#if this.Verified}}
                 <button disabled class="btn">Verified</button>

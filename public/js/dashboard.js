@@ -3,8 +3,8 @@
   function validatePage(e) {
 
     const req = new XMLHttpRequest(),
-      url = encodeURI(e.target.dataset.url),
-      data = "url=" + url
+          url = encodeURI(e.target.dataset.url),
+          data = "url=" + url
     ;
 
     req.onreadystatechange = function() {
@@ -29,6 +29,7 @@
   }
 
   const validateButtons = d.querySelectorAll('.validateBtn');
+
   if (validateButtons) {
     for (let i = 0; i < validateButtons.length; i++) {
       validateButtons[i].addEventListener('click', validatePage);

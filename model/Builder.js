@@ -4,6 +4,7 @@ const fs = require('fs'),
   winston = require('../bin/winston'),
   os = require('os'),
   Db = require('../data/Database'),
+
   SitemapGenerator = require('../bin/Generate')
 ;
 
@@ -20,11 +21,11 @@ class Builder {
     this.cities = cities;
     this.handlebars = handlebars;
     this.database = new Db();
-    this.destination = process.env.DESTINATION; //directory where the page will be placed upon creation
     this.KeywordPosition = process.env.KeywordPosition;
+    this.keywordBase = process.env.KEYWORDBASE;
     this.sitemapGenerator = SitemapGenerator;
 
-    this.dPath = this.fixSlashes(this.destination);
+    this.dPath = this.fixSlashes(process.env.DESTINATION);
     this.fileDir = this.os.homedir() + '/public_html/' + this.dPath + '/';
 
     this.initPageCreation();
@@ -167,8 +168,8 @@ class Builder {
     const cityName = city.City,
       state = city.State,
       seoPhrase = this.KeywordPosition === 'pre' ?
-        process.env.KEYWORDBASE + ' ' + cityName :
-        cityName + ' ' + process.env.KEYWORDBASE,
+        this.keywordBase + ' ' + cityName :
+        cityName + ' ' + this.keywordBase,
       seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase(),
       md = "If you're looking for " + seoPhrase + " Services then give Majestic Plumbing and Electric a call! We can help with all of your plumbing and electric needs.";
     return {
@@ -181,16 +182,6 @@ class Builder {
       state: state
     };
 
-  }
-
-  fixSlashes(path) {
-    if (path.endsWith('/')) {
-      path = path.slice(0,-1)
-    }
-    if (path.startsWith('/')) {
-      path = path.slice(1)
-    }
-    return path;
   }
 
 }
