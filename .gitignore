@@ -2,6 +2,5 @@ node_modules
 /node_modules/
 /.idea/
 .env
-/bin/logs/error.log
-/bin/logs/webhook.log
+/bin/logs/*
 stderr.log
