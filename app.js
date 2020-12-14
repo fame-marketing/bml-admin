@@ -18,7 +18,7 @@ const createError = require('http-errors'),
 			statsRouter = require('./routes/stats'),
 			mapRouter = require('./routes/map'),
 			contactRouter = require('./routes/contact'),
-			settingsRouter = require('./routes/settings'),
+			//settingsRouter = require('./routes/settings'),
 
 			app = express();
 
@@ -44,7 +44,7 @@ app.use('/nn-admin/import/submit', formHandler);
 app.use('/nn-admin/stats', statsRouter);
 app.use('/nn-admin/map', mapRouter);
 app.use('/nn-admin/contact', contactRouter);
-app.use('/nn-admin/settings', settingsRouter);
+//app.use('/nn-admin/settings', settingsRouter);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -70,9 +70,9 @@ app.use(function (err, req, res, next) {
  | creates a  page if a new city has an updated count
 */
 new cron('0 */2 * * * *', function () {
+  (async () => {
+    new Checker();
+  })();
 }, null, true, 'America/New_York');
-(async () => {
-  new Checker();
-})();
 
 module.exports = app;

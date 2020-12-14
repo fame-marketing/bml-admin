@@ -2,6 +2,10 @@ const express = require('express'),
       router  = express.Router(),
       winston = require('../bin/winston'),
       FileUtils = require('../data/FileSystem/FileUtils'),
+      pageDbFunctionsClass = require('../model/Db/pageDbFunctions'),
+      pageDbFunctions = new pageDbFunctionsClass();
+      pageFileFunctionsClass = require('../model/FileSystem/PageFileFunctions'),
+      pageFileFunctions = new pageFileFunctionsClass();
       database = require('../data/Database'),
       db = new database(),
       fs = require('fs')
@@ -32,8 +36,11 @@ router.post('/', async (req, res) => {
 
         try {
 
-          const unsavedPages = await Promise.all( files.map( async file => {
+          let unsavedPages = [];
 
+          for (let i = 0; i < files.length; i++) {
+
+            const file = files[i];
             const fileExt = fileUtils.getExtensionName(file.name);
             const fileExtRegex = /(\.html)|(\.phtml)|(\.php)/g;
             const existingPages = await getStoredPages();
@@ -42,16 +49,16 @@ router.post('/', async (req, res) => {
               fileExt.match(fileExtRegex) &&
               !existingPages.includes(fileUtils.getFileBasename(file.name))
             ) {
-              return file.name;
+              const city = getCityFromFileName(file.name);
+              unsavedPages.push(file.name) ;
             }
-
-          }));
-
-          if (typeof unsavedPages !== 'undefined' && unsavedPages !== '') {
-
           }
 
-          res.send('completed the scan found ' + unsavedPages + ' new pages');
+          function getCityFromFileName(fileName) { //move to dedicated file after this works
+            pageFileFunctions.fileNameContainsCity(fileName);
+          }
+
+          res.send(pageFileFunctions.getAllCities());
 
         } catch(err) {
 

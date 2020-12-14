@@ -24,7 +24,7 @@ const app = require('../app'),
    * Listen on provided port, on all network interfaces.
    */
 
-  server.listen('63203');
+  server.listen();
   server.on('error', onError);
   server.on('listening', onListening);
 
@@ -63,8 +63,10 @@ const app = require('../app'),
       : 'port ' + addr.port;
     debug('Listening on ' + bind);
 
+    /* use on local to auto open the admin panel on program start
     const openingUrl = "http://localhost:" + addr.port + "/nn-admin";
     open(openingUrl);
+    */
 
   }
 

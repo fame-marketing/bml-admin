@@ -11,6 +11,7 @@
     "app-root-path": "^2.2.1",
     "chart.js": "^2.9.3",
     "cookie-parser": "^1.4.5",
+    "country-state-city": "^1.0.5",
     "cron": "^1.8.2",
     "csv-parse": "^4.10.1",
     "debug": "~2.6.9",

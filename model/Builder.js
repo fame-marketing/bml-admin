@@ -4,7 +4,7 @@ const fs = require('fs'),
   winston = require('../bin/winston'),
   os = require('os'),
   Db = require('../data/Database'),
-
+  fileUtils = require('../data/FileSystem/FileUtils'),
   SitemapGenerator = require('../bin/Generate')
 ;
 
@@ -24,8 +24,9 @@ class Builder {
     this.KeywordPosition = process.env.KeywordPosition;
     this.keywordBase = process.env.KEYWORDBASE;
     this.sitemapGenerator = SitemapGenerator;
+    this.fileUtils = new fileUtils();
 
-    this.dPath = this.fixSlashes(process.env.DESTINATION);
+    this.dPath = this.fileUtils.fixSlashes(process.env.DESTINATION);
     this.fileDir = this.os.homedir() + '/public_html/' + this.dPath + '/';
 
     this.initPageCreation();
@@ -42,7 +43,7 @@ class Builder {
 
     this.cities.forEach((city) => {
       if (city !== undefined) {
-        this.checkExisting(city, pageBase);
+        //this.checkExisting(city, pageBase);
       }
     });
 
