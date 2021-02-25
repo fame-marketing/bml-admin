@@ -22,7 +22,7 @@ class Install {
     );
 
     this.tableCreationError.permCheckins = await database.writePool(
-    `CREATE TABLE IF NOT EXISTS nn_checkins_perma (
+    `CREATE TABLE IF NOT EXISTS nn_checkins (
       id                     INT AUTO_INCREMENT PRIMARY KEY,
       EventId                VARCHAR(100) UNIQUE,
       CreatedAt              VARCHAR(30),
@@ -43,7 +43,7 @@ class Install {
     );
 
     this.tableCreationError.permReviews = await database.writePool(
-      `CREATE TABLE IF NOT EXISTS nn_reviews_perma (
+      `CREATE TABLE IF NOT EXISTS nn_reviews (
         id                  INT AUTO_INCREMENT PRIMARY KEY,
         EventId             VARCHAR(100) UNIQUE,
         CreatedAt           VARCHAR(30),

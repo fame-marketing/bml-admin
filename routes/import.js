@@ -1,17 +1,12 @@
 const express = require('express'),
 			router  = express.Router(),
-			winston = require('../bin/winston')
+      multer = require('multer'),
+      fileHandler = multer({storage:multer.memoryStorage()}),
+      importController = require('../controllers/import')
 ;
 
-router.get('/', function(req, res) {
-	res.render(
-		'import',
-		{
-		  layout: 'import',
-			title: 'Import Data',
-			description: 'import a csv'
-		}
-	);
-});
+router.get('/', importController.render);
+
+router.post('/submit', fileHandler.single('file'), importController.storeData);
 
 module.exports = router;

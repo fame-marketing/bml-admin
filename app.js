@@ -10,20 +10,13 @@ const createError = require('http-errors'),
 			winston = require('./bin/winston'),
 			cron = require('cron').CronJob,
 			Checker = require('./data/cityCheck'),
-
-			indexRouter = require('./routes/index'),
-			importRouter = require('./routes/import'),
-      formHandler = require('./routes/submit'),
-      webhookRouter = require('./routes/webhook'),
-			statsRouter = require('./routes/stats'),
-			mapRouter = require('./routes/map'),
-			contactRouter = require('./routes/contact'),
-			//settingsRouter = require('./routes/settings'),
+      adminRouter = require('./routes/router'),
 
 			app = express();
 
 // view engine setup
 app.set('view engine', 'hbs');
+
 app.engine('hbs', hbs({
   extname: 'hbs',
   defaultLayout: 'default',
@@ -37,14 +30,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static('public'));
 
-app.use('/nn-admin', indexRouter);
-app.use('/nn-admin/webhook', webhookRouter);
-app.use('/nn-admin/import', importRouter);
-app.use('/nn-admin/import/submit', formHandler);
-app.use('/nn-admin/stats', statsRouter);
-app.use('/nn-admin/map', mapRouter);
-app.use('/nn-admin/contact', contactRouter);
-//app.use('/nn-admin/settings', settingsRouter);
+app.use('/nn-admin', adminRouter);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -70,9 +56,9 @@ app.use(function (err, req, res, next) {
  | creates a  page if a new city has an updated count
 */
 new cron('0 */2 * * * *', function () {
-  (async () => {
-    new Checker();
-  })();
 }, null, true, 'America/New_York');
+(async () => {
+  new Checker();
+})();
 
 module.exports = app;

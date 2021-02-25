@@ -43,7 +43,7 @@ class Builder {
 
     this.cities.forEach((city) => {
       if (city !== undefined) {
-        //this.checkExisting(city, pageBase);
+        this.checkExisting(city, pageBase);
       }
     });
 
@@ -70,8 +70,9 @@ class Builder {
           const checkCityFormatted = checkCity.toLowerCase().replace(' ', '-');
           const cityExists = files.filter(file => file.includes(checkCityFormatted));
           if (cityExists.length !== 0) {
-            this.markAsCreated(checkCity, cityExists[0]);
-            winston.info('attempted to create a page for the city ' + checkCity + ' that is already represented by the file(s)' + cityExists.toString());
+            const filePath = this.fileDir + '/' + cityExists[0];
+            this.markAsCreated(checkCity, cityExists[0], filePath);
+            winston.info('attempted to create a page for the city ' + checkCity + ' that is already represented by the file(s) ' + cityExists.toString());
           }else if(cityExists.length === 0) {
             this.createPage(city, base);
           }
@@ -95,8 +96,8 @@ class Builder {
   createPage(city, pageBase) {
 
     const seo = this.generateSEO(city),
-      template = this.handlebars.compile(pageBase),
-      filepath = this.fileDir + seo.url + '.phtml'
+          template = this.handlebars.compile(pageBase),
+          filepath = this.fileDir + seo.url + '.phtml'
     ;
 
     let page = template(seo);
@@ -124,7 +125,7 @@ class Builder {
       } else {
 
         winston.info(city.City + ' page created succesfully.');
-        this.markAsCreated(city.City, seo.url);
+        this.markAsCreated(city.City, seo.url, filepath).catch(() => {});
         const sitemap = this.os.homedir() + '/public_html/service-areas-sitemap.xml';
         await new this.sitemapGenerator(sitemap, seo.url);
 
@@ -138,11 +139,18 @@ class Builder {
    | Takes a city and updates that row in the nn_city_totals table to reflect that the page already
    | exists.
    */
-  markAsCreated(cityName, url) {
-    const createdSql = `UPDATE nn_city_totals SET created = 1 WHERE city = "${cityName}"`;
-    this.database.QueryOnly(createdSql);
-    const urlSql = `UPDATE nn_city_totals SET Url = "${url}" WHERE city = "${cityName}"`;
-    this.database.QueryOnly(urlSql);
+  async markAsCreated(cityName, url, createdFile) {
+
+    await fs.stat(createdFile, (err, stats) => {
+      try {
+        const birthtime = stats.birthtime.toLocaleString();
+        const query = `UPDATE nn_city_totals SET created = 1, Url = "${url}", PageCreatedDate = "${birthtime}" WHERE city = "${cityName}"`;
+        this.database.QueryOnly(query);
+      } catch (err) {
+        winston.error('error getting file stats for the newly created file. This may prevent the database from displaying the correct page creation date for the new city.');
+      }
+    });
+
   }
 
   /*
