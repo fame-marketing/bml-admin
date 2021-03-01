@@ -1,8 +1,8 @@
 const parse = require('csv-parse'),
-      winston = require('../bin/winston'),
-      db = require('../data/Database'),
-      database = new db(),
-      recentEventStorageHandler = require('../data/Db/storeRecentEvent')
+  winston = require('../bin/winston'),
+  db = require('../data/Database'),
+  database = new db(),
+  recentEventStorageHandler = require('../data/Db/storeRecentEvent')
 ;
 
 async function importEvents(events, type) { // remember to set some sort of eventId
@@ -35,16 +35,16 @@ async function importEvents(events, type) { // remember to set some sort of even
 
       dbReadyEvent.eventId = dateToId(event.CheckinDateTime);
       dbReadyEvent.Country = !dbReadyEvent.Country ? 'US' : dbReadyEvent.Country;
-      dbReadyEvent.CheckinDateTime = new Date(dbReadyEvent.CheckinDateTime);
+      dbReadyEvent.CheckinDateTime = convertToReadableDate(dbReadyEvent.CheckinDateTime);
 
       let eventTimestamp = dbReadyEvent.CheckinDateTime;
 
       if (dbReadyEvent.RequestDate) {
-        dbReadyEvent.RequestDate = new Date(dbReadyEvent.RequestDate);
-        dbReadyEvent.CreatedAt = new Date(dbReadyEvent.RequestDate);
+        dbReadyEvent.RequestDate = convertToReadableDate(dbReadyEvent.RequestDate);
+        dbReadyEvent.CreatedAt = convertToReadableDate(dbReadyEvent.RequestDate);
       }
       if (dbReadyEvent.ResponseDate) {
-        dbReadyEvent.ResponseDate = new Date(dbReadyEvent.ResponseDate);
+        dbReadyEvent.ResponseDate = convertToReadableDate(dbReadyEvent.ResponseDate);
         /*
          * If there is a responseDate then this is a review, thus we will use the responseDate
          * As the timestamp since that is the true date of the review.
@@ -153,7 +153,8 @@ function dateToId(date) {
 }
 
 function convertToReadableDate(date) {
-  return new Date(date).toLocaleString();
+  const readableDate = new Date(date).toLocaleString('en-GB');
+  return readableDate.substring(0, 10).split('/').reverse().join('/') + ' ' + readableDate.substring(12,20)
 }
 
 exports.render = async (req,res) => {

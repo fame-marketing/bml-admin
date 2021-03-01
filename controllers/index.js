@@ -1,39 +1,43 @@
 const winston = require('../bin/winston'),
-      FileUtils = require('../data/FileSystem/FileUtils'),
-      database = require('../data/Database'),
-      db = new database(),
-      fs = require('fs'),
-      fileUtils = new FileUtils(),
-      directory = fileUtils.fixSlashes(process.env.DESTINATION)
+  FileUtils = require('../data/FileSystem/FileUtils'),
+  database = require('../data/Database'),
+  db = new database(),
+  fs = require('fs'),
+  fileUtils = new FileUtils(),
+  directory = fileUtils.fixSlashes(process.env.DESTINATION)
 ;
 
 async function getNewPages() {
-  const sql = `SELECT * 
-             FROM nn_city_totals 
-             WHERE Created = 1 AND
+  const sql = `SELECT *
+               FROM nn_city_totals
+               WHERE Created = 1 AND
                    City != ''
-             ORDER BY Verified ASC, PageCreatedDate DESC
-             LIMIT 20`;
+               ORDER BY Verified ASC, PageCreatedDate DESC
+               LIMIT 20`;
   const rows = await db.readPool(sql);
+  rows.forEach(row => {
+    row.PageCreatedDate = simplifyDateFormat(row.PageCreatedDate);
+  });
   return rows;
 }
 
 async function getRecentEvents() {
   const sql = `SELECT EventType, EventTime, UserName, City, State
-             FROM nn_events 
-             INNER JOIN nn_checkins
-             ON nn_events.EventId = nn_checkins.EventId
-             UNION ALL
-             SELECT EventType, EventTime, UserName, City, State
-             FROM nn_events 
-             INNER JOIN nn_reviews
-             ON nn_events.EventId = nn_reviews.EventId
-             ORDER BY EventTime DESC
-             LIMIT 15`
+               FROM nn_events
+                        INNER JOIN nn_checkins
+                                   ON nn_events.EventId = nn_checkins.EventId
+               UNION ALL
+               SELECT EventType, EventTime, UserName, City, State
+               FROM nn_events
+                        INNER JOIN nn_reviews
+                                   ON nn_events.EventId = nn_reviews.EventId
+               ORDER BY EventTime DESC
+               LIMIT 15`
   ;
   const rows = await db.readPool(sql);
   rows.forEach(row => {
-    row.EventType = (row.EventType === "checkin.created") ? 'checkin' : 'review';
+    row.EventType = (row.EventType === "checkin.created") ? 'Checkin' : 'Review';
+    row.EventTime = simplifyDateFormat(row.EventTime);
   });
   return rows;
 }
@@ -54,9 +58,13 @@ async function markAsValid() {
 
 }
 
+function simplifyDateFormat(date) {
+  return date.toLocaleString(date, {dateStyle:'medium',timeStyle:'medium'})
+}
+
 exports.render = async (req, res) => {
 
-   res.render('admin', {
+  res.render('admin', {
     layout: 'default',
     template: 'admin-template',
     title: 'Nearby Now Webhook Admin Page',

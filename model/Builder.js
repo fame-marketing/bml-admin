@@ -143,7 +143,7 @@ class Builder {
 
     await fs.stat(createdFile, (err, stats) => {
       try {
-        const birthtime = stats.birthtime.toLocaleString();
+        const birthtime = stats.birthtime.toISOString();
         const query = `UPDATE nn_city_totals SET created = 1, Url = "${url}", PageCreatedDate = "${birthtime}" WHERE city = "${cityName}"`;
         this.database.QueryOnly(query);
       } catch (err) {

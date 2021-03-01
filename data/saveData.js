@@ -1,7 +1,7 @@
 const Db = require('./Database'),
-      winston = require('../bin/winston'),
-      recentEventStorageHandler = require('./Db/storeRecentEvent'),
-      deleteTempEventHandler = require('./Db/deleteTempEvent')
+  winston = require('../bin/winston'),
+  recentEventStorageHandler = require('./Db/storeRecentEvent'),
+  deleteTempEventHandler = require('./Db/deleteTempEvent')
 ;
 
 /*
@@ -35,7 +35,7 @@ class saveData {
     const event = this.formatData(data, eventType);
 
     let permTable = eventType === "checkin.created" ? "nn_checkins" : "nn_reviews",
-        rowId = row.id;
+      rowId = row.id;
 
     await this.updateCityValues(event, rowId, permTable);
 
@@ -145,7 +145,8 @@ class saveData {
    | formats the unix timestamp received from Nearby Now into a more readable format.
    */
   createReadableDate(date) {
-    return new Date(date * 1000).toLocaleString();
+    const readableDate = new Date(date * 1000).toLocaleString('en-GB');
+    return readableDate.substring(0, 10).split('/').reverse().join('/') + ' ' + readableDate.substring(12,20)
   }
 
 }
