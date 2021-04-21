@@ -32,7 +32,7 @@ class Database {
    | @query -- a string containing the query base
    | @values -- an object that will be parsed into the query automatically to populate the db column.
   */
-  async writePool(pool = this.mainPromisePool, query, values) {
+  async writePool(query, values, pool = this.mainPromisePool) {
     try {
       const [rows, fields] = await pool.query(query, values);
       return rows;

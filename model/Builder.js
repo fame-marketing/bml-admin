@@ -143,8 +143,10 @@ class Builder {
 
     await fs.stat(createdFile, (err, stats) => {
       try {
-        const birthtime = stats.birthtime.toISOString();
-        const query = `UPDATE nn_city_totals SET created = 1, Url = "${url}", PageCreatedDate = "${birthtime}" WHERE city = "${cityName}"`;
+        const birthtime = stats.birthtime;
+        const date = birthtime.toLocaleString('en-GB');
+        const formatDate = date.substring(0, 10).split('/').reverse().join('/') + ' ' + date.substring(12,20)
+        const query = `UPDATE nn_city_totals SET created = 1, Url = "${url}", PageCreatedDate = "${formatDate}" WHERE city = "${cityName}"`;
         this.database.QueryOnly(query);
       } catch (err) {
         winston.error('error getting file stats for the newly created file. This may prevent the database from displaying the correct page creation date for the new city.');

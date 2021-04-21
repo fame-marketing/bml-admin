@@ -69,7 +69,7 @@ class Generate {
    */
   writeSitemap(file,url,position) {
     const getDateFormatted = new Date().toLocaleString('en-GB'),
-      lastmod = getDateFormatted.substring(0, 10).split('/').reverse().join('/') + ' ' + getDateFormatted.substring(12,20),
+      lastmod = getDateFormatted.substring(0, 10).split('/').reverse().join('-'),
       domainBase = this.removeTrailingSlash(this.domain),
       newUrl = `<url>
                         <loc>${domainBase}/${this.destination}/${url}</loc>
