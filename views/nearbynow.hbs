@@ -6,14 +6,12 @@
   <?php getStaticHead(); ?>
 
   <title>{{metaTitle}} - Comfort Solutions</title>
-  <meta name="description"
-        content="{{metaDescription}}">
+  <meta name="description" content="{{metaDescription}}">
   <link rel="canonical" href="https://comfortsolutionsair.com/local-hvac/{{url}}">
   <meta property="og:url" content="https://comfortsolutionsair.com/local-hvac/{{url}}"/>
   <meta property="og:title" content="{{metaTitle}} - Comfort Solutions"/>
   <meta property="og:image" content="https://comfortsolutionsair.com/images/subpages/heatmap.jpg"/>
-  <meta property="og:description"
-        content="{{metaDescription}}"/>
+  <meta property="og:description" content="{{metaDescription}}"/>
 
   <script type="application/ld+json">
     {
@@ -77,18 +75,16 @@
               <div class="lower-content">
 
                 <div class="nn-info combo-info">
-
                   <?php
-                  getNearbyNow();
-                  $comboNN = new nearbyNow(
-                    $state = '{{state}}',
-                    $city = '{{city}}',
-                    $showMap = 'yes',
-                    $zoom = 10
-                  );
-                  $comboNN->comboNN();
-                  ?>
 
+                  getNearbyNow(
+                           'combo',
+                           [
+                              'city' => '{{city}}',
+                              'zoom' => 10
+                           ]
+                  );
+                  ?>
                 </div>
 
               </div>
@@ -98,56 +94,7 @@
         </div>
 
         <!--Sidebar Side-->
-        <div class="sidebar-side col-lg-4 col-md-12 col-sm-12">
-          <aside class="sidebar">
-
-            <div class="sidebar-widget popular-posts">
-              <div class="sidebar-title">
-                <h2><a href="../local-hvac">Service Areas</a></h2>
-              </div>
-              <div class="widget-content">
-                <ul class="cat-list">
-                  <li><a href="acworth-hvac">Acworth</a></li>
-                  <li><a href="alpharetta-hvac">Alpharetta</a></li>
-                  <li><a href="atlanta-hvac">Atlanta</a></li>
-                  <li><a href="austell-hvac">Austell</a></li>
-                  <li><a href="bremen-hvac">Bremen</a></li>
-                  <li><a href="canton-hvac">Canton</a></li>
-                  <li><a href="carrollton-hvac">Carrollton</a></li>
-                  <li><a href="college-park-hvac">College Park</a></li>
-                  <li><a href="covington-hvac">Covington</a></li>
-                  <li><a href="dallas-hvac">Dallas</a></li>
-                  <li><a href="decatur-hvac">Decatur</a></li>
-                  <li><a href="doraville-hvac">Doraville</a></li>
-                  <li><a href="douglasville-hvac">Douglasville</a></li>
-                  <li><a href="dunwoody-hvac">Dunwoody</a></li>
-                  <li><a href="hiram-hvac">Hiram</a></li>
-                  <li><a href="jonesboro-hvac">Jonesboro</a></li>
-                  <li><a href="kennesaw-hvac">Kennesaw</a></li>
-                  <li><a href="lithia-springs-hvac">Lithia Springs</a></li>
-                  <li><a href="mableton-hvac">Mableton</a></li>
-                  <li><a href="marietta-hvac">Marietta</a></li>
-                  <li><a href="norcross-hvac">Norcross</a></li>
-                  <li><a href="powder-springs-hvac">Powder Springs</a></li>
-                  <li><a href="roswell-hvac">Roswell</a></li>
-                  <li><a href="sandy-springs-hvac">Sandy Springs</a></li>
-                  <li><a href="smyrna-hvac">Smyrna</a></li>
-                  <li><a href="temple-hvac">Temple</a></li>
-                  <li><a href="villa-rica-hvac">Villa Rica</a></li>
-                  <li><a href="winston-hvac">Winston</a></li>
-                  <li><a href="woodstock-hvac">Woodstock</a></li>
-                </ul>
-              </div>
-            </div>
-
-          </aside>
-          <div class="cta">
-            <div class="text">
-              <h3>Whole house high-efficiency heating and air-conditioning installed for as low as</h3>
-            </div>
-            <a href="https://etail.mysynchrony.com/eapply/eapply.action?mid=5348121950033249&amp;pcgc=M900" target="_blank" rel="noopener noreferrer" class="cta__big">$64 Month</a>
-          </div>
-        </div>
+          <?php getServiceAreaSidebar(); ?>
 
       </div>
     </div>
