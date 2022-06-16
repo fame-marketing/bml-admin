@@ -10,7 +10,9 @@
   "dependencies": {
     "app-root-path": "^2.2.1",
     "chart.js": "^2.9.3",
+    "cli-spinner": "^0.2.10",
     "cookie-parser": "^1.4.5",
+    "country-state-city": "^1.0.5",
     "cron": "^1.8.2",
     "csv-parse": "^4.10.1",
     "debug": "~2.6.9",
@@ -18,13 +20,16 @@
     "express": "~4.16.1",
     "express-handlebars": "^3.1.0",
     "get-port": "^5.1.1",
-    "handlebars": "^4.7.6",
     "hbs": "^4.1.1",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "multer": "^1.4.2",
     "mysql2": "^1.7.0",
+    "open": "^7.3.0",
     "sitemap": "^5.1.0",
     "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "handlebars": "^4.7.6"
   }
 }

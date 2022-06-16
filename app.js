@@ -1,29 +1,23 @@
 require('dotenv').config();
 
 const createError = require('http-errors'),
-			express = require('express'),
-      hbs = require('express-handlebars'),
-			path = require('path'),
-			fs = require('fs'),
-			cookieParser = require('cookie-parser'),
-			morgan = require('morgan'),
-			winston = require('./bin/winston'),
-			cron = require('cron').CronJob,
-			Checker = require('./data/cityCheck'),
+  express = require('express'),
+  hbs = require('express-handlebars'),
+  path = require('path'),
+  fs = require('fs'),
+  cookieParser = require('cookie-parser'),
+  morgan = require('morgan'),
+  winston = require('./bin/winston'),
+  cron = require('cron').CronJob,
+  Checker = require('./data/cityCheck'),
+  adminRouter = require('./routes/router'),
+  https = require('https'),
 
-			indexRouter = require('./routes/index'),
-			importRouter = require('./routes/import'),
-      formHandler = require('./routes/submit'),
-      webhookRouter = require('./routes/webhook'),
-			statsRouter = require('./routes/stats'),
-			mapRouter = require('./routes/map'),
-			contactRouter = require('./routes/contact'),
-			settingsRouter = require('./routes/settings'),
-
-			app = express();
+  app = express();
 
 // view engine setup
 app.set('view engine', 'hbs');
+
 app.engine('hbs', hbs({
   extname: 'hbs',
   defaultLayout: 'default',
@@ -37,14 +31,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static('public'));
 
-app.use('/nn-admin', indexRouter);
-app.use('/nn-admin/webhook', webhookRouter);
-app.use('/nn-admin/import', importRouter);
-app.use('/nn-admin/import/submit', formHandler);
-app.use('/nn-admin/stats', statsRouter);
-app.use('/nn-admin/map', mapRouter);
-app.use('/nn-admin/contact', contactRouter);
-app.use('/nn-admin/settings', settingsRouter);
+app.use('/nn-admin', adminRouter);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -70,9 +57,25 @@ app.use(function (err, req, res, next) {
  | creates a  page if a new city has an updated count
 */
 new cron('0 */2 * * * *', function () {
+
+  const heartbeat = https.request({
+    hostname:'heartbeat.uptimerobot.com',
+    port: 443,
+    path: '/m787348302-832f0abc1a856b46c31784e553ffd53234c13896',
+    method: 'GET'
+  });
+
+  heartbeat.on("error", (e) => {
+    winston.info('there was an error with the heartbeat : %j', e);
+  });
+
+  heartbeat.end();
+
   (async () => {
+    winston.info('the checker is running');
     new Checker();
   })();
+
 }, null, true, 'America/New_York');
 
 module.exports = app;

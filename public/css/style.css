@@ -90,15 +90,15 @@ header a{
 }
 
 /* Dashboard Styles */
+.adminContent {
+  padding: 50px 15px 50px;
+}
 .adminContent.dashboard {
   display: flex;
-  padding-top: 50px;
-}
-.adminContent{
-  background: #f1f1f1;
 }
 .adminContent_section {
   padding: 10px;
+  position: relative;
 }
 .adminContent_pages {
   width:60%;
@@ -116,9 +116,41 @@ header a{
 }
 .dashboard li {
   display: grid;
-  padding: 9px;
+  padding: 15px;
 }
-.recentPage {
+
+.pagesTools {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+#pagesTools_menu {
+  background: linear-gradient(45deg, #42a0c3, #5477f6);
+  width: max-content;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-15px);
+  transition: transform .2s;
+  position: absolute;
+  right: 0;
+  top: 36px;
+  z-index: 30;
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 15px;
+}
+
+#pagesTools_opener:hover svg {
+  transform:rotate(60deg);
+  transition: transform .2s;
+}
+
+.tableHeading {
+  font-weight:700;
+  font-size:1.1rem
+}
+.recentPage, .pageListHeading  {
   grid-template-columns:
     1fr [city]
     80px [state]
@@ -128,21 +160,20 @@ header a{
     1fr [creationDate]
     1fr [validate]
 }
-.recentEvents_item {
+.recentEvents_item, .recentEventsHeading {
   grid-template-columns:
     104px [type]
     1fr [time]
     1fr [employee]
     1fr [location]
 }
-.dashboard li:nth-child(odd) {
-  background: #e4e8ec;
-}
-.dashboard li:nth-child(even) {
-  background: #f7f7f7;
+.dashboard strong {
+  padding-bottom: 5px;
+  display: inline-block;
 }
 .dashboard li span {
   width: 100%;
+  padding: 0 5px;
 }
 .locationsInfo {
   display: flex;
@@ -303,6 +334,41 @@ button {
   text-transform: uppercase;
 }
 
+/* Settings Styles */
+.nnSetting {
+  padding: 10px;
+  display: inline-block;
+  cursor: pointer;
+}
+.notificationsWrapper {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  transition: transform .5s;
+  transform: translateX(100%);
+  display: flex;
+  visibility: hidden;
+  box-shadow: 2px 2px 10px #00000052;
+}
+.notificationsBox {
+  height: 300px;
+  width: 300px;
+  background: linear-gradient(45deg, #42a0c3, #5477f6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+#notificationsCloseBtn {
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  color: #fff;
+  font-size: 1.7rem;
+  cursor: pointer;
+}
 
 /* Stats Styles */
 .employeeChart {

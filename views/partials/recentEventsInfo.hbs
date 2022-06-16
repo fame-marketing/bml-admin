@@ -4,13 +4,20 @@
 
     {{#if events}}
 
+      <li class="recentEventsHeading tableHeading">
+        <span class="recentPage_city">Type</span>
+        <span class="recentPage_state">Time</span>
+        <span class="recentPage_url">Employee</span>
+        <span class="recentPage_checkin">Location</span>
+      </li>
+
       <ul class="recentEvents_list">
         {{#each events}}
           <li class="recentEvents_item">
-            <span><strong>Type</strong> <br> {{this.EventType}}</span>
-            <span><strong>Time</strong> <br> {{this.EventTime}}</span>
-            <span><strong>Employee</strong> <br> {{this.UserName}}</span>
-            <span><strong>Location</strong> <br> {{this.City}},{{this.State}}</span>
+            <span>{{this.EventType}}</span>
+            <span>{{this.EventTime}}</span>
+            <span>{{this.UserName}}</span>
+            <span>{{this.City}},{{this.State}}</span>
           </li>
         {{/each}}
       </ul>

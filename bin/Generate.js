@@ -68,15 +68,16 @@ class Generate {
    |
    */
   writeSitemap(file,url,position) {
-    const lastmod = new Date().toISOString(),
+    const getDateFormatted = new Date().toLocaleString('en-GB'),
+      lastmod = getDateFormatted.substring(0, 10).split('/').reverse().join('-'),
       domainBase = this.removeTrailingSlash(this.domain),
       newUrl = `<url>
-    <loc>${domainBase}/${this.destination}/${url}</loc>
-    <lastmod>${lastmod}</lastmod>
-</url>
-  <!-- ::writeHere:: -->
-  <!-- DO NOT REMOVE THESE COMMENTS -->
-</urlset>`;
+                        <loc>${domainBase}/${this.destination}/${url}</loc>
+                        <lastmod>${lastmod}</lastmod>
+                    </url>
+                  <!-- ::writeHere:: -->
+                  <!-- DO NOT REMOVE THESE COMMENTS -->
+                </urlset>`;
 
     fs.open(file, 'r+', (e, fd) => {
 

@@ -1,17 +1,10 @@
 const express = require('express'),
-  router  = express.Router(),
-  winston = require('../bin/winston')
+      router  = express.Router(),
+      settingsController = require('../controllers/settings')
 ;
 
-router.get('/', function(req, res) {
-  res.render(
-    'settings',
-    {
-      layout: 'default',
-      title: 'Nearby Now Dashboard Settings',
-      description: 'Nearby Now Dashboard Settings'
-    }
-  );
-});
+router.get('/', settingsController.render);
+
+router.post('/', settingsController.scanForPages);
 
 module.exports = router;
