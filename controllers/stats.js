@@ -27,12 +27,12 @@ exports.getStats = async(req,res) => {
       data = await db.readPool(
         `(SELECT CreatedAt, UserName, City, State, PostalCode, null as ReviewRating, null as ResponseDate, null as CustomerName,
               COUNT(*) as EventTotal
-              FROM nn_checkins
+              FROM nn_checkins_perma
               GROUP BY UserName)
               UNION
              (SELECT CreatedAt, UserName, City, State, PostalCode, ReviewRating, ResponseDate, CustomerName,
               COUNT(*) as EventTotal
-              FROM nn_reviews
+              FROM nn_reviews_perma
               GROUP BY UserName) 
              ORDER BY EventTotal DESC 
              LIMIT 7`

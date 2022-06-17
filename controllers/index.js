@@ -16,7 +16,9 @@ async function getNewPages() {
                LIMIT 20`;
   const rows = await db.readPool(sql);
   rows.forEach(row => {
-    row.PageCreatedDate = simplifyDateFormat(row.PageCreatedDate);
+    if (row.PageCreatedDate === 'null') {
+      row.PageCreatedDate = simplifyDateFormat(row.PageCreatedDate);
+    }
   });
   return rows;
 }
@@ -24,13 +26,13 @@ async function getNewPages() {
 async function getRecentEvents() {
   const sql = `SELECT EventType, EventTime, UserName, City, State
                FROM nn_events
-                        INNER JOIN nn_checkins
-                                   ON nn_events.EventId = nn_checkins.EventId
+                        INNER JOIN nn_checkins_perma
+                                   ON nn_events.EventId = nn_checkins_perma.EventId
                UNION ALL
                SELECT EventType, EventTime, UserName, City, State
                FROM nn_events
-                        INNER JOIN nn_reviews
-                                   ON nn_events.EventId = nn_reviews.EventId
+                        INNER JOIN nn_reviews_perma
+                                   ON nn_events.EventId = nn_reviews_perma.EventId
                ORDER BY EventTime DESC
                LIMIT 15`
   ;
@@ -72,7 +74,7 @@ exports.render = async (req, res) => {
     pages: await getNewPages(),
     events: await getRecentEvents(),
     pendingEvents: await getPendingEvents(),
-    hrefBase: process.env.URL + '/' + directory
+    hrefBase: fileUtils.fixSlashes(process.env.URL) + '/' + fileUtils.fixSlashes(directory)
   });
 
 }

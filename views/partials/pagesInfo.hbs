@@ -2,6 +2,7 @@
   <div class="recentPages">
     <h2>RECENT PAGES</h2>
     <ul class="recentPages_list">
+
       {{#if pages}}
 
         <li class="pageListHeading tableHeading">
@@ -15,10 +16,11 @@
         </li>
 
         {{#each pages}}
+
           <li class="recentPage">
             <span class="recentPage_city">{{this.City}}</span>
             <span class="recentPage_state">{{this.State}}</span>
-            <span class="recentPage_url"><a href="{{hrefBase}}{{this.Url}}/" target="_blank" rel="noopener noreferrer">{{this.Url}}</a></span>
+            <span class="recentPage_url"><a href="{{../hrefBase}}/{{this.Url}}/" target="_blank" rel="noopener noreferrer">{{this.Url}}</a></span>
             <span class="recentPage_checkin">{{this.CheckinTotal}}</span>
             <span class="recentPage_review">{{this.ReviewTotal}}</span>
             <span class="recentPage_date">{{this.PageCreatedDate}}</span>

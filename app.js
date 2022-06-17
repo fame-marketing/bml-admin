@@ -56,26 +56,13 @@ app.use(function (err, req, res, next) {
  | Stores information and counts checkin/review totals
  | creates a  page if a new city has an updated count
 */
-new cron('0 */2 * * * *', function () {
 
-  const heartbeat = https.request({
-    hostname:'heartbeat.uptimerobot.com',
-    port: 443,
-    path: '/m787348302-832f0abc1a856b46c31784e553ffd53234c13896',
-    method: 'GET'
-  });
+(async () => {
+  new Checker();
+})();
 
-  heartbeat.on("error", (e) => {
-    winston.info('there was an error with the heartbeat : %j', e);
-  });
-
-  heartbeat.end();
-
-  (async () => {
-    winston.info('the checker is running');
-    new Checker();
-  })();
-
-}, null, true, 'America/New_York');
+//new cron('0 */2 * * * *', function () {
+//
+//}, null, true, 'America/New_York');
 
 module.exports = app;

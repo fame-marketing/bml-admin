@@ -7,8 +7,8 @@ const parse = require('csv-parse'),
 
 async function importEvents(events, type) { // remember to set some sort of eventId
 
-  let table = type === 'checkins' ? 'nn_checkins' :
-    type === 'reviews' ? 'nn_reviews' :
+  let table = type === 'checkins' ? 'nn_checkins_perma' :
+    type === 'reviews' ? 'nn_reviews_perma' :
       'notValid',
     eventType = type === 'checkins' ? 'checkin.created' : 'review.completed', //This needs to be converted due to inconsistency with how Nearby Now names things between their reports and webhooks.
     sql = `INSERT IGNORE INTO ${table} SET ?`
@@ -83,7 +83,7 @@ function saveCityTotals(event, table) {
 
   const city = event.City,
     state = event.State,
-    typeColumn = table === "nn_reviews" ? "ReviewTotal" : "CheckinTotal",
+    typeColumn = table === "nn_reviews_perma" ? "ReviewTotal" : "CheckinTotal",
     query = `INSERT INTO nn_city_totals (city, state, ${typeColumn}) 
               VALUES ("${city}","${state}",1) 
               ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`;

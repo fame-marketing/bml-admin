@@ -117,14 +117,20 @@ header a{
 .dashboard li {
   display: grid;
   padding: 15px;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
 }
-
+.dashboard li:last-child {
+  border-bottom: 0px;
+}
+.recentPage:hover {
+  box-shadow: inset 0 0 4px -1px #3d3e42
+}
 .pagesTools {
   position: absolute;
   top: 15px;
   right: 15px;
 }
-
 #pagesTools_menu {
   background: linear-gradient(45deg, #42a0c3, #5477f6);
   width: max-content;

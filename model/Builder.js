@@ -144,8 +144,7 @@ class Builder {
     await fs.stat(createdFile, (err, stats) => {
       try {
         const birthtime = stats.birthtime;
-        const date = birthtime.toLocaleString('en-GB');
-        const formatDate = date.substring(0, 10).split('/').reverse().join('/') + ' ' + date.substring(12,20)
+        const formatDate = this.createReadableDate(birthtime);
         const query = `UPDATE nn_city_totals SET created = 1, Url = "${url}", PageCreatedDate = "${formatDate}" WHERE city = "${cityName}"`;
         this.database.QueryOnly(query);
       } catch (err) {
@@ -193,6 +192,20 @@ class Builder {
       state: state
     };
 
+  }
+
+  createReadableDate(date) {
+
+    function force2Digits(number) {
+      return number < 10 ? '0' + number : number;
+    }
+
+    const dateObj = new Date(date);
+    const dateFormat = dateObj.getFullYear() + '-' + force2Digits(dateObj.getMonth()) + '-' + force2Digits(dateObj.getDate())
+    const timeFormat = force2Digits(dateObj.getHours()) + ':' + force2Digits(dateObj.getMinutes()) + ':' + force2Digits(dateObj.getSeconds())
+    const formattedDate = dateFormat + " " + timeFormat
+    console.log(formattedDate)
+    return formattedDate;
   }
 
 }

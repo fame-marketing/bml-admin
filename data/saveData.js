@@ -34,7 +34,7 @@ class saveData {
     const eventType = data.type;
     const event = this.formatData(data, eventType);
 
-    let permTable = eventType === "checkin.created" ? "nn_checkins" : "nn_reviews",
+    let permTable = eventType === "checkin.created" ? "nn_checkins_perma" : "nn_reviews_perma",
       rowId = row.id;
 
     await this.updateCityValues(event, rowId, permTable);
@@ -76,7 +76,7 @@ class saveData {
 
     const city = event.City,
       state = event.State,
-      typeColumn = permTable === "nn_checkins" ? "checkinTotal" : "reviewTotal",
+      typeColumn = permTable === "nn_checkins_perma" ? "checkinTotal" : "reviewTotal",
       query = `INSERT INTO nn_city_totals (city, state, ${typeColumn})
                    VALUES ("${city}","${state}",1)
                    ON DUPLICATE KEY UPDATE ${typeColumn} = ${typeColumn} + 1`;
@@ -145,8 +145,17 @@ class saveData {
    | formats the unix timestamp received from Nearby Now into a more readable format.
    */
   createReadableDate(date) {
-    const readableDate = new Date(date * 1000).toLocaleString('en-GB');
-    return readableDate.substring(0, 10).split('/').reverse().join('/') + ' ' + readableDate.substring(12,20)
+
+    function force2Digits(number) {
+      return number < 10 ? '0' + number : number;
+    }
+
+    const dateObj = new Date(date * 1000);
+    const dateFormat = dateObj.getFullYear() + '-' + force2Digits(dateObj.getMonth()) + '-' + force2Digits(dateObj.getDate())
+    const timeFormat = force2Digits(dateObj.getHours()) + ':' + force2Digits(dateObj.getMinutes()) + ':' + force2Digits(dateObj.getSeconds())
+    const formattedDate = dateFormat + " " + timeFormat
+    console.log(formattedDate)
+    return formattedDate;
   }
 
 }
