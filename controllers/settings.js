@@ -5,24 +5,10 @@ const winston = require('../bin/winston'),
       pageFileFunctionsClass = require('../model/FileSystem/PageFileFunctions'),
       pageFileFunctions = new pageFileFunctionsClass(),
       database = require('../data/Database'),
-      db = new database(),
       fs = require('fs')
 ;
 
-async function getStoredPages () {
-
-  const sql = `SELECT Url FROM nn_city_totals WHERE Url IS NOT NULL`;
-  const existingPages = await db.readPool(sql);
-  return existingPages.map( UrlValue => UrlValue.Url );
-
-}
-
-async function addNewPages(pageList) {
-
-  const values = pageList;
-  const sql = `INSERT INTO nn_city_totals (City, State, Url, CheckinTotal, ReviewTotal, Created, PageCreatedDate, Verified) VALUES ?`;
-
-}
+const fileUtils = new FileUtils();
 
 exports.render = (req,res) => {
 
@@ -37,58 +23,64 @@ exports.render = (req,res) => {
 
 }
 
-exports.scanForPages = async (req,res) => {
+/*
+ * Updates pages details in the database.
+ * Updates page link and creation date
+ *
+ * */
+exports.updatePages = async (req,res) => {
 
-  const fileUtils = new FileUtils();
+  try {
 
-  if (req.body.scan === "true") {
+    const fileRoot = fileUtils.getFileRoot();
 
-    try {
+    await fs.readdir(fileRoot, {withFileTypes:true}, async (e, files) => {
 
-      const fileRoot = fileUtils.getFileRoot();
+      try {
 
-      await fs.readdir(fileRoot, {withFileTypes:true}, async (e, files) => {
+        let unsavedPages = [];
 
-        try {
+        const existingPages = await pageDbFunctions.getStoredPages();
 
-          let unsavedPages = [];
+        for (let i = 0; i < files.length; i++) {
 
-          for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const fileExt = fileUtils.getExtensionName(file.name);
+          const fileExtRegex = /(\.html)|(\.phtml)|(\.php)/g;
 
-            const file = files[i];
-            const fileExt = fileUtils.getExtensionName(file.name);
-            const fileExtRegex = /(\.html)|(\.phtml)|(\.php)/g;
-            const existingPages = await getStoredPages();
-
-            if (
-              fileExt.match(fileExtRegex) &&
-              !existingPages.includes(fileUtils.getFileBasename(file.name))
-            ) {
-              const city = getCityFromFileName(file.name);
-              unsavedPages.push(file.name) ;
+          if (
+            fileExt.match(fileExtRegex) !== null &&
+            !existingPages.includes(fileUtils.getFileBasename(file.name))
+          ) {
+            unsavedPages.push(file.name)
+          } else {
+            const city = await pageFileFunctions.fileNameContainsCity(file.name)
+            const birthTime = fileUtils.getFileBirthtime(file.name)
+            if (city) {
+              const pageUpdate = await pageDbFunctions.updatePageCreatedDate(city, birthTime)
+              if (pageUpdate === 'failure') throw Error('Could not update file data. city may not exist in city list file')
             }
+
           }
-
-          function getCityFromFileName(fileName) { //move to dedicated file after this works
-            pageFileFunctions.fileNameContainsCity(fileName);
-          }
-
-          res.send(pageFileFunctions.getAllCities());
-
-        } catch(err) {
-
-          winston.error(err);
-          res.send(err);
 
         }
 
-      });
+        res.send('Finished updating data');
 
-    } catch(err) {
+      } catch(err) {
 
-      winston.error('There was an error while trying to scan for new pages' + err);
+        winston.error(err);
+        res.send(err);
 
-    }
+      }
+
+    });
+
+  } catch(err) {
+
+    res.send(err);
+    winston.error('There was an error while trying to scan for new pages' + err);
 
   }
+
 }

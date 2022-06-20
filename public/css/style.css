@@ -326,12 +326,21 @@ input[type="file"] {
   border-top: 1px solid #444;
 }
 button {
-  display: block;
+  display: inline-block;
   margin: auto;
   background: #ececec;
   border: none;
   padding: 7px 25px;
   margin-top: 10px;
+  cursor: pointer;
+}
+.action-button {
+  background: #fff;
+  box-shadow: 2px 2px 3px 0 #00000026;
+  transition: box-shadow .4s;
+}
+.action-button:hover {
+  box-shadow: none;
 }
 .validateBtn {
   background: #e23b3b;

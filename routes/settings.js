@@ -5,6 +5,6 @@ const express = require('express'),
 
 router.get('/', settingsController.render);
 
-router.post('/', settingsController.scanForPages);
+router.post('/update-pages', settingsController.updatePages);
 
 module.exports = router;

@@ -57,8 +57,8 @@ async function importEvents(events, type) { // remember to set some sort of even
       const eventRows = await database.writePool(sql, dbReadyEvent);
 
       if (eventRows.affectedRows > 0) { // only save event and tally event for city if this is a new event.
-        recentEventStorageHandler.store(dbReadyEvent.eventId, eventTimestamp, eventType);
-        saveCityTotals(dbReadyEvent, table);
+        //recentEventStorageHandler.store(dbReadyEvent.eventId, eventTimestamp, eventType);
+        //saveCityTotals(dbReadyEvent, table);
       }
 
       return eventRows.affectedRows;
@@ -153,8 +153,16 @@ function dateToId(date) {
 }
 
 function convertToReadableDate(date) {
-  const readableDate = new Date(date).toLocaleString('en-GB');
-  return readableDate.substring(0, 10).split('/').reverse().join('/') + ' ' + readableDate.substring(12,20)
+
+  function force2Digits(number) {
+    return number < 10 ? '0' + number : number;
+  }
+
+  const dateObj = new Date(date * 1000);
+  const dateFormat = dateObj.getFullYear() + '-' + force2Digits(dateObj.getMonth()) + '-' + force2Digits(dateObj.getDate())
+  const timeFormat = force2Digits(dateObj.getHours()) + ':' + force2Digits(dateObj.getMinutes()) + ':' + force2Digits(dateObj.getSeconds())
+  return dateFormat + " " + timeFormat
+
 }
 
 exports.render = async (req,res) => {

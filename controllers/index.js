@@ -1,10 +1,8 @@
-const winston = require('../bin/winston'),
-  FileUtils = require('../data/FileSystem/FileUtils'),
-  database = require('../data/Database'),
-  db = new database(),
-  fs = require('fs'),
-  fileUtils = new FileUtils(),
-  directory = fileUtils.fixSlashes(process.env.DESTINATION)
+const FileUtils = require('../data/FileSystem/FileUtils'),
+      database = require('../data/Database'),
+      db = new database(),
+      fileUtils = new FileUtils(),
+      directory = fileUtils.fixSlashes(process.env.DESTINATION)
 ;
 
 async function getNewPages() {
@@ -16,7 +14,7 @@ async function getNewPages() {
                LIMIT 20`;
   const rows = await db.readPool(sql);
   rows.forEach(row => {
-    if (row.PageCreatedDate === 'null') {
+    if (row.PageCreatedDate !== null) {
       row.PageCreatedDate = simplifyDateFormat(row.PageCreatedDate);
     }
   });

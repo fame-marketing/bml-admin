@@ -7,7 +7,6 @@
     ;
 
     req.onreadystatechange = () => {
-      console.log(req);
       if (req.readyState === XMLHttpRequest.DONE && req.status === 200) {
         showNotifications(req.responseText)
       }
@@ -17,7 +16,7 @@
       showNotifications('starting scan');
     };
 
-    req.open('POST', '/nn-admin/settings', true);
+    req.open('POST', '/nn-admin/settings/update-pages', true);
 
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 

@@ -38,6 +38,12 @@ class FileUtils {
     return path.basename(fileString, ext);
   }
 
+  getFileBirthtime(fileString) {
+    const fileFullLocation = this.getFileRoot() + fileString
+    const {birthtime} = fs.statSync(fileFullLocation)
+    return birthtime
+  }
+
 }
 
 module.exports = FileUtils;

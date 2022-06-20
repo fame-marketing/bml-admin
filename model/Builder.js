@@ -145,7 +145,7 @@ class Builder {
       try {
         const birthtime = stats.birthtime;
         const formatDate = this.createReadableDate(birthtime);
-        const query = `UPDATE nn_city_totals SET created = 1, Url = "${url}", PageCreatedDate = "${formatDate}" WHERE city = "${cityName}"`;
+        const query = `UPDATE nn_city_totals SET Created = 1, Url = "${url}", PageCreatedDate = "${formatDate}" WHERE City = "${cityName}"`;
         this.database.QueryOnly(query);
       } catch (err) {
         winston.error('error getting file stats for the newly created file. This may prevent the database from displaying the correct page creation date for the new city.');
@@ -203,9 +203,7 @@ class Builder {
     const dateObj = new Date(date);
     const dateFormat = dateObj.getFullYear() + '-' + force2Digits(dateObj.getMonth()) + '-' + force2Digits(dateObj.getDate())
     const timeFormat = force2Digits(dateObj.getHours()) + ':' + force2Digits(dateObj.getMinutes()) + ':' + force2Digits(dateObj.getSeconds())
-    const formattedDate = dateFormat + " " + timeFormat
-    console.log(formattedDate)
-    return formattedDate;
+    return dateFormat + " " + timeFormat
   }
 
 }
