@@ -12,7 +12,7 @@
     "chart.js": "^2.9.3",
     "cli-spinner": "^0.2.10",
     "cookie-parser": "^1.4.5",
-    "country-state-city": "^1.0.5",
+    "country-state-city": "^3.0.0",
     "cron": "^1.8.2",
     "csv-parse": "^4.10.1",
     "debug": "~2.6.9",

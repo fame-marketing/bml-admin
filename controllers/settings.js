@@ -55,10 +55,12 @@ exports.updatePages = async (req,res) => {
             unsavedPages.push(file.name)
           } else {
             const city = await pageFileFunctions.fileNameContainsCity(file.name)
+            console.log(city)
             const birthTime = fileUtils.getFileBirthtime(file.name)
+            console.log(birthTime)
             if (city) {
               const pageUpdate = await pageDbFunctions.updatePageCreatedDate(city, birthTime)
-              if (pageUpdate === 'failure') throw Error('Could not update file data. city may not exist in city list file')
+              if (pageUpdate === 'failure') winston.error('Could not update file data. city may not exist in city list file')
             }
 
           }
