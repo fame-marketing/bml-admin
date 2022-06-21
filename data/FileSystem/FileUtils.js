@@ -15,7 +15,7 @@ class FileUtils {
   }
 
   getFileRoot() {
-    return this.fixSlashes(this.os.homedir()) + '/public_html/' + this.dPath + '/';
+    return '/' + this.fixSlashes(this.os.homedir()) + '/public_html/' + this.dPath + '/';
   }
 
   fixSlashes(pathString) {
