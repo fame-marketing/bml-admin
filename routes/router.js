@@ -6,7 +6,7 @@ const express = require('express'),
 router.use('/', indexRouter);
 router.use('/webhook', require('./webhook'));
 router.use('/import', require('./import'));
-router.use('/stats', require('./stats'));
+router.use('/dataTest', require('./datatest'));
 router.use('/map', require('./map'));
 router.use('/settings', require('./settings'));
 

@@ -11,12 +11,11 @@ class saveData {
 
   constructor(rows) {
 
-    this.data = rows;
     this.database = new Db();
     this.recentEventStorageHandler = recentEventStorageHandler;
     this.deleteTempEventHandler = deleteTempEventHandler;
 
-    this.data.forEach((row) => {
+    rows.forEach((row) => {
       this.saveEvent(row);
     });
 
@@ -30,7 +29,8 @@ class saveData {
   */
   async saveEvent(row) {
 
-    const data = JSON.parse(row.EventData);
+    let data = typeof row === 'string' ? JSON.parse(row.EventData) : row.EventData
+
     const eventType = data.type;
     const event = this.formatData(data, eventType);
 
