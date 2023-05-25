@@ -22,13 +22,13 @@ exports.getEvents = async (req,res) => {
   const db = new Db(),
     checkinData = await db.readPool(
       `SELECT CheckinDateTime, Reference, CheckinImageUrl, UserName, City, State, PostalCode, Latitude, Longitude
-            FROM nn_checkins_perma
+            FROM nn_checkins
             ORDER BY CheckinDateTime
             LIMIT ${recordsNum}`
     ),
     reviewData = await db.readPool(
       `SELECT ReviewSummary, ReviewDetail, ReviewRating, ResponseDate, CustomerName, CheckinDateTime, Reference, CheckinImageUrl, UserName, City, State, PostalCode
-            FROM nn_reviews_perma
+            FROM nn_reviews
             ORDER BY ResponseDate
             LIMIT ${recordsNum}`
     ),

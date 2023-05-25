@@ -24,13 +24,13 @@ async function getNewPages() {
 async function getRecentEvents() {
   const sql = `SELECT EventType, EventTime, UserName, City, State
                FROM nn_events
-                        INNER JOIN nn_checkins_perma
-                                   ON nn_events.EventId = nn_checkins_perma.EventId
+                        INNER JOIN nn_checkins
+                                   ON nn_events.EventId = nn_checkins.EventId
                UNION ALL
                SELECT EventType, EventTime, UserName, City, State
                FROM nn_events
-                        INNER JOIN nn_reviews_perma
-                                   ON nn_events.EventId = nn_reviews_perma.EventId
+                        INNER JOIN nn_reviews
+                                   ON nn_events.EventId = nn_reviews.EventId
                ORDER BY EventTime DESC
                LIMIT 15`
   ;
