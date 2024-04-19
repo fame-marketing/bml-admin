@@ -1,8 +1,6 @@
-const winston = require('../bin/winston'),
-      Db = require('../data/Database')
-;
+import Database from '../data/Database.js'
 
-exports.render = (req,res) => {
+export const render = (req,res) => {
 
   res.render(
     'map',
@@ -15,11 +13,11 @@ exports.render = (req,res) => {
 
 }
 
-exports.getEvents = async (req,res) => {
+export const getEvents = async (req,res) => {
 
   const recordsNum = req.body.hasOwnProperty('number') ? req.body.number : 15;
 
-  const db = new Db(),
+  const db = new Database(),
     checkinData = await db.readPool(
       `SELECT CheckinDateTime, Reference, CheckinImageUrl, UserName, City, State, PostalCode, Latitude, Longitude
             FROM nn_checkins

@@ -1,10 +1,10 @@
-const Db = require('../Database');
+import Database from '../Database.js'
 
-class storeRecentEvent {
+export default class storeRecentEvent {
 
   static store(eventId, eventTime, eventType) {
 
-    this.database = new Db();
+    this.database = new Database();
 
     const eventSQL = `INSERT IGNORE INTO nn_events SET ?`;
 
@@ -19,5 +19,3 @@ class storeRecentEvent {
   }
 
 }
-
-module.exports = storeRecentEvent;

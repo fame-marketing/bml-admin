@@ -1,7 +1,7 @@
-const fs = require('fs'),
-  util = require('util'),
-  path = require('path'),
-  winston = require('./winston');
+import fs from 'fs'
+import util from 'util'
+import path from 'path'
+import logger from "../bin/winston.js";
 
 /*
  | @sitemap - should be a string representing the path relative to the web root
@@ -9,14 +9,14 @@ const fs = require('fs'),
  |
  | This class will handle writing the new seo page url into the sitemap.
 */
-class Generate {
+export default class SitemapGenerator {
 
   constructor(sitemap, url) {
-    winston.info('running sitemap generator');
+    logger.info('running sitemap generator');
     this.fs = fs;
     this.util = util;
     this.domain = process.env.URL;
-    this.destination = process.env.DESTINATION;
+    this.destination = process.env.NN_FILE_DESTINATION;
     this.url = url;
 
     this.getWriteLocation(sitemap);
@@ -86,7 +86,7 @@ class Generate {
       fs.write(fd, newUrl, position, (e,written,string) => {
 
         if (e) {
-          winston.error('Could not write a new sitemap entry for the url ' + url + '. Make sure that the sitemap exists and is writeable. You will need to add the failed url manually.');
+          logger.error('Could not write a new sitemap entry for the url ' + url + '. Make sure that the sitemap exists and is writeable. You will need to add the failed url manually.');
           throw e;
         }
 
@@ -107,5 +107,3 @@ class Generate {
   }
 
 }
-
-module.exports = Generate;

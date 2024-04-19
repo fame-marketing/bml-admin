@@ -1,6 +1,5 @@
-const winston = require('../bin/winston'),
-      AddProcessor = require('../data/Create')
-;
+import logger from '../bin/winston.js'
+import CreateWebhookEvent from '../data/CreateWebhookEvent.js'
 
 /*
  | @request -- the body of the request that called this file. This should contain the NearbyNow event data.
@@ -16,11 +15,11 @@ async function storeData(request) {
         'invalid';
 
     if (requestType !== "invalid") {
-      new AddProcessor.Create(request)
+      new CreateWebhookEvent(request)
     }
 
   } catch(e) {
-    winston.error(e);
+    logger.error(e);
   }
 
 }
@@ -43,7 +42,7 @@ function processRequest(data) {
 
 }
 
-exports.storeEvent = async (req,res,next) => {
+export const storeEvent = async (req,res,next) => {
 
   // Takes the request body and checks to make sure that it is valid. throws an error if not.
   await (() => {
@@ -53,7 +52,7 @@ exports.storeEvent = async (req,res,next) => {
         res.status(200).end();
         storeData(req.body).then();
       } else {
-        winston.error(`There was an error: ${valid}`);
+        logger.error(`There was an error: ${valid}`);
         res.status(500).end();
       }
     } catch (error) {

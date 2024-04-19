@@ -1,17 +1,17 @@
-const mysql = require('mysql2'),
-  winston = require('../bin/winston')
-;
+import * as mysql from 'mysql2'
+import logger from '../bin/winston.js'
 
-class Database {
+export default class Database {
 
   constructor() {
 
     this.connectionDetails = {
       connectionLimit: 10,
-      host: process.env.dbHost,
-      user: process.env.dbUser,
-      database: process.env.dbName,
-      password: process.env.dbPass
+      host: process.env.DB_HOST,
+      port: 3306,
+      user: process.env.DB_USER,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASS
     };
 
     this.mainStdPool = this.getStdPool();
@@ -37,7 +37,7 @@ class Database {
       const [rows, fields] = await pool.query(query, values);
       return rows;
     } catch (err) {
-      winston.error(err);
+      logger.error(err);
       return "error";
     }
   }
@@ -64,5 +64,3 @@ class Database {
   }
 
 }
-
-module.exports = Database;

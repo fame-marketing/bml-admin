@@ -1,4 +1,4 @@
-const winston = require('winston');
+import winston from 'winston'
 
 const customFormat = winston.format.printf(({level, timestamp, message, stack}) => {
   if (stack) {
@@ -38,4 +38,4 @@ logger.stream = {
 	}
 };
 
-module.exports = logger;
+export default logger

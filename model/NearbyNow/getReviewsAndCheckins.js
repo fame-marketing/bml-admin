@@ -1,7 +1,7 @@
-const NearbyNowRequest = require('./NearbyNowRequest')
-      https = require('https')
+import https from 'https'
+import NearbyNowRequest from './NearbyNowRequest.js'
 
-class GetReviewsAndCheckins extends NearbyNowRequest {
+export default class GetReviewsAndCheckins extends NearbyNowRequest {
 
   constructor(req) {
     super(
@@ -40,5 +40,3 @@ class GetReviewsAndCheckins extends NearbyNowRequest {
   }
 
 }
-
-module.exports = GetReviewsAndCheckins

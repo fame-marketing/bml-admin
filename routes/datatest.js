@@ -1,8 +1,8 @@
-const express = require('express'),
-      router  = express.Router(),
-      datatestController = require('../controllers/datatest')
-;
+import  {Router} from 'express'
+import * as dataTestController from '../controllers/datatest.js'
 
-router.get('/', datatestController.render);
+const dataTestRouter = Router();
 
-module.exports = router;
+dataTestRouter.get('/', dataTestController.render);
+
+export default dataTestRouter

@@ -1,9 +1,7 @@
-const parse = require('csv-parse'),
-  winston = require('../bin/winston'),
-  db = require('../data/Database'),
-  database = new db(),
-  recentEventStorageHandler = require('../data/Db/storeRecentEvent')
-;
+import {parse} from "csv-parse";
+import logger from "../bin/winston.js";
+import Database from "../data/Database.js";
+import storeRecentEvent from "../data/Db/storeRecentEvent.js";
 
 async function importEvents(events, type) { // remember to set some sort of eventId
 
@@ -57,7 +55,7 @@ async function importEvents(events, type) { // remember to set some sort of even
       const eventRows = await database.writePool(sql, dbReadyEvent);
 
       if (eventRows.affectedRows > 0) { // only save event and tally event for city if this is a new event.
-        //recentEventStorageHandler.store(dbReadyEvent.eventId, eventTimestamp, eventType);
+        //storeRecentEvent.store(dbReadyEvent.eventId, eventTimestamp, eventType);
         //saveCityTotals(dbReadyEvent, table);
       }
 
@@ -165,7 +163,7 @@ function convertToReadableDate(date) {
 
 }
 
-exports.render = async (req,res) => {
+export const render = async (req,res) => {
   res.render(
     'import',
     {
@@ -176,7 +174,7 @@ exports.render = async (req,res) => {
   );
 }
 
-exports.storeData = async (req,res) => {
+export const storeData = async (req,res) => {
 
   try {
 
@@ -194,7 +192,7 @@ exports.storeData = async (req,res) => {
     }, async function(err, output) {
 
       if (err) {
-        winston.error(err);
+        logger.error(err);
         endMsg = `${err}`;
       }
 
@@ -216,7 +214,7 @@ exports.storeData = async (req,res) => {
     });
 
   } catch (e) {
-    winston.error('There was an error during import : ' + e)
+    logger.error('There was an error during import : ' + e)
   }
 
 }

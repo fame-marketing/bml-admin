@@ -1,4 +1,4 @@
-const Db = require('./Database');
+import Database from "./Database.js";
 
 /*
  | @data -- an object containing the event body as it was sent from nearby now
@@ -6,12 +6,12 @@ const Db = require('./Database');
  | Creates new rows in the temp db tables using the event data.
 */
 
-class Create {
+export default class CreateWebhookEvent {
 
   constructor(data) {
 
     this.data = data;
-    this.database = new Db();
+    this.database = new Database();
     const value = {
       "EventData": JSON.stringify(this.data)
     };
@@ -21,5 +21,3 @@ class Create {
   }
 
 }
-
-module.exports = {Create: Create};

@@ -1,16 +1,14 @@
-const os = require('os'),
-      fs = require('fs'),
-      path = require('path'),
-      winston = require('../../bin/winston');
+import os from 'os'
+import path from 'path'
+import logger from "../../bin/winston.js";
 
-class FileUtils {
+export default class FileUtils {
 
   constructor() {
 
     this.os = os;
-    this.fs = fs;
     this.path = path;
-    this.dPath = this.fixSlashes(process.env.DESTINATION);
+    this.dPath = this.fixSlashes(process.env.NN_FILE_DESTINATION);
 
   }
 
@@ -19,6 +17,7 @@ class FileUtils {
   }
 
   fixSlashes(pathString) {
+    logger.error(process.env.DB_HOST)
     if (pathString.endsWith('/')) {
       pathString = pathString.slice(0,-1)
     }
@@ -45,5 +44,3 @@ class FileUtils {
   }
 
 }
-
-module.exports = FileUtils;

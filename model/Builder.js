@@ -1,18 +1,17 @@
-const fs = require('fs'),
-  util = require('util'),
-  handlebars = require('handlebars'),
-  winston = require('../bin/winston'),
-  os = require('os'),
-  Db = require('../data/Database'),
-  fileUtils = require('../data/FileSystem/FileUtils'),
-  SitemapGenerator = require('../bin/Generate')
-;
+import fs from 'fs'
+import util from 'util'
+import * as handlebars from "handlebars";
+import logger from "../bin/winston.js";
+import os from 'os'
+import Database from "../data/Database.js";
+import fileUtils  from '../data/FileSystem/FileUtils.js'
+import SitemapGenerator from '../bin/SitemapGenerator.js'
 
 /*
  | The class that handles all facets of creating new pages.
 */
 
-class Builder {
+export default class Builder {
 
   constructor(cities) {
     this.filesystem = fs;
@@ -20,13 +19,13 @@ class Builder {
     this.promiseReader = util.promisify(fs.readFile);
     this.cities = cities;
     this.handlebars = handlebars;
-    this.database = new Db();
+    this.database = new Database();
     this.KeywordPosition = process.env.KeywordPosition;
     this.keywordBase = process.env.KEYWORDBASE;
     this.sitemapGenerator = SitemapGenerator;
     this.fileUtils = new fileUtils();
 
-    this.dPath = this.fileUtils.fixSlashes(process.env.DESTINATION);
+    this.dPath = this.fileUtils.fixSlashes(process.env.NN_FILE_DESTINATION);
     this.fileDir = this.os.homedir() + '/public_html/' + this.dPath + '/';
 
     this.initPageCreation();
@@ -37,9 +36,9 @@ class Builder {
    | grabs the handlebars filled html page base then iterates over the cities list passed to the parent class
    | and passes each one to the createPage method.
   */
-  async initPageCreation() {
+  initPageCreation() {
 
-    const pageBase = await this.fetchFileBase();
+    const pageBase = this.fetchFileBase();
 
     this.cities.forEach((city) => {
       if (city !== undefined) {
@@ -62,7 +61,7 @@ class Builder {
 
       if(e) {
 
-        winston.error('Could not read the destination directory: ' + e);
+        logger.error('Could not read the destination directory: ' + e);
 
       } else {
 
@@ -72,12 +71,12 @@ class Builder {
           if (cityExists.length !== 0) {
             const filePath = this.fileDir + '/' + cityExists[0];
             this.markAsCreated(checkCity, cityExists[0], filePath);
-            winston.info('attempted to create a page for the city ' + checkCity + ' that is already represented by the file(s) ' + cityExists.toString());
+            logger.info('attempted to create a page for the city ' + checkCity + ' that is already represented by the file(s) ' + cityExists.toString());
           }else if(cityExists.length === 0) {
             this.createPage(city, base);
           }
         } catch (err) {
-          winston.error(err);
+          logger.error(err);
         }
 
       }
@@ -117,14 +116,14 @@ class Builder {
           this.filesystem.mkdirSync(this.fileDir, {recursive:true},(e) => {
             if (e) throw e;
           });
-          winston.info("The directory " + this.fileDir + " did not exist, it has been created. The file will be generated on the next cron run.");
+          logger.info("The directory " + this.fileDir + " did not exist, it has been created. The file will be generated on the next cron run.");
         } else {
-          winston.error("there was an error while attempting to create the file: " + e);
+          logger.error("there was an error while attempting to create the file: " + e);
         }
 
       } else {
 
-        winston.info(city.City + ' page created succesfully.');
+        logger.info(city.City + ' page created succesfully.');
         this.markAsCreated(city.City, seo.url, filepath).catch(() => {});
         const sitemap = this.os.homedir() + '/public_html/service-areas-sitemap.xml';
         await new this.sitemapGenerator(sitemap, seo.url);
@@ -148,7 +147,7 @@ class Builder {
         const query = `UPDATE nn_city_totals SET Created = 1, Url = "${url}", PageCreatedDate = "${formatDate}" WHERE City = "${cityName}"`;
         this.database.QueryOnly(query);
       } catch (err) {
-        winston.error('error getting file stats for the newly created file. This may prevent the database from displaying the correct page creation date for the new city.');
+        logger.error('error getting file stats for the newly created file. This may prevent the database from displaying the correct page creation date for the new city.');
       }
     });
 
@@ -162,7 +161,7 @@ class Builder {
     try {
       return await this.promiseReader('views/nearbynow.hbs', 'utf8');
     } catch (err) {
-      winston.error(err);
+      logger.error(err);
     }
 
   }
@@ -207,5 +206,3 @@ class Builder {
   }
 
 }
-
-module.exports = Builder;

@@ -4,15 +4,13 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   margin: 0;
-}
-.adminWrapper {
-  min-height: 100vh;
   background: #eaeaea;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-areas: "aside body";
+  grid-template-columns: 300px auto;
 }
 a {
-  color: #397ce2;
+  color: #fff;
   text-decoration: none;
 }
 a:hover,
@@ -20,12 +18,6 @@ a:focus,
 a:active,
 a:visited {
   text-decoration:none
-}
-p {
-  text-align: center;
-}
-h1 {
-  text-align: center;
 }
 .left {
   text-align: left;
@@ -44,29 +36,49 @@ ul {
 
 /* Header Styles */
 header {
+  grid-area: header;
   display: grid;
   grid-template-columns: [logo] auto [nav] auto;
   align-items: center;
-  height: 80px;
+  height: 60px;
   box-shadow: 0 0 7px #000000ad;
   background: #3d3e42;
 }
+aside {
+  grid-area: aside;
+  background: #241f20;
+  border-left: 10px solid red;
+  box-shadow: inset 10px 0 #fff;
+  padding: 0 20px 20px 30px;
+  display: grid;
+  grid-template-rows: auto 1fr 1fr;
+}
+h1 {
+  font-size: 2em;
+}
 .logo {
-  padding-left: 25px;
+  margin: auto 0;
+  padding: 0;
+  font-size: 1.4em;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.logo img {
+  width: 130px;
+  padding: 20px 0;
 }
 .nav {
-  text-align: right;
-  height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: flex-end;
-  align-items: center;
+  gap:15px
 }
-.nav li {
-  border-left: 3px solid #737684;
-  height: 100%;
+.nav svg {
+  margin-right: 10px;
 }
 .nav li a {
-  padding: 0px 36px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -79,26 +91,57 @@ header a{
   color: #fff;
 }
 
-/* Subheader Styles */
-.subheader ul {
+/* Sidebar Styles */
+.sidebarList {
   display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
-.subheader li {
-  padding: 15px 33px;
-  text-transform: uppercase;
-  font-weight: 600;
+.sidebarList img {
+  height: 1.3em;
+}
+.sidebarList svg, .sidebarList img {
+  margin-right: 10px;
+}
+.sidebarList.dashboardOther {
+  justify-content: flex-end;
+}
+.sidebarService {
+  background: #fff;
+  padding: 5px 27px;
+  box-shadow: 4px 4px 10px -5px #0000006b;
+  border-radius: 4px;
+  width: 33%;
 }
 
 /* Dashboard Styles */
+.dashboardServices {
+  background: #ffffff;
+  padding: 5px 27px;
+  box-shadow: 4px 4px 10px -5px #0000006b;
+  border-radius: 4px;
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+}
+.adminWrapper {
+  min-height: 100vh;
+  grid-area: body;
+}
 .adminContent {
-  padding: 50px 15px 50px;
+  padding: 50px 30px 50px;
+}
+.dashboardBody h1 {
+  margin-bottom:70px
 }
 .adminContent.dashboard {
   display: flex;
+  gap: 50px;
 }
 .adminContent_section {
-  padding: 10px;
-  position: relative;
+  background: #fff;
+  padding: 15px 30px;
+  border-radius: 7px;
 }
 .adminContent_pages {
   width:60%;
@@ -106,13 +149,47 @@ header a{
 .adminContent_events {
   width: 40%;
 }
-.adminContent_cont {
-  background: #fff;
-  padding: 5px 27px;
-  box-shadow: 0 0 10px -5px #0000006b;
+.dashboardService {
+  background: #ffffff;
+  color:#333;
+  padding: 25px;
+  box-shadow: 4px 4px 10px -5px #0000006b;
+  border-radius: 4px;
+  gap: 20px;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.3em;
+}
+.dashboardService img,
+.dashboardService svg {
+  width: 50px;
+  height: 50px;
+  color: #232323;
 }
 .recentPages_list {
   padding-left: 0;
+}
+.dashboardPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.dashboardServiceList {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+  justify-content: center;
+}
+.dashboardBody {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
 }
 .dashboard li {
   display: grid;
@@ -147,15 +224,23 @@ header a{
   font-weight: 700;
   padding: 10px 15px;
 }
-
 #pagesTools_opener:hover svg {
   transform:rotate(60deg);
   transition: transform .2s;
 }
-
-.tableHeading {
-  font-weight:700;
-  font-size:1.1rem
+.table li {
+  display: grid;
+  grid-template-columns: 205px 1fr 1fr 1fr 1fr 1fr 100px 100px;
+  background: #fff;
+  padding: 15px;
+  border-bottom: 4px solid #d5d5d5;
+}
+.table li:last-child {
+  border: none;
+}
+.table .tableHeading {
+  font-weight: 700;
+  font-size: 1rem;
 }
 .recentPage, .pageListHeading  {
   grid-template-columns:
@@ -221,7 +306,16 @@ header a{
 .pendingEventsCounter {
   margin-bottom: 1em;
   text-align:right;
+}
 
+/* Form Styles */
+.formsList {
+  width:100%
+}
+.formsPageBody {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 50px;
 }
 
 /* Import Styles */

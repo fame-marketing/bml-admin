@@ -1,14 +1,20 @@
 <div class="adminWrapper">
 
-  {{> header }}
+  <div class="dashboardPage">
+    <div class="dashboardBody">
 
-  <div class="adminContent dashboard">
-    <div class="adminContent_pages adminContent_section">
-      {{> pagesInfo }}
-    </div>
-    <div class="adminContent_events adminContent_section">
-      {{> recentEventsInfo }}
+      {{authenticated}}
+
+      <h1>Welcome to Your Fame Marketing Experience</h1>
+
+      <div class="dashboardServiceList">
+        <a href="/fame-admin/forms" class="dashboardService">
+          <i class="fa-solid fa-list"></i> Form Submissions
+        </a>
+      </div>
+
     </div>
   </div>
+
 </div>
 <script src="js/dashboard.js"></script>

@@ -3,11 +3,11 @@ const winston = require('../../bin/winston'),
       fileUtils = require('../../data/FileSystem/FileUtils')
 ;
 
-class pageDbFunctions {
+export default class pageDbFunctionsClass {
 
   constructor() {
     this.winston = winston;
-    this.database = new Db();
+    this.database = new Database();
     this.fileUtils = new fileUtils();
   }
 
@@ -43,5 +43,3 @@ class pageDbFunctions {
   }
 
 }
-
-module.exports = pageDbFunctions;

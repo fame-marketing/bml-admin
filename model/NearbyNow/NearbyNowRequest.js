@@ -1,6 +1,4 @@
-class NearbyNowRequest {
-
-  _storeFrontToken = "667e6629-2662-4056-aa56-089b97c97bd9"
+export default class NearbyNowRequest {
 
   constructor({
       state = 'GA',
@@ -21,7 +19,7 @@ class NearbyNowRequest {
     }  = {}) {
 
     this.queryParams = {
-      storefronttoken : this._storeFrontToken,
+      storefronttoken : process.env.NN_API_TOKEN,
       state : state,
       city : city,
       showmap : showMap,

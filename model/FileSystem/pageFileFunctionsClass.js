@@ -1,12 +1,11 @@
-const winston = require('../../bin/winston'),
-      cityData = require('country-state-city').City,
-      fileUtils = require('../../data/FileSystem/FileUtils')
-;
+import logger from "../../bin/winston.js"
+import {City as cityData} from 'country-state-city'
+import fileUtils from '../../data/FileSystem/FileUtils.js'
 
-class PageFileFunctions {
+export default class PageFileFunctionsClass {
 
   constructor() {
-    this.winston = winston
+    this.winston = logger
     this.states = ["GA","AL","TN","FL","SC"] // will disregard any cites that are in states not listed here. Lets make this a setting that can be adjusted.
     this.cityList = []
     this.fileUtils = new fileUtils()
@@ -42,5 +41,3 @@ class PageFileFunctions {
   }
 
 }
-
-module.exports = PageFileFunctions;

@@ -1,19 +1,18 @@
-const Db = require('./Database'),
-  winston = require('../bin/winston'),
-  recentEventStorageHandler = require('./Db/storeRecentEvent'),
-  deleteTempEventHandler = require('./Db/deleteTempEvent')
-;
+import Database from './Database.js'
+import logger from "../bin/winston.js";
+import storeRecentEvent from './Db/storeRecentEvent.js'
+import deleteTempEvent from './Db/deleteTempEvent.js'
 
 /*
  | Handles saving new events.
 */
-class saveData {
+export class saveData {
 
   constructor(rows) {
 
-    this.database = new Db();
-    this.recentEventStorageHandler = recentEventStorageHandler;
-    this.deleteTempEventHandler = deleteTempEventHandler;
+    this.database = new Database();
+    this.recentEventStorageHandler = storeRecentEvent;
+    this.deleteTempEventHandler = deleteTempEvent;
 
     rows.forEach((row) => {
       this.saveEvent(row);
@@ -45,7 +44,7 @@ class saveData {
     this.recentEventStorageHandler.store(event.EventId, event.CreatedAt, eventType);
 
     if (typeof writtenData !== 'undefined' && writtenData.affectedRows > 0) {
-      winston.info( "The following data was written to the database %j", event);
+      logger.info( "The following data was written to the database %j", event);
 
       this.deleteTempEventHandler.delete(rowId);
     }
@@ -159,5 +158,3 @@ class saveData {
   }
 
 }
-
-module.exports = saveData;

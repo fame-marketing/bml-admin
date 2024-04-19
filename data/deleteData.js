@@ -6,7 +6,7 @@ class deleteData {
 
   constructor() {
 
-    this.database = new Db();
+    this.database = new Database();
 
   }
 

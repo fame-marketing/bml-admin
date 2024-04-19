@@ -1,15 +1,14 @@
-const Db = require('./Database'),
-      Saver = require('./saveData'),
-      Builder = require('../model/Builder')
-;
+import Database from './Database.js'
+import {saveData as Saver} from './saveData.js'
+import Builder from '../model/Builder.js'
 
 /*
  | base class that manages the process
 */
-class cityCheck {
+export default class cityCheck {
 
   constructor() {
-    this.database = new Db();
+    this.database = new Database();
     this.saver = Saver;
     this.builder = Builder;
 
@@ -61,5 +60,3 @@ class cityCheck {
   }
 
 }
-
-module.exports = cityCheck;

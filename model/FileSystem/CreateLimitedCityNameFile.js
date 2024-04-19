@@ -44,7 +44,7 @@ class CreateLimitedCityNameFile {
     newFile.write(citiesArray);
 
     newFile.end(()=>{
-      winston.info('The new city list file has been created successfully');
+      logger.info('The new city list file has been created successfully');
     });
 
   }

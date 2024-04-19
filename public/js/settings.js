@@ -16,7 +16,7 @@
       showNotifications('starting scan');
     };
 
-    req.open('POST', '/nn-admin/settings/update-pages', true);
+    req.open('POST', '/fame-admin/settings/update-pages', true);
 
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 

@@ -1,13 +1,18 @@
-const express = require('express'),
-      router = express.Router(),
-      indexRouter = require('./index')
-;
+import {Router} from "express"
+import indexRouter from './indexRouter.js'
+import nearbyNowRouter from './nearbyNow.js'
+import formsRouter from './forms.js'
+import dataTestRouter from './datatest.js'
+import mapRouter from './map.js'
+import settingsRouter from './settings.js'
 
-router.use('/', indexRouter);
-router.use('/webhook', require('./webhook'));
-router.use('/import', require('./import'));
-router.use('/dataTest', require('./datatest'));
-router.use('/map', require('./map'));
-router.use('/settings', require('./settings'));
+const router = Router()
 
-module.exports = router;
+router.use('/', indexRouter)
+router.use('/nearby-now', nearbyNowRouter);
+router.use('/forms', formsRouter);
+router.use('/dataTest', dataTestRouter);
+router.use('/map', mapRouter);
+router.use('/settings', settingsRouter);
+
+export default router

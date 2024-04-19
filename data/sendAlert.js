@@ -19,12 +19,12 @@ async function sendAlert(recipient) {
     html: "<b>Hello world?</b>", // html body
   });
 
-  winston.info('Alert has been sent: %j', info.messageerror)
+  logger.info('Alert has been sent: %j', info.messageerror)
 
 }
 
 sendAlert().catch( () => {
-  winston.error('Could not send the alert.')
+  logger.error('Could not send the alert.')
 })
 
 module.exports = sendAlert;

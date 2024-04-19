@@ -1,10 +1,10 @@
-const express = require('express'),
-      router  = express.Router(),
-      mapController = require('../controllers/map')
-;
+import  {Router} from 'express'
+import * as mapController from '../controllers/map.js'
 
-router.get('/', mapController.render);
+const mapRouter = Router();
 
-router.post('/', mapController.getEvents);
+mapRouter.get('/', mapController.render);
 
-module.exports = router;
+mapRouter.post('/', mapController.getEvents);
+
+export default mapRouter;

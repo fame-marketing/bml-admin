@@ -69,7 +69,7 @@
             number : recordNum
           });
 
-    req.open('POST', '/nn-admin/map', true);
+    req.open('POST', '/fame-admin/map', true);
     req.setRequestHeader('Content-Type', 'application/json');
     req.send(sendData);
 

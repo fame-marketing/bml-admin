@@ -1,16 +1,13 @@
-const Db = require('../Database');
+import Database from '../Database.js'
 
-  class deleteTempEvent {
+export default class deleteTempEvent {
+  static delete (eventId) {
 
-    static delete (eventId) {
+    this.database = new Database();
 
-      this.database = new Db();
-
-      const deleteSql = `DELETE FROM nn_events_temp WHERE id = '${eventId}'`;
-      this.database.QueryOnly(deleteSql);
-
-    }
+    const deleteSql = `DELETE FROM nn_events_temp WHERE id = '${eventId}'`;
+    this.database.QueryOnly(deleteSql);
 
   }
 
-module.exports = deleteTempEvent;
+}

@@ -1,0 +1,39 @@
+<div class="adminWrapper">
+
+  <div class="formsPage">
+    <div class="formsPageBody">
+
+      <h1>Ranger Dog Website Form Submissions</h1>
+
+      <ul class="formsList table">
+
+        <li class="tableHeading">
+          <span>SubmissionDate</span>
+          <span>Name</span>
+          <span>Phone</span>
+          <span>Email</span>
+          <span>DogName</span>
+          <span>City</span>
+          <span>Consent</span>
+          <span>SpamScore</span>
+        </li>
+
+        {{#each formSubmissions}}
+          <li>
+            <span>{{this.SubmissionDate}}</span>
+            <span>{{this.Name}}</span>
+            <span>{{this.Phone}}</span>
+            <span>{{this.Email}}</span>
+            <span>{{this.DogName}}</span>
+            <span>{{this.City}}</span>
+            <span>{{this.Consent}}</span>
+            <span>{{this.SpamScore}}</span>
+          </li>
+        {{/each}}
+      </ul>
+
+    </div>
+  </div>
+
+</div>
+<script src="js/dashboard.js"></script>

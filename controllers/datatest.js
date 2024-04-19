@@ -1,8 +1,6 @@
-const winston = require('../bin/winston')
-      nnData = require('../model/NearbyNow/getReviewsAndCheckins.js')
-;
+import nnData from '../model/NearbyNow/getReviewsAndCheckins.js'
 
-exports.render = async (req,res) => {
+export const render = async (req,res) => {
 
   const nnFetch = new nnData(req)
 
@@ -20,7 +18,7 @@ exports.render = async (req,res) => {
 
 }
 
-getNnData = async(req,res) => {
+export const getNnData = async(req,res) => {
 
   let data = "test, data.";
 

@@ -1,12 +1,11 @@
-const winston = require('../bin/winston'),
-      FileUtils = require('../data/FileSystem/FileUtils'),
-      pageDbFunctionsClass = require('../model/Db/pageDbFunctions'),
-      pageDbFunctions = new pageDbFunctionsClass(),
-      pageFileFunctionsClass = require('../model/FileSystem/PageFileFunctions'),
-      pageFileFunctions = new pageFileFunctionsClass(),
-      database = require('../data/Database'),
-      fs = require('fs')
-;
+import logger from "../bin/winston.js";
+import FileUtils from "../data/FileSystem/FileUtils.js";
+import fs from "fs";
+import pageDbFunctionsClass from '../model/Db/pageDbFunctionsClass.js'
+import pageFileFunctionsClass from '../model/FileSystem/pageFileFunctionsClass.js'
+
+const pageDbFunctions = new pageDbFunctionsClass(),
+      pageFileFunctions = new pageFileFunctionsClass();
 
 const fileUtils = new FileUtils();
 
@@ -60,7 +59,7 @@ exports.updatePages = async (req,res) => {
             console.log(birthTime)
             if (city) {
               const pageUpdate = await pageDbFunctions.updatePageCreatedDate(city, birthTime)
-              if (pageUpdate === 'failure') winston.error('Could not update file data. city may not exist in city list file')
+              if (pageUpdate === 'failure') logger.error('Could not update file data. city may not exist in city list file')
             }
 
           }
@@ -71,7 +70,7 @@ exports.updatePages = async (req,res) => {
 
       } catch(err) {
 
-        winston.error(err);
+        logger.error(err);
         res.send(err);
 
       }
@@ -81,7 +80,7 @@ exports.updatePages = async (req,res) => {
   } catch(err) {
 
     res.send(err);
-    winston.error('There was an error while trying to scan for new pages' + err);
+    logger.error('There was an error while trying to scan for new pages' + err);
 
   }
 

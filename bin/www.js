@@ -3,11 +3,10 @@
 /**
  * Module dependencies.
  */
-const app = require('../app'),
-      open = require('open'),
-      winston = require('./winston.js'),
-      debug = require('debug')('nearbynow-automation:server'),
-      http = require('http');
+import app from '../app.js'
+import open from 'open'
+import logger from './winston.js'
+import http from 'http'
 
 /**
  * Get port from environment and store in Express.
@@ -61,9 +60,9 @@ const app = require('../app'),
     let bind = typeof addr === 'string'
       ? 'pipe ' + addr
       : 'port ' + addr.port;
-    debug('Listening on ' + bind);
+    logger.debug('Listening on ' + bind);
 
-    const openingUrl = "http://localhost:" + addr.port + "/nn-admin";
+    const openingUrl = "http://localhost:" + addr.port + "/fame-admin";
     open(openingUrl);
 
 

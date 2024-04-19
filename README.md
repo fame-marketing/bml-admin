@@ -39,7 +39,7 @@ from the clients cPanel account, navigate to the Setup Node.js App program and c
 - Application mode - Production
 - Application root - webhook
 - Application URL - nn-admin
-- Application startup file - bin/www
+- Application startup file - bin/www.js
 - Passenger log file - *do not change*
 
 Upload all the files that are in the same directory as this README to a directory named "webhook" OUTSIDE of the server root.

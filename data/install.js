@@ -8,16 +8,16 @@ require('dotenv').config();
 class Install {
 
   constructor() {
-    this.database = new Db();
+    this.database = new Database();
     this.tableCreationError = {};
 
     process.on('exit', (code) => {
       if (code === 0) {
         process.stdout.write("db tables successfully created.");
         process.stdout.write('\n');
-        winston.info("db tables successfully created.");
+        logger.info("db tables successfully created.");
       } else {
-        winston.error(`process completed but with errors: code - ${code}`);
+        logger.error(`process completed but with errors: code - ${code}`);
       }
     });
 
@@ -122,19 +122,25 @@ class Install {
         ),
 
         database.writePool(
-          `CREATE TABLE IF NOT EXISTS nn_settings (
-            id                   INT AUTO_INCREMENT PRIMARY KEY,
-            Name                 VARCHAR(100) UNIQUE,
-            Value                VARCHAR(25)
-          )`, null, pool
-        ),
-
-        database.writePool(
           `CREATE TABLE IF NOT EXISTS nn_users (
             id                   INT AUTO_INCREMENT PRIMARY KEY,
             UserName             VARCHAR(100) DEFAULT NULL,
             UserPass             VARCHAR(255) DEFAULT NULL,
             Permissions          VARCHAR(25)
+          )`, null, pool
+        ),
+
+        database.writePool(
+          `CREATE TABLE IF NOT EXISTS form_submissions (
+            id               INT AUTO_INCREMENT PRIMARY KEY,
+            SubmissionDate   DATETIME,
+            Name             VARCHAR(100) DEFAULT NULL,
+            Phone            VARCHAR(255) DEFAULT NULL,
+            Email            VARCHAR(255) DEFAULT NULL,
+            DogName          VARCHAR(255) DEFAULT NULL,
+            City             VARCHAR(255) DEFAULT NULL,
+            Consent          TINYINT(1) DEFAULT 0,
+            SpamScore        DOUBLE(3,1) DEFAULT NULL
           )`, null, pool
         )
       ]);
@@ -146,7 +152,7 @@ class Install {
       });
 
     } catch(err) {
-      winston.error(err);
+      logger.error(err);
     }
 
   }

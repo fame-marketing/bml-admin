@@ -1,37 +1,33 @@
-require('dotenv').config();
+import 'dotenv/config'
+import createError from 'http-errors'
+import express from 'express'
+import {engine as hbsEngine} from 'express-handlebars'
+import cookieParser from 'cookie-parser'
+import morgan from 'morgan'
+import winston from 'winston'
+import { CronJob } from 'cron';
+import cityCheck from './data/cityCheck.js'
+import router from './routes/router.js'
 
-const createError = require('http-errors'),
-  express = require('express'),
-  hbs = require('express-handlebars'),
-  path = require('path'),
-  fs = require('fs'),
-  cookieParser = require('cookie-parser'),
-  morgan = require('morgan'),
-  winston = require('./bin/winston'),
-  cron = require('cron').CronJob,
-  Checker = require('./data/cityCheck'),
-  adminRouter = require('./routes/router'),
-  https = require('https'),
-
-  app = express();
+const app = express();
 
 // view engine setup
 app.set('view engine', 'hbs');
 
-app.engine('hbs', hbs({
+app.engine('hbs', hbsEngine({
   extname: 'hbs',
   defaultLayout: 'default',
   layoutsDir: __dirname + '/views/layouts/',
   partialsDir: __dirname + '/views/partials/'
-}));
+}))
 
-app.use(morgan('combined', {stream: winston.stream}));
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(cookieParser());
-app.use(express.static('public'));
+app.use(morgan('combined', {stream: winston.stream}))
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(cookieParser())
+app.use(express.static('public'))
 
-app.use('/nn-admin', adminRouter);
+app.use('/fame-admin', router);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -44,7 +40,7 @@ app.use(function (err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = err;
 
-  winston.error('general error sent from app.js - ' + err.message);
+  logger.error('general error sent from app.js - ' + err.message);
 
   // render the error page
   res.status(err.status || 500);
@@ -57,10 +53,10 @@ app.use(function (err, req, res, next) {
  | creates a  page if a new city has an updated count
 */
 
-new cron('0 */2 * * * *', function () {
+new CronJob('0 */2 * * * *', function () {
   (async () => {
-    new Checker();
+    new cityCheck();
   })();
 }, null, true, 'America/New_York');
 
-module.exports = app;
+export default app
