@@ -1,8 +1,7 @@
-const email = require('nodemailer'),
-      winston = require('winston')
-;
+import nodemailer from 'nodemailer'
+import logger from "../bin/winston.js";
 
-async function sendAlert(recipient) {
+export async function sendAlert(recipient) {
 
   let transporter = nodemailer.createTransport({
     sendmail: true,
@@ -26,5 +25,3 @@ async function sendAlert(recipient) {
 sendAlert().catch( () => {
   logger.error('Could not send the alert.')
 })
-
-module.exports = sendAlert;

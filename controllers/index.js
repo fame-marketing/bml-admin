@@ -5,7 +5,6 @@ export const render = async (req, res) => {
     template: 'admin-template',
     title: 'Nearby Now Webhook Admin Page',
     description: 'The Fame Admin Interface',
-    authenticated: req.oidc.isAuthenticated()
   });
 
 }

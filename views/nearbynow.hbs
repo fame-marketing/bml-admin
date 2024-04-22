@@ -1,110 +1,17 @@
-<?php require_once '../init.php'; ?>
-<!DOCTYPE html>
-<html>
-<head>
+<div class="adminWrapper">
 
-  <?php getStaticHead(); ?>
+  <div class="adminContent dashboard">
 
-  <title>{{metaTitle}} - Comfort Solutions</title>
-  <meta name="description" content="{{metaDescription}}">
-  <link rel="canonical" href="https://comfortsolutionsair.com/local-hvac/{{url}}">
-  <meta property="og:url" content="https://comfortsolutionsair.com/local-hvac/{{url}}"/>
-  <meta property="og:title" content="{{metaTitle}} - Comfort Solutions"/>
-  <meta property="og:image" content="https://comfortsolutionsair.com/images/subpages/heatmap.jpg"/>
-  <meta property="og:description" content="{{metaDescription}}"/>
-
-  <script type="application/ld+json">
-    {
-      "@context": "http://schema.org",
-      "@type": "HVACBusiness",
-      "image": "https://comfortsolutionsair.com/images/subpages/heatmap.jpg",
-      "@id": "comfortsolutionsair.com/local-hvac/{{url}}",
-      "name": "Comfort Solutions Air",
-      "priceRange": "$$",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "7843 Conners Road",
-        "addressLocality": "Winston",
-        "addressRegion": "GA",
-        "postalCode": "30187",
-        "addressCountry": "US"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 33.7237391,
-        "longitude": -84.9122706
-      },
-      "telephone": "7708002665",
-      "email": "mailto:service@comfortsolutionsair.com"
-    }
-  </script>
-</head>
-
-<body>
-
-<noscript>
-  <iframe src="https://www.googletagmanager.com/ns.phtml?id=GTM-54LRXRC"
-          height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript>
-
-<div class="page-wrapper">
-
-  <?php getHeader(); ?>
-
-  <section class="page-title">
-    <div class="auto-container">
-      <div class="page-title__name">Service Areas - {{city}}</div>
-
-      <?php getBreadcrumbs(); ?>
+    <div class="pageActions">
+      <a href="nearby-now/import" class="action-btn">Import Events</a>
     </div>
-  </section>
 
-  <!--Sidebar Page Container-->
-  <div class="sidebar-page-container">
-    <div class="auto-container">
-      <div class="row clearfix">
-
-        <!--Content Side-->
-        <div class="content-side col-lg-8 col-md-12 col-sm-12">
-          <div class="blog-single">
-            <div class="inner-box">
-              <div class="title-box">
-                <h1>{{metaTitle}}</h1>
-                <h2>{{metaDescription}}</h2>
-              </div>
-              <div class="lower-content">
-
-                <div class="nn-info combo-info">
-                  <?php
-                    getNearbyNow(
-                      'combo',
-                      [
-                        'state' => '{{state}}',
-                        'city' => '{{city}}',
-                        'zoom' => 10
-                      ]
-                    );
-                  ?>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!--Sidebar Side-->
-          <?php getServiceAreaSidebar(); ?>
-
-      </div>
+    <div class="adminContent_pages adminContent_section">
+      {{> pagesInfo }}
+    </div>
+    <div class="adminContent_events adminContent_section">
+      {{> recentEventsInfo }}
     </div>
   </div>
-
-  <?php getPreFooter(); ?>
-
-  <?php getFooter(); ?>
-
-  <?php getScripts(); ?>
-
-</body>
-</html>
+</div>
+<script src="js/dashboard.js"></script>

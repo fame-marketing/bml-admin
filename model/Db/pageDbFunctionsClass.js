@@ -1,12 +1,9 @@
-const winston = require('../../bin/winston'),
-      Db = require('../../data/Database'),
-      fileUtils = require('../../data/FileSystem/FileUtils')
-;
+import Database from "../../data/Database.js"
+import fileUtils from "../../data/FileSystem/FileUtils.js"
 
 export default class pageDbFunctionsClass {
 
   constructor() {
-    this.winston = winston;
     this.database = new Database();
     this.fileUtils = new fileUtils();
   }

@@ -167,7 +167,7 @@ export const render = async (req,res) => {
   res.render(
     'import',
     {
-      layout: 'import',
+      layout: 'default',
       title: 'Import Data',
       description: 'import a csv'
     }

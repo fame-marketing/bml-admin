@@ -27,8 +27,8 @@ export const render = async (req,res) => {
     'forms',
     {
       layout: 'default',
-      title: 'Ranger Dog Training Form Submissions',
-      description: 'Ranger Dog Training Form Submissions',
+      title: '[Client Name] Form Submissions',
+      description: '[Client Name] Form Submissions',
       formSubmissions: await getFormSubmissions()
     }
   );

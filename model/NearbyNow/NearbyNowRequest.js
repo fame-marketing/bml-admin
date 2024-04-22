@@ -42,5 +42,3 @@ export default class NearbyNowRequest {
   }
 
 }
-
-module.exports = NearbyNowRequest

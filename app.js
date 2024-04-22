@@ -4,12 +4,15 @@ import express from 'express'
 import {engine as hbsEngine} from 'express-handlebars'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
-import winston from 'winston'
+import logger from "./bin/winston.js";
 import { CronJob } from 'cron';
 import cityCheck from './data/cityCheck.js'
 import router from './routes/router.js'
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
 
-const app = express();
+const app = express(),
+      __dirname = dirname(fileURLToPath(import.meta.url));
 
 // view engine setup
 app.set('view engine', 'hbs');
@@ -21,7 +24,7 @@ app.engine('hbs', hbsEngine({
   partialsDir: __dirname + '/views/partials/'
 }))
 
-app.use(morgan('combined', {stream: winston.stream}))
+app.use(morgan('combined', {stream: logger.stream}))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())

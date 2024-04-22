@@ -129,19 +129,29 @@ header a{
   grid-area: body;
 }
 .adminContent {
-  padding: 50px 30px 50px;
+  padding: 50px 15px 50px;
 }
 .dashboardBody h1 {
   margin-bottom:70px
 }
 .adminContent.dashboard {
   display: flex;
-  gap: 50px;
+  flex-wrap:wrap;
+}
+.pageActions {
+  width:100%;
+  text-align: right;
+}
+.action-btn {
+  background: #fff;
+  padding: 12px 25px;
+  color: #333;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 .adminContent_section {
-  background: #fff;
-  padding: 15px 30px;
-  border-radius: 7px;
+  padding: 10px;
+  position: relative;
 }
 .adminContent_pages {
   width:60%;
@@ -181,7 +191,6 @@ header a{
   display: flex;
   gap: 30px;
   width: 100%;
-  justify-content: center;
 }
 .dashboardBody {
   width: 100%;
@@ -224,23 +233,21 @@ header a{
   font-weight: 700;
   padding: 10px 15px;
 }
+
 #pagesTools_opener:hover svg {
   transform:rotate(60deg);
   transition: transform .2s;
 }
+
+/*
+  Entry Table Styles (such as form submissions, nearby now events, or other data that is displayed in a table style)
+*/
 .table li {
-  display: grid;
-  grid-template-columns: 205px 1fr 1fr 1fr 1fr 1fr 100px 100px;
-  background: #fff;
-  padding: 15px;
-  border-bottom: 4px solid #d5d5d5;
+  display:grid;
 }
-.table li:last-child {
-  border: none;
-}
-.table .tableHeading {
-  font-weight: 700;
-  font-size: 1rem;
+.tableHeading {
+  font-weight:700;
+  font-size:1.1rem
 }
 .recentPage, .pageListHeading  {
   grid-template-columns:
@@ -262,6 +269,9 @@ header a{
 .dashboard strong {
   padding-bottom: 5px;
   display: inline-block;
+}
+.recentPage_url a {
+  color:#3c82ca;
 }
 .dashboard li span {
   width: 100%;
@@ -302,20 +312,35 @@ header a{
   color: #353535;
 }
 
+/*
+  Form Submissions List Styles
+ */
+
+.formList_section {
+  width:100%
+}
+
+.formsList li {
+  grid-template-columns:
+    minmax(200px, 1fr) [SubmissionDate]
+    minmax(170px, 1fr) [Name]
+    minmax(100px, 1fr) [Phone]
+    minmax(100px, 1fr) [Email]
+    minmax(100px, 1fr) [DogName]
+    minmax(100px, 1fr) [City]
+    minmax(90px, 1fr) [Consnet]
+    minmax(115px, 1fr) [SpamScore]
+}
+.formsList li span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Dashboard Styles */
 .pendingEventsCounter {
   margin-bottom: 1em;
   text-align:right;
-}
 
-/* Form Styles */
-.formsList {
-  width:100%
-}
-.formsPageBody {
-  display: flex;
-  flex-direction: column;
-  padding: 20px 50px;
 }
 
 /* Import Styles */
@@ -389,6 +414,9 @@ select:active, select:focus,
 input:active, input:focus {
   border: none;
 }
+.importForm button {
+  display:block;
+}
 input[type="file"] {
   font-size: 0;
   margin-bottom: 30px;
@@ -427,7 +455,6 @@ button {
   border: none;
   padding: 7px 25px;
   margin-top: 10px;
-  cursor: pointer;
 }
 .action-button {
   background: #fff;

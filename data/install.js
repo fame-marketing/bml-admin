@@ -1,9 +1,6 @@
-const Db = require('./Database'),
-  winston = require('../bin/winston'),
-  Spinner = require('cli-spinner').Spinner
-;
-
-require('dotenv').config();
+import Database from "./Database.js";
+import logger from "../bin/winston.js";
+import 'dotenv/config'
 
 class Install {
 
@@ -27,10 +24,6 @@ class Install {
   async createTables(database) {
 
     try {
-
-      const spinner = new Spinner('Creating Db Tables.');
-      spinner.setSpinnerString(0);
-      spinner.start();
 
       const pool = database.getPromisePool();
 
@@ -144,8 +137,6 @@ class Install {
           )`, null, pool
         )
       ]);
-
-      spinner.stop();
 
       pool.end(() => {
         process.exitCode = 0;

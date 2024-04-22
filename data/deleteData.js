@@ -1,8 +1,6 @@
-const Db = require('./Database'),
-      winston = require('../bin/winston')
-;
+import Database from "./Database.js";
 
-class deleteData {
+export default class deleteData {
 
   constructor() {
 
@@ -16,5 +14,3 @@ class deleteData {
   }
 
 }
-
-module.exports = deleteData;

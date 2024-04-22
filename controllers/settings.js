@@ -9,7 +9,7 @@ const pageDbFunctions = new pageDbFunctionsClass(),
 
 const fileUtils = new FileUtils();
 
-exports.render = (req,res) => {
+export const render = (req,res) => {
 
   res.render(
     'settings',
@@ -27,7 +27,7 @@ exports.render = (req,res) => {
  * Updates page link and creation date
  *
  * */
-exports.updatePages = async (req,res) => {
+export const updatePages = async (req,res) => {
 
   try {
 
