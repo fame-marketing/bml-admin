@@ -19,10 +19,10 @@ export default class PageFileFunctionsClass {
       } )
     })
 
-    const keyword = process.env.KEYWORDBASE.toLowerCase();
+    const keyword = process.env.NN_KEYWORD_BASE.toLowerCase();
     const baseFileName = this.fileUtils.getFileBasename(fileName)
 
-    const cityName = process.env.KeywordPosition === "post" ?
+    const cityName = process.env.NN_KEYWORD_POSITION === "post" ?
       baseFileName.replace('-' + keyword, '').replace('-', ' ') :
       baseFileName.replace(keyword + '-', '').replace('-', ' ')
 

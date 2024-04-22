@@ -20,8 +20,8 @@ export default class Builder {
     this.cities = cities;
     this.handlebars = handlebars;
     this.database = new Database();
-    this.KeywordPosition = process.env.KeywordPosition;
-    this.keywordBase = process.env.KEYWORDBASE;
+    this.KeywordPosition = process.env.NN_KEYWORD_POSITION;
+    this.keywordBase = process.env.NN_KEYWORD_BASE;
     this.sitemapGenerator = SitemapGenerator;
     this.fileUtils = new fileUtils();
 
@@ -159,7 +159,7 @@ export default class Builder {
   async fetchFileBase() {
 
     try {
-      return await this.promiseReader('views/nearbynow.hbs', 'utf8');
+      return await this.promiseReader('views/html_templates/nearbynow.hbs', 'utf8');
     } catch (err) {
       logger.error(err);
     }
@@ -180,7 +180,7 @@ export default class Builder {
         this.keywordBase + ' ' + cityName :
         cityName + ' ' + this.keywordBase,
       seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase(),
-      md = "Comfort Solutions Heating and Cooling provides quality, timely, and affordable services. For " + cityName + " HVAC, contact us today.";
+      md = "[Client Name] provides quality, timely, and affordable services. For " + cityName + " HVAC, contact us today.";
     return {
       metaDescription: md,
       metaTitle: seoPhrase,

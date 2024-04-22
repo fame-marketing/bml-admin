@@ -30,7 +30,7 @@ async function storeData(request) {
 */
 function processRequest(data) {
 
-  const accountKey = process.env.accountKey;
+  const accountKey = process.env.NN_API_TOKEN;
 
   if (data.headers["x-account-key"] !== accountKey) {
     return "incorrectKey";
