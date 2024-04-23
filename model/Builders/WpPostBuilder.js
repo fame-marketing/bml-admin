@@ -9,6 +9,7 @@ import {createReadableDate} from "../../utils/helpers.js"
 export default class WpPostBuilder {
 
   constructor(cities) {
+
     this.cities = cities
     this.database = new Database()
     this.KeywordPosition = process.env.NN_KEYWORD_POSITION
@@ -30,9 +31,14 @@ export default class WpPostBuilder {
       const existingCities = await this.getExistingServiceAreas()
 
       this.cities.forEach((city) => {
-        if (city !== undefined && existingCities.includes(city)) {
-          this.sendCityData(city);
+
+        // get seo data now so we can compare the seoUrl to existing url's from WordPress
+        const cityData = this.generateSEO(city);
+
+        if (city !== undefined && existingCities.includes(cityData.seoUrl)) {
+          this.sendCityData(cityData);
         }
+
       });
 
     }
@@ -40,13 +46,15 @@ export default class WpPostBuilder {
   }
 
   async getExistingServiceAreas() {
-    // TODO: make a call to wp rest api to get all existing post of type service_area?
-    return [
-      'atlanta',
-      'douglasville',
-      'Villa Rica',
-      'Temple'
-    ]
+    const pageListResponse = await fetch('https://fameinternet.com/~famewptest/wp-json/wp/v2/posts')
+
+    const pageListData = await pageListResponse.json()
+
+    const pageCities = pageListData.map(page => {
+      return page.slug
+    })
+
+    return pageCities
   }
 
   /*
@@ -57,10 +65,13 @@ export default class WpPostBuilder {
    | indicated by the filepath variable.
   */
 
-  sendCityData(city) {
+  async sendCityData(city) {
 
-    const seo = this.generateSEO(city);
-
+    const createPageResponse = await fetch('https://fameinternet.com/~famewptest/wp-json/wp/v2/posts', {
+      method: "POST",
+      headers: '',
+      body:
+    })
     //TODO : send the generated SEO data to Wordpress
 
   }

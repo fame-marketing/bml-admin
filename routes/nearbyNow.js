@@ -15,5 +15,6 @@ nearbyNowRouter.get('/service-area/:area', nearbyNowController.getServiceAreaDet
 nearbyNowRouter.get('/import', importController.render)
 nearbyNowRouter.post('/import/submit', fileHandler.single('file'), importController.storeData)
 nearbyNowRouter.post('/webhook', webhookController.storeEvent)
+nearbyNowRouter.get('/wordpress', webhookController.testWordpress)
 
 export default nearbyNowRouter

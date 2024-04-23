@@ -13,6 +13,13 @@ export async function getFormSubmissions(orderBy = 'SubmissionDate', limit = 30)
 
   forms.forEach(form => {
     form.SubmissionDate = simplifyDateFormat(form.SubmissionDate);
+    if (form.SpamScore >= .7) {
+      form.SpamRank = 'Safe'
+    } else if (form.SpamScore < .7 && form.SpamScore >= .3 ) {
+      form.SpamRank = 'Suspicious'
+    } else if (form.SpamScore < .3) {
+      form.SpamRank = "Likely Spam"
+    }
   });
 
   logger.info('results: %j', forms);

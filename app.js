@@ -2,6 +2,7 @@ import 'dotenv/config'
 import createError from 'http-errors'
 import express from 'express'
 import {engine as hbsEngine} from 'express-handlebars'
+import HandlebarHelpers from './utils/handlebarHelpers.js'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
 import logger from "./bin/winston.js";
@@ -19,6 +20,7 @@ app.set('view engine', 'hbs');
 
 app.engine('hbs', hbsEngine({
   extname: 'hbs',
+  helpers: HandlebarHelpers,
   defaultLayout: 'default',
   layoutsDir: __dirname + '/views/layouts/',
   partialsDir: __dirname + '/views/partials/'
@@ -56,10 +58,10 @@ app.use(function (err, req, res, next) {
  | creates a  page if a new city has an updated count
 */
 
-new CronJob('0 */2 * * * *', function () {
-  (async () => {
-    new cityCheck();
-  })();
-}, null, true, 'America/New_York');
+// new CronJob('0 */2 * * * *', function () {
+//   (async () => {
+//     new cityCheck();
+//   })();
+// }, null, true, 'America/New_York');
 
 export default app

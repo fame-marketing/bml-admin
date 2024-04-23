@@ -1,5 +1,6 @@
 import logger from '../bin/winston.js'
 import CreateWebhookEvent from '../data/CreateWebhookEvent.js'
+import cityCheck from '../data/cityCheck.js'
 
 /*
  | @request -- the body of the request that called this file. This should contain the NearbyNow event data.
@@ -60,4 +61,8 @@ export const storeEvent = async (req,res,next) => {
     }
   })();
 
+}
+
+export const testWordpress = async (req,res,next) => {
+  new cityCheck()
 }
