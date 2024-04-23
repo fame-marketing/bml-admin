@@ -1,7 +1,7 @@
 import FileUtils from "../data/FileSystem/FileUtils.js";
 import Database from "../data/Database.js";
 import logger from "../bin/winston.js";
-import {validateKey} from "./helpers.js";
+import {validateKey} from "../utils/helpers.js";
 
 const db = new Database(),
       fileUtils = new FileUtils(),

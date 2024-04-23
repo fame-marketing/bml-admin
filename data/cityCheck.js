@@ -1,6 +1,7 @@
 import Database from './Database.js'
 import {saveData as Saver} from './saveData.js'
-import Builder from '../model/Builder.js'
+import HtmlPageBuilder from '../model/Builders/HtmlPageBuilder.js'
+import WpPostBuilder from '../model/Builders/WpPostBuilder.js'
 
 /*
  | base class that manages the process
@@ -10,7 +11,15 @@ export default class cityCheck {
   constructor() {
     this.database = new Database();
     this.saver = Saver;
-    this.builder = Builder;
+    this.sitePlatform = 'HTML'; //TODO: pull this from the client and use to determine which builder class to use.
+    if (this.sitePlatform === 'HTML') {
+      this.builder = HtmlPageBuilder;
+    } else if (this.sitePlatform === 'NextJs') {
+      this.builder = VercelBuilder;
+    } else if (this.sitePlatform === 'Wordpress') {
+      this.builder = WpPostBuilder
+    }
+
 
     // grabs event data from temp tables and hands them to the saveData class for processing and storage.
     this.save();

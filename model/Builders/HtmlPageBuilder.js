@@ -1,17 +1,18 @@
 import fs from 'fs'
 import util from 'util'
 import * as handlebars from "handlebars";
-import logger from "../bin/winston.js";
+import logger from "../../bin/winston.js";
 import os from 'os'
-import Database from "../data/Database.js";
-import fileUtils  from '../data/FileSystem/FileUtils.js'
-import SitemapGenerator from '../bin/SitemapGenerator.js'
+import Database from "../../data/Database.js";
+import fileUtils  from '../../data/FileSystem/FileUtils.js'
+import SitemapGenerator from '../../bin/SitemapGenerator.js'
+import {createReadableDate} from "../../utils/helpers.js"
 
 /*
  | The class that handles all facets of creating new pages.
 */
 
-export default class Builder {
+export default class HtmlPageBuilder {
 
   constructor(cities) {
     this.filesystem = fs;
@@ -143,7 +144,7 @@ export default class Builder {
     await fs.stat(createdFile, (err, stats) => {
       try {
         const birthtime = stats.birthtime;
-        const formatDate = this.createReadableDate(birthtime);
+        const formatDate = createReadableDate(birthtime);
         const query = `UPDATE nn_city_totals SET Created = 1, Url = "${url}", PageCreatedDate = "${formatDate}" WHERE City = "${cityName}"`;
         this.database.QueryOnly(query);
       } catch (err) {
@@ -191,18 +192,6 @@ export default class Builder {
       state: state
     };
 
-  }
-
-  createReadableDate(date) {
-
-    function force2Digits(number) {
-      return number < 10 ? '0' + number : number;
-    }
-
-    const dateObj = new Date(date);
-    const dateFormat = dateObj.getFullYear() + '-' + force2Digits(dateObj.getMonth()) + '-' + force2Digits(dateObj.getDate())
-    const timeFormat = force2Digits(dateObj.getHours()) + ':' + force2Digits(dateObj.getMinutes()) + ':' + force2Digits(dateObj.getSeconds())
-    return dateFormat + " " + timeFormat
   }
 
 }

@@ -21,3 +21,15 @@ export const validatePayload = (data) => {
 export const simplifyDateFormat = (date) => {
   return date.toLocaleString(date, {dateStyle:'medium',timeStyle:'medium'})
 }
+
+export const createReadableDate = (date) => {
+
+  function force2Digits(number) {
+    return number < 10 ? '0' + number : number;
+  }
+
+  const dateObj = new Date(date);
+  const dateFormat = dateObj.getFullYear() + '-' + force2Digits(dateObj.getMonth()) + '-' + force2Digits(dateObj.getDate())
+  const timeFormat = force2Digits(dateObj.getHours()) + ':' + force2Digits(dateObj.getMinutes()) + ':' + force2Digits(dateObj.getSeconds())
+  return dateFormat + " " + timeFormat
+}
