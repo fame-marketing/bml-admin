@@ -65,14 +65,22 @@ export default class WpPostBuilder {
    | indicated by the filepath variable.
   */
 
-  async sendCityData(city) {
+  async sendCityData(cityData) {
 
-    const createPageResponse = await fetch('https://fameinternet.com/~famewptest/wp-json/wp/v2/posts', {
+    const wpNonce = ''
+
+    const createPageResponse = await fetch('https://fameinternet.com/~famewptest/wp-json/fame-wp/v1/service-area/create', {
       method: "POST",
-      headers: '',
-      body:
+      headers: {
+        'X-WP-Nonce': wpNonce,
+        'Authorization': 'Basic ' + Buffer.from('fameadmin:OkYu cI7k RD5f jR8O skyQ mykT').toString('base64')
+      },
+      body: cityData
     })
-    //TODO : send the generated SEO data to Wordpress
+
+    const createPageResults = createPageResponse.json()
+
+    console.log(createPageResults)
 
   }
 
