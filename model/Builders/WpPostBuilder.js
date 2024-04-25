@@ -114,8 +114,7 @@ export default class WpPostBuilder {
       metaDescription: md,
       metaTitle: seoPhrase,
       url: seoUrl,
-      pageName: cityName,
-      keyword: seoPhrase,
+      pageName: cityName + ', ' + state,
       city: cityName,
       state: state
     };
