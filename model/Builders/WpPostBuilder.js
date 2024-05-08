@@ -1,6 +1,5 @@
 import logger from "../../bin/winston.js";
 import Database from "../../data/Database.js";
-import {createReadableDate} from "../../utils/helpers.js"
 
 /*
  | The class that handles all facets of creating new pages.
@@ -80,7 +79,7 @@ export default class WpPostBuilder {
 
     const createPageResults = createPageResponse.json()
 
-    console.log(createPageResults)
+    logger.info(createPageResults)
 
   }
 
