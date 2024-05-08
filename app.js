@@ -58,10 +58,10 @@ app.use(function (err, req, res, next) {
  | creates a  page if a new city has an updated count
 */
 
-// new CronJob('0 */2 * * * *', function () {
-//   (async () => {
-//     new cityCheck();
-//   })();
-// }, null, true, 'America/New_York');
+ new CronJob('0 */2 * * * *', function () {
+   (async () => {
+     new cityCheck();
+   })();
+ }, null, true, 'America/New_York');
 
 export default app
