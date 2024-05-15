@@ -23,7 +23,7 @@ import http from 'http'
    * Listen on provided port, on all network interfaces.
    */
 
-  server.listen(63203);
+  server.listen();
   server.on('error', onError);
   server.on('listening', onListening);
 
@@ -62,7 +62,7 @@ import http from 'http'
       : 'port ' + addr.port;
     logger.debug('Listening on ' + bind);
 
-    const openingUrl = "http://localhost:" + addr.port + "/fame-admin";
+    const openingUrl = "https://computerhelper.org:" + addr.port + "/";
     open(openingUrl);
 
 

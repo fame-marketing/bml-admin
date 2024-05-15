@@ -29,7 +29,7 @@ export const createReadableDate = (date) => {
   }
 
   const dateObj = new Date(date);
-  const dateFormat = dateObj.getFullYear() + '-' + force2Digits(dateObj.getMonth()) + '-' + force2Digits(dateObj.getDate())
+  const dateFormat = dateObj.getFullYear() + '-' + force2Digits(dateObj.getMonth() + 1) + '-' + force2Digits(dateObj.getDate())
   const timeFormat = force2Digits(dateObj.getHours()) + ':' + force2Digits(dateObj.getMinutes()) + ':' + force2Digits(dateObj.getSeconds())
   return dateFormat + " " + timeFormat
 }

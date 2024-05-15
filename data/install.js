@@ -94,7 +94,8 @@ class Install {
             ReviewTotal         INT NOT NULL DEFAULT 0,
             Created             TINYINT(1) DEFAULT 0,
             PageCreatedDate     DATETIME,
-            Verified            TINYINT(1) DEFAULT 0
+            Verified            TINYINT(1) DEFAULT 0,
+            Messages            VARCHAR(250) DEFAULT NULL
           )`, null, pool
         ),
 

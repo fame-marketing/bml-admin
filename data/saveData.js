@@ -28,7 +28,7 @@ export class saveData {
   */
   async saveEvent(row) {
 
-    let data = typeof row === 'string' ? JSON.parse(row.EventData) : row.EventData
+    let data = typeof row.EventData === 'string' ? JSON.parse(row.EventData) : row.EventData
 
     const eventType = data.type;
     const event = this.formatData(data, eventType);

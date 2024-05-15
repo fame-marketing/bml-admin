@@ -2,6 +2,9 @@ import {parse} from "csv-parse";
 import logger from "../bin/winston.js";
 import Database from "../data/Database.js";
 import storeRecentEvent from "../data/Db/storeRecentEvent.js";
+import {createReadableDate} from '../utils/helpers.js'
+
+const database = new Database();
 
 async function importEvents(events, type) { // remember to set some sort of eventId
 
@@ -33,16 +36,16 @@ async function importEvents(events, type) { // remember to set some sort of even
 
       dbReadyEvent.eventId = dateToId(event.CheckinDateTime);
       dbReadyEvent.Country = !dbReadyEvent.Country ? 'US' : dbReadyEvent.Country;
-      dbReadyEvent.CheckinDateTime = convertToReadableDate(dbReadyEvent.CheckinDateTime);
+      dbReadyEvent.CheckinDateTime = createReadableDate(dbReadyEvent.CheckinDateTime);
 
       let eventTimestamp = dbReadyEvent.CheckinDateTime;
 
       if (dbReadyEvent.RequestDate) {
-        dbReadyEvent.RequestDate = convertToReadableDate(dbReadyEvent.RequestDate);
-        dbReadyEvent.CreatedAt = convertToReadableDate(dbReadyEvent.RequestDate);
+        dbReadyEvent.RequestDate = createReadableDate(dbReadyEvent.RequestDate);
+        dbReadyEvent.CreatedAt = createReadableDate(dbReadyEvent.RequestDate);
       }
       if (dbReadyEvent.ResponseDate) {
-        dbReadyEvent.ResponseDate = convertToReadableDate(dbReadyEvent.ResponseDate);
+        dbReadyEvent.ResponseDate = createReadableDate(dbReadyEvent.ResponseDate);
         /*
          * If there is a responseDate then this is a review, thus we will use the responseDate
          * As the timestamp since that is the true date of the review.
@@ -50,13 +53,13 @@ async function importEvents(events, type) { // remember to set some sort of even
         eventTimestamp = dbReadyEvent.ResponseDate;
       }
 
-      eventTimestamp = convertToReadableDate(eventTimestamp);
+      eventTimestamp = createReadableDate(eventTimestamp);
 
       const eventRows = await database.writePool(sql, dbReadyEvent);
 
       if (eventRows.affectedRows > 0) { // only save event and tally event for city if this is a new event.
-        //storeRecentEvent.store(dbReadyEvent.eventId, eventTimestamp, eventType);
-        //saveCityTotals(dbReadyEvent, table);
+        storeRecentEvent.store(dbReadyEvent.eventId, eventTimestamp, eventType);
+        saveCityTotals(dbReadyEvent, table);
       }
 
       return eventRows.affectedRows;
@@ -131,14 +134,14 @@ function validateData(eventData, eventType) {
 
   if (
     eventColumns.every( function (column) {
-      return expectedColumns[eventType].includes(column);
+      return expectedColumns[eventType].includes(column.trim());
     })
   ) {
     return true;
   } else {
     return expectedColumns[eventType].reduce( (missing, column) => {
-      if (!eventColumns.includes(column)) {
-        missing.push(column);
+      if (!eventColumns.includes(column.trim())) {
+        missing.push(column.trim());
       }
       return missing;
     }, []);
@@ -148,19 +151,6 @@ function validateData(eventData, eventType) {
 
 function dateToId(date) {
   return new Date(date).getTime() / 1000;
-}
-
-function convertToReadableDate(date) {
-
-  function force2Digits(number) {
-    return number < 10 ? '0' + number : number;
-  }
-
-  const dateObj = new Date(date * 1000);
-  const dateFormat = dateObj.getFullYear() + '-' + force2Digits(dateObj.getMonth()) + '-' + force2Digits(dateObj.getDate())
-  const timeFormat = force2Digits(dateObj.getHours()) + ':' + force2Digits(dateObj.getMinutes()) + ':' + force2Digits(dateObj.getSeconds())
-  return dateFormat + " " + timeFormat
-
 }
 
 export const render = async (req,res) => {
