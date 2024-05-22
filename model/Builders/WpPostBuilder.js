@@ -1,5 +1,6 @@
 import logger from "../../bin/winston.js";
 import Database from "../../data/Database.js";
+import {createReadableDate} from "../../utils/helpers.js";
 
 /*
  | The class that handles all facets of creating new pages.
@@ -29,31 +30,48 @@ export default class WpPostBuilder {
       // return an array of city names
       const existingCities = await this.getExistingServiceAreas()
 
-      this.cities.forEach((city) => {
+      for (let i = 0; i < this.cities.length; i++) {
 
-        // get seo data now so we can compare the seoUrl to existing url's from WordPress
+        const city = this.cities[i]
+
         const cityData = this.generateSEO(city);
 
-        if (city !== undefined && existingCities.includes(cityData.seoUrl)) {
-          this.sendCityData(cityData);
+        if (city === undefined) {
+          return;
         }
 
-      });
+        if (!existingCities.pageSlugs.includes(cityData.seoUrl)) {
+          await this.sendCityData(cityData);
+        } else if (existingCities.pageSlugs.includes(cityData.seoUrl)) {
+          await this.markAsCreated(existingCities.pageData, cityData.city, cityData.state)
+        }
+      }
 
     }
 
   }
 
   async getExistingServiceAreas() {
-    const pageListResponse = await fetch('https://fameinternet.com/~famewptest/wp-json/wp/v2/posts')
+    const pageListResponse = await fetch('[company_url]/wp-json/wp/v2/service-areas')
 
     const pageListData = await pageListResponse.json()
 
-    const pageCities = pageListData.map(page => {
-      return page.slug
-    })
+    if(pageListData.length > 0) {
+      const pageSlugs = pageListData.map(page => {
+        return page.slug
+      })
 
-    return pageCities
+      return {
+        pageSlugs : pageSlugs,
+        pageData : pageListData
+      }
+    }
+
+    return {
+      pageSlugs : [],
+      pageData: []
+    }
+
   }
 
   /*
@@ -66,20 +84,55 @@ export default class WpPostBuilder {
 
   async sendCityData(cityData) {
 
-    const wpNonce = ''
+    const wpNonce = '';
+    let resultMessage = '';
 
-    const createPageResponse = await fetch('https://fameinternet.com/~famewptest/wp-json/fame-wp/v1/service-area/create', {
+    const createPageResponse = await fetch('[company_url]/wp-json/fame-wp/v1/service-areas/create', {
       method: "POST",
       headers: {
         'X-WP-Nonce': wpNonce,
-        'Authorization': 'Basic ' + Buffer.from('fameadmin:OkYu cI7k RD5f jR8O skyQ mykT').toString('base64')
+        'Authorization': 'Basic ' + Buffer.from('fame_dev:UXEk ECCM iWs1 eoun FLJg Gh17').toString('base64'),
+        'Content-Type': 'application/json'
       },
-      body: cityData
+      body: JSON.stringify(cityData)
     })
 
-    const createPageResults = createPageResponse.json()
+    const createPageResults = await createPageResponse.json()
 
-    logger.info(createPageResults)
+    if ( "code" in createPageResults ) {
+      if (createPageResults.code === "rest_missing_callback_param") {
+        resultMessage = "Page Not Created: " + createPageResults.message;
+      } else if (createPageResults.code === "rest_forbidden") {
+        resultMessage = "Use does not have permission to create a service area."
+      } else if (createPageResults.code === "rest_invalid_param") {
+        resultMessage = createPageResults.message
+      }
+    } else if ( "ID" in createPageResults ) {
+      // If there is an ID then we know that the plugin is returning the newly created page data.
+      const markAsCompleteResult = await this.markAsCreated(createPageResults, cityData.city, cityData.state)
+      if (!markAsCompleteResult) {
+        resultMessage = 'Page was created, but we encountered an area while marking the page as created.'
+      }
+    } else {
+      resultMessage = 'Unable to create new page. Please check for errors in in both the WP instance and this admin application.'
+    }
+
+    if (resultMessage !== '') {
+      try {
+        await this.addCityMessage(resultMessage, cityData.city)
+      } catch (e) {
+        logger.error(e)
+      }
+
+    } else {
+
+      try {
+        await this.addCityMessage('', cityData.city)
+      } catch (e) {
+        logger.error(e)
+      }
+
+    }
 
   }
 
@@ -88,10 +141,27 @@ export default class WpPostBuilder {
    | Takes a city and updates that row in the nn_city_totals table to reflect that the page already
    | exists.
    */
-  async markAsCreated() {
+  async markAsCreated(pageData, city, state) {
 
-   // We will try to use data from Wordpress to set update/set the page creation status and date in the database.
+     try {
+       const formatDate = createReadableDate(pageData.post_date);
+       const query = `UPDATE nn_city_totals SET Created = 1, Url = "${pageData.guid}", PageCreatedDate = "${formatDate}" WHERE City = "${city}" AND State = "${state}"`;
+       const markResults = await this.database.writePool(query);
 
+       return typeof markResults !== 'undefined' && markResults.affectedRows > 0;
+     } catch (err) {
+       logger.error('Error marking city as created.');
+     }
+
+  }
+
+  async addCityMessage(newMessage, cityName) {
+    try {
+      const query = `UPDATE nn_city_totals SET Messages = "${newMessage}" WHERE City = "${cityName}"`;
+      this.database.QueryOnly(query);
+    } catch (err) {
+      logger.error('error getting file stats for the newly created file. This may prevent the database from displaying the correct page creation date for the new city.');
+    }
   }
 
   /*
@@ -108,7 +178,8 @@ export default class WpPostBuilder {
         this.keywordBase + ' ' + cityName :
         cityName + ' ' + this.keywordBase,
       seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase(),
-      md = "[Client Name] provides quality, timely, and affordable services. For " + cityName + " HVAC, contact us today.";
+      md = "Meta Description plus the city name which is " + cityName;
+
     return {
       metaDescription: md,
       metaTitle: seoPhrase,

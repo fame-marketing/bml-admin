@@ -10,8 +10,7 @@ const db = new Database(),
 async function getNewPages() {
   const sql = `SELECT *
                FROM nn_city_totals
-               WHERE Created = 1 AND
-                   City != ''
+               WHERE City != ''
                ORDER BY Verified ASC, PageCreatedDate DESC
                LIMIT 20`;
   const rows = await db.readPool(sql);

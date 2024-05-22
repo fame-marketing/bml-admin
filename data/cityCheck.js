@@ -2,7 +2,6 @@ import Database from './Database.js'
 import {saveData as Saver} from './saveData.js'
 import HtmlPageBuilder from '../model/Builders/HtmlPageBuilder.js'
 import WpPostBuilder from '../model/Builders/WpPostBuilder.js'
-import logger from "../bin/winston.js";
 
 /*
  | base class that manages the process

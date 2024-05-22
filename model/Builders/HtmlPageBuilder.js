@@ -71,7 +71,7 @@ export default class HtmlPageBuilder {
           const cityExists = files.filter(file => file.includes(checkCityFormatted));
           if (cityExists.length !== 0) {
             const filePath = this.fileDir + '/' + cityExists[0];
-            this.markAsCreated(checkCity, cityExists[0], filePath);
+            await this.markAsCreated(checkCity, cityExists[0], filePath);
             logger.info('attempted to create a page for the city ' + checkCity + ' that is already represented by the file(s) ' + cityExists.toString());
           }else if(cityExists.length === 0) {
             this.createPage(city, base);
@@ -103,7 +103,7 @@ export default class HtmlPageBuilder {
     let page = template(seo);
 
     /*
-     | This writefile method will handle creating the seo page.
+     | This writeFile method will handle creating the seo page.
      | Node documentation - https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback
      | flags wx tell the method not to try to create the file if it exists already
      | If there is an missing directory leading up to the destination, the method will
@@ -181,7 +181,7 @@ export default class HtmlPageBuilder {
         this.keywordBase + ' ' + cityName :
         cityName + ' ' + this.keywordBase,
       seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase(),
-      md = "[Client Name] provides quality, timely, and affordable services. For " + cityName + " HVAC, contact us today.";
+      md = "[Company Name] provides quality, timely, and affordable services. For " + cityName + " HVAC, contact us today.";
     return {
       metaDescription: md,
       metaTitle: seoPhrase,
