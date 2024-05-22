@@ -181,7 +181,7 @@ export default class HtmlPageBuilder {
         this.keywordBase + ' ' + cityName :
         cityName + ' ' + this.keywordBase,
       seoUrl = seoPhrase.replace(/\s|_/g, '-').toLocaleLowerCase(),
-      md = "[Company Name] provides quality, timely, and affordable services. For " + cityName + " HVAC, contact us today.";
+      md = "[Client Name] provides quality, timely, and affordable services. For " + cityName + " HVAC, contact us today.";
     return {
       metaDescription: md,
       metaTitle: seoPhrase,

@@ -32,7 +32,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(express.static('public'))
 
-app.use('/fame-admin', router);
+app.use('/fame-admin/', router);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
