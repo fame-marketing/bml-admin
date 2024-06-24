@@ -3,6 +3,7 @@ import logger from "../bin/winston.js";
 import Database from "../data/Database.js";
 import storeRecentEvent from "../data/Db/storeRecentEvent.js";
 import {createReadableDate} from '../utils/helpers.js'
+import { v5 as uuidv5 } from 'uuid'
 
 const database = new Database();
 
@@ -34,7 +35,8 @@ async function importEvents(events, type) { // remember to set some sort of even
         dbReadyEvent[keys[i]] = values[i];
       }
 
-      dbReadyEvent.eventId = dateToId(event.CheckinDateTime);
+      dbReadyEvent.eventId = uuidv5(dbReadyEvent.CheckinDateTime + dbReadyEvent.Reference, 'db1d5d0f-2a02-4126-9e29-2ec6c204d946');
+
       dbReadyEvent.Country = !dbReadyEvent.Country ? 'US' : dbReadyEvent.Country;
       dbReadyEvent.CheckinDateTime = createReadableDate(dbReadyEvent.CheckinDateTime);
 
