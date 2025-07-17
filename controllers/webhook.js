@@ -1,6 +1,8 @@
 import logger from '../bin/winston.js'
 import CreateWebhookEvent from '../data/CreateWebhookEvent.js'
 import cityCheck from '../data/cityCheck.js'
+import Database from '../data/Database.js'
+import VercelPageBuilder from '../model/Builders/VercelPageBuilder.js'
 
 /*
  | @request -- the body of the request that called this file. This should contain the NearbyNow event data.
@@ -65,4 +67,54 @@ export const storeEvent = async (req,res,next) => {
 
 export const testWordpress = async (req,res,next) => {
   new cityCheck()
+}
+
+export const vercelEndpoint = async (req, res, next) => {
+  try {
+    // Validate the request
+    const valid = processRequest(req);
+    if (valid !== true) {
+      logger.error(`Invalid request to Vercel endpoint: ${valid}`);
+      return res.status(400).json({ error: valid });
+    }
+
+    // Store the event data if it's a webhook event
+    if (req.body.type) {
+      await storeData(req.body);
+    }
+
+    // Get eligible cities from the database
+    const database = new Database();
+    const checkinLimit = 1;
+    const reviewLimit = 1;
+    
+    const sql = `SELECT * FROM nn_city_totals WHERE Created = 0
+                AND (CheckinTotal >= ${checkinLimit} OR
+                      ReviewTotal >= ${reviewLimit})`;
+    
+    const eligible = await database.readPool(sql);
+
+    // If there are eligible cities, create pages for them using the VercelPageBuilder
+    if (eligible && eligible.length !== 0) {
+      // Create pages using the VercelPageBuilder
+      new VercelPageBuilder(eligible);
+      
+      // Return success response with the eligible cities
+      return res.status(200).json({ 
+        success: true, 
+        message: `Processing ${eligible.length} eligible cities for Vercel project`,
+        cities: eligible.map(city => `${city.City}, ${city.State}`)
+      });
+    }
+
+    // If no eligible cities, return success but with a message
+    return res.status(200).json({ 
+      success: true, 
+      message: 'No eligible cities found for page creation'
+    });
+    
+  } catch (error) {
+    logger.error(`Error in Vercel endpoint: ${error.message}`);
+    next(error);
+  }
 }

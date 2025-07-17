@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "init": "node ./data/install",
-    "run": "node bin/www.cjs"
+    "run": "node bin/www.cjs",
+    "dev": "node bin/dev.js",
+    "start": "node bin/www.cjs"
   },
   "dependencies": {
     "app-root-path": "^3.1.0",

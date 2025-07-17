@@ -16,5 +16,7 @@ nearbyNowRouter.get('/import', importController.render)
 nearbyNowRouter.post('/import/submit', fileHandler.single('file'), importController.storeData)
 nearbyNowRouter.post('/webhook', webhookController.storeEvent)
 nearbyNowRouter.get('/wordpress', webhookController.testWordpress)
+nearbyNowRouter.post('/vercel-webhook', webhookController.vercelEndpoint)
+nearbyNowRouter.get('/generate-vercel-pages', webhookController.vercelEndpoint)
 
 export default nearbyNowRouter
