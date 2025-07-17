@@ -34,8 +34,8 @@ export const render = async (req,res) => {
     'forms',
     {
       layout: 'default',
-      title: '[Company Name] Form Submissions',
-      description: '[Company Name] Form Submissions',
+      title: 'Building Material Liquidation Form Submissions',
+      description: 'Building Material Liquidation Form Submissions',
       formSubmissions: await getFormSubmissions()
     }
   );

@@ -62,7 +62,7 @@ import http from 'http'
       : 'port ' + addr.port;
     logger.debug('Listening on ' + bind);
 
-    const openingUrl = "[company_url]:" + addr.port + "/";
+    const openingUrl = "https://bmladmin.fameinternet.com:" + addr.port + "/";
     open(openingUrl);
 
 

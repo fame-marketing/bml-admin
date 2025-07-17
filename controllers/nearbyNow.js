@@ -51,7 +51,7 @@ async function getPendingEvents() {
 
 }
 
-async function markAsValid() {
+async function markAsValid(url) {
 
   const sql = `UPDATE nn_city_totals SET Verified = 1 WHERE Url = "${url}"`;
   const res = await db.readPool(sql);
@@ -65,7 +65,7 @@ function simplifyDateFormat(date) {
 
 export const render = async (req, res) => {
 
-  res.render('nearbyNow', {
+  res.render('nearbynow', {
     layout: 'default',
     template: 'admin-template',
     title: 'Nearby Now Webhook Admin Page',

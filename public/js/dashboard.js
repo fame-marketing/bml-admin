@@ -29,7 +29,7 @@
 
     };
 
-    req.open('POST', '/fame-admin/nearby-now/', true);
+    req.open('POST', '/nearby-now/', true);
 
     req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 

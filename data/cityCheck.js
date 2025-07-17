@@ -2,6 +2,7 @@ import Database from './Database.js'
 import {saveData as Saver} from './saveData.js'
 import HtmlPageBuilder from '../model/Builders/HtmlPageBuilder.js'
 import WpPostBuilder from '../model/Builders/WpPostBuilder.js'
+import VercelPageBuilder from '../model/Builders/VercelPageBuilder.js'
 
 /*
  | base class that manages the process
@@ -11,7 +12,7 @@ export default class cityCheck {
   constructor() {
     this.database = new Database();
     this.saver = Saver;
-    this.sitePlatform = 'Wordpress'; //TODO: pull this from the client and use to determine which builder class to use.
+    this.sitePlatform = 'NextJs'; //TODO: pull this from the client and use to determine which builder class to use.
 
     // grabs event data from temp tables and hands them to the saveData class for processing and storage.
     this.save();
@@ -42,11 +43,11 @@ export default class cityCheck {
   async checkCityTotals() {
 
     const checkinLimit = 1,
-          reviewLimit = 1;
+      reviewLimit = 1;
 
     const sql = `SELECT * FROM nn_city_totals WHERE Created = 0
-                AND (CheckinTotal >= ${checkinLimit} OR
-                      ReviewTotal >= ${reviewLimit})`
+                                                AND (CheckinTotal >= ${checkinLimit} OR
+                                                     ReviewTotal >= ${reviewLimit})`
     ;
 
     const eligible = await this.database.readPool(sql);
@@ -55,7 +56,7 @@ export default class cityCheck {
       if (this.sitePlatform === 'HTML') {
         new HtmlPageBuilder(eligible);
       } else if (this.sitePlatform === 'NextJs') {
-        new VercelBuilder(eligible);
+        new VercelPageBuilder(eligible);
       } else if (this.sitePlatform === 'Wordpress') {
         new WpPostBuilder(eligible)
       }
