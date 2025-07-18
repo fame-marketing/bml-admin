@@ -1,6 +1,6 @@
 import Database from "../../data/Database.js";
 import logger from "../../bin/winston.js";
-import { simplifyDateFormat } from "../../utils/helpers.js";
+import { createReadableDate } from "../../utils/helpers.js";
 import fetch from 'node-fetch'
 
 export default class Vercel {
@@ -14,7 +14,7 @@ export default class Vercel {
     try {
       // Update database records for each eligible page
       for (const page of eligiblePages) {
-        const currentDateTime = simplifyDateFormat(new Date());
+        const currentDateTime = createReadableDate(new Date());
 
         const sql = `UPDATE nn_city_totals
                      SET Created         = 1,
