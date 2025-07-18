@@ -97,8 +97,9 @@ export const vercelEndpoint = async (req, res, next) => {
     // If there are eligible cities, create pages for them using the VercelPageBuilder
     if (eligible && eligible.length !== 0) {
       // Create pages using the VercelPageBuilder
-      new VercelPageBuilder(eligible);
-      
+      const vercel = new VercelPageBuilder();
+      await vercel.triggerRebuild(eligible)
+
       // Return success response with the eligible cities
       return res.status(200).json({ 
         success: true, 

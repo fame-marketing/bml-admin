@@ -56,7 +56,8 @@ export default class cityCheck {
       if (this.sitePlatform === 'HTML') {
         new HtmlPageBuilder(eligible);
       } else if (this.sitePlatform === 'NextJs') {
-        new VercelPageBuilder(eligible);
+        const vercel = new VercelPageBuilder();
+        await vercel.triggerRebuild(eligible)
       } else if (this.sitePlatform === 'Wordpress') {
         new WpPostBuilder(eligible)
       }
