@@ -63,6 +63,17 @@ function simplifyDateFormat(date) {
   return date.toLocaleString(date, {dateStyle:'medium',timeStyle:'medium'})
 }
 
+async function getServiceAreaList() {
+  const sql = `SELECT City, Url FROM nn_city_totals WHERE Created = 1`;
+  return await db.readPool(sql);
+}
+
+async function getAreaDetails(slug) {
+  const sql = `SELECT City as city, State as state, Url as url FROM nn_city_totals WHERE Url = "${slug}"`;
+  const rows = await db.readPool(sql);
+  return rows.length > 0 ? rows[0] : null;
+}
+
 export const render = async (req, res) => {
 
   res.render('nearbynow', {

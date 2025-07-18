@@ -1,6 +1,7 @@
 import Database from "../../data/Database.js";
 import logger from "../../bin/winston.js";
 import { simplifyDateFormat } from "../../utils/helpers.js";
+import fetch from 'node-fetch'
 
 export default class Vercel {
 
